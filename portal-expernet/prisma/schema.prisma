@@ -60,6 +60,8 @@ model User {
   juryMembres          JuryMembre[]
   evaluations          Evaluation[]
   attestations         Attestation[]
+  messages             Message[]
+  documents            Document[]
 }
 
 // ───────── Catalogue de formations (module public) ─────────
@@ -127,6 +129,8 @@ model Promotion {
   inscriptions Inscription[]
   sessions     Session[]
   examens      Examen[]
+  canaux       Canal[]
+  documents    Document[]
 }
 
 model Inscription {
@@ -233,4 +237,59 @@ model Evaluation {
   competence Competence @relation(fields: [competenceId], references: [id])
 
   @@unique([examenId, etudiantId, competenceId])
+}
+
+// ───────── Collaboration (remplace Teams) ─────────
+
+// Un canal de discussion. promotionId = null : canal général ouvert à tout le centre.
+model Canal {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  promotionId Int?
+  createdAt   DateTime @default(now())
+
+  promotion Promotion? @relation(fields: [promotionId], references: [id])
+  messages  Message[]
+  documents Document[]
+
+  @@unique([promotionId, nom])
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  canalId   Int
+  auteurId  Int
+  contenu   String
+  parentId  Int?      // réponse dans un fil de discussion
+  createdAt DateTime  @default(now())
+  modifieLe DateTime?
+
+  canal    Canal     @relation(fields: [canalId], references: [id])
+  auteur   User      @relation(fields: [auteurId], references: [id])
+  parent   Message?  @relation("Reponses", fields: [parentId], references: [id])
+  reponses Message[] @relation("Reponses")
+
+  @@index([canalId, createdAt])
+}
+
+// Un document partagé (cours, consignes, rendus...). Le fichier lui-même est stocké sur disque,
+// la base ne garde que ses informations.
+model Document {
+  id             Int      @id @default(autoincrement())
+  titre          String
+  nomFichier     String
+  cheminStockage String
+  typeMime       String
+  tailleOctets   Int
+  auteurId       Int
+  promotionId    Int?
+  canalId        Int?
+  visiblePar     Role[]   @default([ADMIN, FORMATEUR, ETUDIANT])
+  createdAt      DateTime @default(now())
+
+  auteur    User       @relation(fields: [auteurId], references: [id])
+  promotion Promotion? @relation(fields: [promotionId], references: [id])
+  canal     Canal?     @relation(fields: [canalId], references: [id])
+
+  @@index([promotionId, createdAt])
 }

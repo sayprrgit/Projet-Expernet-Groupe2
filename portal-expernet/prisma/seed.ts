@@ -15,6 +15,9 @@ function empreinte(sessionId: number, etudiantId: number, date: Date, signature:
 
 async function main() {
   // Nettoyage (ordre inverse des dépendances) : à n'utiliser qu'en développement
+  await prisma.message.deleteMany();
+  await prisma.document.deleteMany();
+  await prisma.canal.deleteMany();
   await prisma.evaluation.deleteMany();
   await prisma.juryMembre.deleteMany();
   await prisma.competence.deleteMany();
@@ -183,6 +186,37 @@ async function main() {
         commentaire: 'Normalisation à revoir',
       },
     ],
+  });
+
+  // ───────── Collaboration : canaux, messages, documents ─────────
+  const general = await prisma.canal.create({ data: { nom: 'général' } });
+  const canalPromo = await prisma.canal.create({ data: { nom: 'annonces', promotionId: promo.id } });
+
+  const bienvenue = await prisma.message.create({
+    data: {
+      canalId: canalPromo.id,
+      auteurId: formateur.id,
+      contenu: 'Bienvenue dans la promotion CDA 2026-2027 !',
+    },
+  });
+  await prisma.message.createMany({
+    data: [
+      { canalId: canalPromo.id, auteurId: lynho.id, contenu: 'Merci, content d’être là.', parentId: bienvenue.id },
+      { canalId: general.id, auteurId: admin.id, contenu: 'Le planning de la semaine est disponible.' },
+    ],
+  });
+
+  await prisma.document.create({
+    data: {
+      titre: 'Consignes du projet Expernet',
+      nomFichier: 'consignes-projet.pdf',
+      cheminStockage: 'uploads/demo/consignes-projet.pdf',
+      typeMime: 'application/pdf',
+      tailleOctets: 120_000,
+      auteurId: formateur.id,
+      promotionId: promo.id,
+      canalId: canalPromo.id,
+    },
   });
 
   console.log('Base remplie avec les données de démonstration.');
