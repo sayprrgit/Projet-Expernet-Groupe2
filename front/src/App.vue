@@ -1,62 +1,44 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-const message = ref('Chargement...');
-
-onMounted(async () => {
-  try {
-    // Grâce au proxy Vite, l'appel cible directement http://localhost:3000/api
-    const response = await axios.get('/api'); 
-    message.value = response.data;
-  } catch (error) {
-    console.error("Erreur lors de l'appel API :", error);
-    message.value = "Impossible de joindre le serveur.";
-  }
-});
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <header class="app-header">
+    <RouterLink to="/" class="app-header__brand">Portal Expernet</RouterLink>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
+    <nav class="app-header__nav">
+      <RouterLink to="/">Accueil</RouterLink>
+      <RouterLink to="/docs">Documentation API</RouterLink>
+    </nav>
   </header>
 
-  <main>
-    <h1>Message du Backend :</h1>
-    <p>{{ message }}</p>
-  </main>
+  <RouterView />
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+.app-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.app-header__brand {
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.app-header__nav {
+  display: flex;
+  gap: 1.25rem;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.app-header__nav :deep(a.router-link-active) {
+  font-weight: 600;
 }
 </style>

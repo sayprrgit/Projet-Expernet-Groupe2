@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./portal-expernet
+      target: prod
+    container_name: portal-expernet-backend-prod
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./front
+      target: prod
+    container_name: portal-expernet-frontend-prod
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
