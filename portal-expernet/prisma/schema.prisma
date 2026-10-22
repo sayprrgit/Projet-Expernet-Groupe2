@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────── Enums ─────────
+
+enum Role {
+  ADMIN
+  FORMATEUR
+  ETUDIANT
+}
+
+enum NiveauRncp {
+  NIVEAU_3
+  NIVEAU_4
+  NIVEAU_5
+  NIVEAU_6
+  NIVEAU_7
+}
+
+enum StatutCandidature {
+  EN_ATTENTE
+  ACCEPTEE
+  REFUSEE
+}
+
+enum RoleJury {
+  PRESIDENT
+  MEMBRE
+}
+
+enum NiveauAcquisition {
+  NON_ACQUIS
+  EN_COURS
+  ACQUIS
+}
+
+// ───────── Utilisateurs & authentification ─────────
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  nom          String
+  prenom       String
+  role         Role     @default(ETUDIANT)
+  mfaSecret    String?
+  mfaEnabled   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  promotionsEnseignees Promotion[]   @relation("FormateurPromotion")
+  inscriptions         Inscription[]
+  emargements          Emargement[]
+  juryMembres          JuryMembre[]
+  evaluations          Evaluation[]
+  attestations         Attestation[]
+}
+
+// ───────── Catalogue de formations (module public) ─────────
+
+model Filiere {
+  id         Int         @id @default(autoincrement())
+  nom        String      @unique
+  slug       String      @unique
+  formations Formation[]
+}
+
+model Formation {
+  id               Int        @id @default(autoincrement())
+  titre            String
+  slug             String     @unique
+  filiereId        Int
+  niveauRncp       NiveauRncp
+  eligibleCpf      Boolean    @default(false)
+  prerequis        String
+  objectifs        String
+  modalitesAcces   String
+  debouches        String
+  dureeHeures      Int
+  metaDescription  String?
+  publiee          Boolean    @default(false)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  filiere      Filiere        @relation(fields: [filiereId], references: [id])
+  promotions   Promotion[]
+  candidatures Candidature[]
+  competences  Competence[]
+
+  @@index([filiereId, niveauRncp, eligibleCpf])
+}
+
+model Candidature {
+  id          Int               @id @default(autoincrement())
+  formationId Int
+  nom         String
+  prenom      String
+  email       String
+  telephone   String?
+  motivation  String
+  statut      StatutCandidature @default(EN_ATTENTE)
+  createdAt   DateTime          @default(now())
+
+  formation Formation @relation(fields: [formationId], references: [id])
+
+  @@index([formationId, statut])
+}
+
+// ───────── Promotions & sessions ─────────
+
+model Promotion {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  formationId Int
+  formateurId Int
+  dateDebut   DateTime
+  dateFin     DateTime
+
+  formation    Formation     @relation(fields: [formationId], references: [id])
+  formateur    User          @relation("FormateurPromotion", fields: [formateurId], references: [id])
+  inscriptions Inscription[]
+  sessions     Session[]
+  examens      Examen[]
+}
+
+model Inscription {
+  id          Int @id @default(autoincrement())
+  promotionId Int
+  etudiantId  Int
+
+  promotion Promotion @relation(fields: [promotionId], references: [id])
+  etudiant  User      @relation(fields: [etudiantId], references: [id])
+
+  @@unique([promotionId, etudiantId])
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  promotionId Int
+  titre       String
+  debut       DateTime
+  fin         DateTime
+
+  promotion   Promotion    @relation(fields: [promotionId], references: [id])
+  emargements Emargement[]
+
+  @@index([promotionId, debut])
+}
+
+// ───────── Émargement numérique ─────────
+
+model Emargement {
+  id            Int      @id @default(autoincrement())
+  sessionId     Int
+  etudiantId    Int
+  signature     String   // image de la signature (base64) ou chemin de fichier
+  signeLe       DateTime @default(now())
+  adresseIp     String?
+  empreinte     String   // hash SHA-256 (sessionId + etudiantId + horodatage + signature)
+
+  session  Session @relation(fields: [sessionId], references: [id])
+  etudiant User    @relation(fields: [etudiantId], references: [id])
+
+  // un étudiant ne peut signer qu'une fois par session
+  @@unique([sessionId, etudiantId])
+}
+
+model Attestation {
+  id         Int      @id @default(autoincrement())
+  etudiantId Int
+  periodeDu  DateTime
+  periodeAu  DateTime
+  cheminPdf  String
+  generee    DateTime @default(now())
+
+  etudiant User @relation(fields: [etudiantId], references: [id])
+}
+
+// ───────── Examens, jurys, grilles de compétences ─────────
+
+model Examen {
+  id          Int      @id @default(autoincrement())
+  promotionId Int
+  intitule    String
+  dateExamen  DateTime
+  salle       String?
+
+  promotion   Promotion    @relation(fields: [promotionId], references: [id])
+  jury        JuryMembre[]
+  evaluations Evaluation[]
+}
+
+model JuryMembre {
+  id       Int      @id @default(autoincrement())
+  examenId Int
+  userId   Int
+  roleJury RoleJury @default(MEMBRE)
+
+  examen Examen @relation(fields: [examenId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([examenId, userId])
+}
+
+model Competence {
+  id          Int    @id @default(autoincrement())
+  formationId Int
+  code        String
+  libelle     String
+
+  formation   Formation    @relation(fields: [formationId], references: [id])
+  evaluations Evaluation[]
+
+  @@unique([formationId, code])
+}
+
+model Evaluation {
+  id           Int               @id @default(autoincrement())
+  examenId     Int
+  etudiantId   Int
+  competenceId Int
+  niveau       NiveauAcquisition @default(NON_ACQUIS)
+  commentaire  String?
+
+  examen     Examen     @relation(fields: [examenId], references: [id])
+  etudiant   User       @relation(fields: [etudiantId], references: [id])
+  competence Competence @relation(fields: [competenceId], references: [id])
+
+  @@unique([examenId, etudiantId, competenceId])
+}
