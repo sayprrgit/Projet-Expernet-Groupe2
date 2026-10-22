@@ -223,7 +223,7 @@ const hasActiveFilters = () => {
   padding: 0.85rem 2.8rem 0.85rem 3.25rem;
   font-size: 1.05rem;
   color: var(--color-text-main);
-  background-color: var(--color-bg-page);
+  background-color: var(--color-bg-inset);
   border: 1.5px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   transition: all 0.2s ease;
@@ -261,7 +261,7 @@ const hasActiveFilters = () => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.85rem 1.25rem;
-  background: var(--color-bg-page);
+  background: var(--color-bg-inset);
   border: 1.5px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   color: var(--exp-navy-900);

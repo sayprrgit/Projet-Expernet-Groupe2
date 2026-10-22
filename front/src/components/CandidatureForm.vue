@@ -519,7 +519,7 @@ const resetForm = () => {
 <style scoped>
 .candidature-section {
   padding: 4.5rem 0;
-  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+  background: linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-card-subtle) 100%);
 }
 
 .candidature-card {
@@ -601,7 +601,7 @@ const resetForm = () => {
   display: flex;
   align-items: flex-start;
   padding: 1rem 1.2rem;
-  background: var(--color-bg-page);
+  background: var(--color-bg-inset);
   border: 2px solid var(--color-border-subtle);
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -866,7 +866,7 @@ const resetForm = () => {
 }
 
 .next-steps {
-  background: var(--color-bg-page);
+  background: var(--color-bg-inset);
   padding: 1.5rem;
   border-radius: var(--radius-md);
   text-align: left;

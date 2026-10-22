@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Formation } from '@/types/formation';
+import { CATEGORY_IMAGES } from '@/data/images';
 
 defineProps<{
   formation: Formation;
@@ -13,6 +14,15 @@ const emit = defineEmits<{
 
 <template>
   <article class="formation-card" :aria-labelledby="`card-title-${formation.id}`">
+    <figure class="formation-card__media">
+      <img
+        :src="CATEGORY_IMAGES[formation.category]"
+        :alt="`Illustration du cursus ${formation.categoryLabel}`"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+
     <div class="formation-card__header">
       <!-- Badges du haut -->
       <div class="card-badges">
@@ -122,6 +132,24 @@ const emit = defineEmits<{
   border-color: rgba(242, 140, 5, 0.4);
 }
 
+.formation-card__media {
+  margin: 0;
+  overflow: hidden;
+  background: var(--color-bg-inset);
+}
+
+.formation-card__media img {
+  display: block;
+  width: 100%;
+  height: 165px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.formation-card:hover .formation-card__media img {
+  transform: scale(1.04);
+}
+
 .formation-card__header {
   padding: 1.25rem 1.25rem 0.5rem;
   display: flex;
@@ -210,7 +238,7 @@ const emit = defineEmits<{
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.85rem 1rem;
-  background: var(--color-bg-page);
+  background: var(--color-bg-inset);
   border-radius: var(--radius-md);
   margin-bottom: 1rem;
 }

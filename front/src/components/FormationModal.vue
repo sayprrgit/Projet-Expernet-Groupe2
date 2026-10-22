@@ -317,7 +317,7 @@ const onApply = () => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
-  background: var(--color-bg-page);
+  background: var(--color-bg-inset);
   padding: 1.25rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border-subtle);
@@ -432,7 +432,7 @@ const onApply = () => {
 }
 
 .btn--secondary {
-  background: var(--color-bg-page);
+  background: var(--color-bg-inset);
   color: var(--exp-navy-900);
   border: 1px solid var(--color-border-strong);
 }

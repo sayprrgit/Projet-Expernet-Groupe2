@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { IMAGES } from '@/data/images';
+
 const currentYear = new Date().getFullYear();
 </script>
 
@@ -9,7 +11,7 @@ const currentYear = new Date().getFullYear();
         <!-- Colonne 1 : Brand & Mission -->
         <div class="footer-col footer-col--brand">
           <div class="footer-logo">
-            <span class="brand-icon">⚡</span>
+            <img class="brand-mark" :src="IMAGES.logoMarkWhite" alt="Logo Expernet" width="42" height="40" />
             <div class="brand-text">
               <span class="brand-title">EXPERNET</span>
               <span class="brand-subtitle">CAMPUS &amp; PRO • LA RÉUNION</span>
@@ -19,6 +21,7 @@ const currentYear = new Date().getFullYear();
             Depuis 2002, Expernet et Expernet Campus forment les experts de la Tech, de l'Informatique, de la Cybersécurité et du Digital à La Réunion.
           </p>
           <div class="footer-badges">
+            <img class="f-badge-image" :src="IMAGES.qualiopiWide" alt="Centre de formation certifié Qualiopi" loading="lazy" />
             <span class="f-badge">CFA Certifié Qualiopi</span>
             <span class="f-badge">Partenaires ENI, IPI, ESD, Digital Campus</span>
           </div>
@@ -51,28 +54,32 @@ const currentYear = new Date().getFullYear();
         <div class="footer-col">
           <h3 class="footer-heading">Formations Référence</h3>
           <ul class="footer-list footer-links">
-            <li><a href="#formations">BTS SIO (SISR &amp; SLAM)</a></li>
-            <li><a href="#formations">Bac+4 Administrateur Système &amp; Réseau (ENI)</a></li>
-            <li><a href="#formations">Bac+4 Concepteur Développeur d'Applications (ENI)</a></li>
-            <li><a href="#formations">Bachelor Chef de Projet Digital (Digital Campus)</a></li>
-            <li><a href="#formations">Bac+5 Hacking &amp; Cybersécurité (ESD)</a></li>
-            <li><a href="#formations">Bac+5 Directeur de Projet Informatique (IPI)</a></li>
-            <li><a href="#formations">Certifications Microsoft 365, Copilot &amp; TOSA</a></li>
+            <li><RouterLink to="/formations?type=campus">BTS SIO (SISR &amp; SLAM)</RouterLink></li>
+            <li><RouterLink to="/formations?type=campus">Bac+4 Administrateur Système &amp; Réseau (ENI)</RouterLink></li>
+            <li><RouterLink to="/formations?type=campus">Bac+4 Concepteur Développeur d'Applications (ENI)</RouterLink></li>
+            <li><RouterLink to="/formations?type=campus">Bachelor Chef de Projet Digital (Digital Campus)</RouterLink></li>
+            <li><RouterLink to="/formations?type=campus">Bac+5 Hacking &amp; Cybersécurité (ESD)</RouterLink></li>
+            <li><RouterLink to="/formations?type=campus">Bac+5 Directeur de Projet Informatique (IPI)</RouterLink></li>
+            <li><RouterLink to="/formations?type=pro">Certifications Microsoft 365, Copilot &amp; TOSA</RouterLink></li>
           </ul>
         </div>
 
-        <!-- Colonne 4 : Accessibilité & Légal -->
+        <!-- Colonne 4 : Espaces & Légal -->
         <div class="footer-col">
-          <h3 class="footer-heading">Accessibilité &amp; Légal</h3>
+          <h3 class="footer-heading">Espaces &amp; Légal</h3>
           <ul class="footer-list footer-links">
+            <li><RouterLink to="/galia">GALIA — Espace apprenant</RouterLink></li>
+            <li><RouterLink to="/teams">Teams — Espace collaboratif</RouterLink></li>
+            <li><RouterLink to="/planning">Planning des sessions</RouterLink></li>
+            <li><RouterLink to="/a-propos">Notre histoire &amp; notre équipe</RouterLink></li>
+            <li><RouterLink to="/docs">Documentation API</RouterLink></li>
             <li>
               <span class="rgaa-status">
                 Accessibilité numérique : <strong>Conformité RGAA</strong>
               </span>
             </li>
-            <li><a href="#candidature-section">Dépôt de candidature en ligne</a></li>
-            <li><a href="#candidature-section">Politique de confidentialité (RGPD)</a></li>
-            <li><a href="#top">Mentions Légales</a></li>
+            <li><RouterLink to="/candidature">Dépôt de candidature en ligne</RouterLink></li>
+            <li><RouterLink to="/a-propos">Mentions légales &amp; RGPD</RouterLink></li>
           </ul>
         </div>
       </div>
@@ -109,16 +116,11 @@ const currentYear = new Date().getFullYear();
   margin-bottom: 1.25rem;
 }
 
-.brand-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
+.brand-mark {
+  display: block;
   height: 40px;
-  background: linear-gradient(135deg, var(--exp-orange), #ff9f24);
-  color: #fff;
-  font-size: 1.2rem;
-  border-radius: 8px;
+  width: auto;
+  object-fit: contain;
 }
 
 .brand-text {
@@ -151,6 +153,16 @@ const currentYear = new Date().getFullYear();
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.f-badge-image {
+  height: 34px;
+  width: auto;
+  padding: 0.2rem 0.5rem;
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  object-fit: contain;
 }
 
 .f-badge {

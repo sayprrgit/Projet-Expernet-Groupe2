@@ -1,7 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { IMAGES } from '@/data/images';
 
+const route = useRoute();
 const isMenuOpen = ref(false);
+const isSpacesOpen = ref(false);
+
+const NAV_LINKS = [
+  { label: 'Accueil', to: '/' },
+  { label: 'Formations', to: '/formations' },
+  { label: 'Campus', to: '/campus' },
+  { label: 'Pro', to: '/expernet-pro' },
+  { label: 'À propos', to: '/a-propos' },
+  { label: 'Planning', to: '/planning' },
+];
+
+const SPACES = [
+  { label: 'GALIA — Espace apprenant', to: '/galia' },
+  { label: 'Teams — Espace collaboratif', to: '/teams' },
+];
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -9,63 +27,67 @@ const toggleMenu = () => {
 
 const closeMenu = () => {
   isMenuOpen.value = false;
+  isSpacesOpen.value = false;
 };
+
+watch(() => route.fullPath, closeMenu);
 </script>
 
 <template>
   <header class="navbar" role="banner">
-    <!-- Skip link pour conformité RGAA -->
-    <a href="#formations" class="skip-link">Aller directement aux formations</a>
-    <a href="#candidature-section" class="skip-link">Aller au formulaire de candidature</a>
-
     <div class="container navbar__inner">
-      <div class="navbar__brand">
-        <a href="#top" class="brand-link" aria-label="Accueil Expernet et Expernet Campus Réunion">
-          <div class="brand-logo-badge">
-            <span class="brand-icon">⚡</span>
-            <div class="brand-text">
-              <span class="brand-title">EXPERNET</span>
-              <span class="brand-subtitle">CAMPUS &amp; PRO • LA RÉUNION</span>
-            </div>
-          </div>
-        </a>
-      </div>
+      <RouterLink to="/" class="brand-link" aria-label="Accueil Expernet et Expernet Campus Réunion">
+        <span class="brand-logo-badge">
+          <img class="brand-mark" :src="IMAGES.logoMarkWhite" alt="Logo Expernet" width="44" height="42" />
+          <span class="brand-text">
+            <span class="brand-title">EXPERNET</span>
+            <span class="brand-subtitle">CAMPUS &amp; PRO • LA RÉUNION</span>
+          </span>
+        </span>
+      </RouterLink>
 
-      <!-- Navigation desktop sans api doc -->
       <nav class="navbar__nav" aria-label="Navigation principale">
         <ul class="nav-list">
-          <li>
-            <a href="#formations" class="nav-link">Toutes les Formations</a>
+          <li v-for="link in NAV_LINKS" :key="link.to">
+            <RouterLink :to="link.to" class="nav-link">{{ link.label }}</RouterLink>
           </li>
-          <li>
-            <a href="#expernet-campus" class="nav-link">Expernet Campus (Alternance)</a>
-          </li>
-          <li>
-            <a href="#expernet-pro" class="nav-link">Expernet Pro (CPF &amp; Salariés)</a>
-          </li>
-          <li>
-            <a href="#candidature-section" class="nav-link">Candidature</a>
+          <li class="nav-item--dropdown" @mouseleave="isSpacesOpen = false">
+            <button
+              type="button"
+              class="nav-link nav-link--button"
+              :aria-expanded="isSpacesOpen"
+              aria-haspopup="true"
+              @click="isSpacesOpen = !isSpacesOpen"
+            >
+              Espaces
+              <span class="nav-caret" aria-hidden="true">▾</span>
+            </button>
+            <ul v-show="isSpacesOpen" class="nav-dropdown">
+              <li v-for="space in SPACES" :key="space.to">
+                <RouterLink :to="space.to" class="nav-dropdown__link" @click="isSpacesOpen = false">
+                  {{ space.label }}
+                </RouterLink>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>
 
-      <!-- CTA -->
       <div class="navbar__actions">
-        <a href="#candidature-section" class="btn btn--primary">
+        <RouterLink to="/candidature" class="btn btn--primary">
           <span>Candidater</span>
           <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
-        </a>
+        </RouterLink>
 
-        <!-- Bouton menu mobile -->
         <button
           type="button"
           class="menu-toggle"
           :aria-expanded="isMenuOpen"
           aria-controls="mobile-menu"
-          aria-label="Ouvrir le menu de navigation"
+          :aria-label="isMenuOpen ? 'Fermer le menu de navigation' : 'Ouvrir le menu de navigation'"
           @click="toggleMenu"
         >
           <span class="menu-bar"></span>
@@ -75,7 +97,6 @@ const closeMenu = () => {
       </div>
     </div>
 
-    <!-- Menu mobile déroulant -->
     <div
       v-if="isMenuOpen"
       id="mobile-menu"
@@ -87,24 +108,17 @@ const closeMenu = () => {
       <div class="container mobile-menu__inner">
         <nav aria-label="Navigation mobile">
           <ul class="mobile-nav-list">
-            <li>
-              <a href="#formations" class="mobile-nav-link" @click="closeMenu">Toutes les Formations</a>
-            </li>
-            <li>
-              <a href="#expernet-campus" class="mobile-nav-link" @click="closeMenu">Expernet Campus (Alternance)</a>
-            </li>
-            <li>
-              <a href="#expernet-pro" class="mobile-nav-link" @click="closeMenu">Expernet Pro (CPF &amp; Entreprises)</a>
-            </li>
-            <li>
-              <a href="#candidature-section" class="mobile-nav-link" @click="closeMenu">Déposer une Candidature</a>
+            <li v-for="link in [...NAV_LINKS, ...SPACES]" :key="link.to">
+              <RouterLink :to="link.to" class="mobile-nav-link" @click="closeMenu">
+                {{ link.label }}
+              </RouterLink>
             </li>
           </ul>
         </nav>
         <div class="mobile-menu__cta">
-          <a href="#candidature-section" class="btn btn--primary btn--full" @click="closeMenu">
-            Candidater maintenant (Rentrée 2026-2027)
-          </a>
+          <RouterLink to="/candidature" class="btn btn--primary btn--full" @click="closeMenu">
+            Candidater
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -144,17 +158,11 @@ const closeMenu = () => {
   gap: 0.75rem;
 }
 
-.brand-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, var(--exp-orange), #ff9f24);
-  color: #fff;
-  font-size: 1.25rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(242, 140, 5, 0.4);
+.brand-mark {
+  display: block;
+  height: 42px;
+  width: auto;
+  object-fit: contain;
 }
 
 .brand-text {
@@ -180,7 +188,7 @@ const closeMenu = () => {
 .nav-list {
   display: flex;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1.35rem;
   list-style: none;
 }
 
@@ -210,6 +218,62 @@ const closeMenu = () => {
 
 .nav-link:hover::after {
   width: 100%;
+}
+
+.nav-link.router-link-active {
+  color: var(--exp-orange);
+}
+
+.nav-link.router-link-active::after {
+  width: 100%;
+}
+
+.nav-item--dropdown {
+  position: relative;
+}
+
+.nav-link--button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-caret {
+  font-size: 0.7rem;
+  margin-left: 0.1rem;
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 270px;
+  padding: 0.5rem;
+  list-style: none;
+  background: var(--exp-navy-900);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 2px solid var(--exp-orange);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  z-index: 20;
+}
+
+.nav-dropdown__link {
+  display: block;
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+}
+
+.nav-dropdown__link:hover,
+.nav-dropdown__link.router-link-active {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--exp-orange);
 }
 
 .navbar__actions {
@@ -265,7 +329,7 @@ const closeMenu = () => {
   border-radius: 2px;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
   .navbar__nav {
     display: none;
   }
@@ -303,6 +367,10 @@ const closeMenu = () => {
   }
 
   .mobile-nav-link:hover {
+    color: var(--exp-orange);
+  }
+
+  .mobile-nav-link.router-link-active {
     color: var(--exp-orange);
   }
 
