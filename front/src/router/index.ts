@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '@/views/HomeView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,11 +10,22 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/docs',
-      name: 'docs',
-      component: () => import('@/views/DocsView.vue'),
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
     },
   ],
-})
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth',
+      };
+    }
+    return { top: 0, behavior: 'smooth' };
+  },
+});
 
-export default router
+export default router;

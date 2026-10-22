@@ -1,0 +1,260 @@
+<script setup lang="ts">
+const currentYear = new Date().getFullYear();
+</script>
+
+<template>
+  <footer class="app-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-grid">
+        <!-- Colonne 1 : Brand & Mission -->
+        <div class="footer-col footer-col--brand">
+          <div class="footer-logo">
+            <span class="brand-icon">⚡</span>
+            <div class="brand-text">
+              <span class="brand-title">EXPERNET</span>
+              <span class="brand-subtitle">CAMPUS &amp; PRO • LA RÉUNION</span>
+            </div>
+          </div>
+          <p class="footer-text">
+            Depuis 2002, Expernet et Expernet Campus forment les experts de la Tech, de l'Informatique, de la Cybersécurité et du Digital à La Réunion.
+          </p>
+          <div class="footer-badges">
+            <span class="f-badge">CFA Certifié Qualiopi</span>
+            <span class="f-badge">Partenaires ENI, IPI, ESD, Digital Campus</span>
+          </div>
+        </div>
+
+        <!-- Colonne 2 : Campus Réunion -->
+        <div class="footer-col">
+          <h3 class="footer-heading">Nos Campus à La Réunion</h3>
+          <ul class="footer-list">
+            <li class="campus-item">
+              <strong>📍 Campus Le Port</strong>
+              <span>6 rue Raymond Mondon, 97420 Le Port</span>
+              <a href="tel:+262262219045" class="contact-link">📞 0262 21 90 45</a>
+            </li>
+            <li class="campus-item">
+              <strong>📍 Campus Nord (Sainte-Clotilde)</strong>
+              <span>Parc Technologique Universitaire</span>
+              <span>2 rue Émile Hugot, 97490 Sainte-Clotilde</span>
+              <a href="tel:+262262294020" class="contact-link">📞 0262 29 40 20</a>
+            </li>
+            <li class="campus-item">
+              <strong>📍 Campus Sud (Saint-Pierre)</strong>
+              <span>Pôle d'activités Sud Ouest, 97410 Saint-Pierre</span>
+              <a href="tel:+262262219045" class="contact-link">📞 0262 21 90 45</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Colonne 3 : Filières phares -->
+        <div class="footer-col">
+          <h3 class="footer-heading">Formations Référence</h3>
+          <ul class="footer-list footer-links">
+            <li><a href="#formations">BTS SIO (SISR &amp; SLAM)</a></li>
+            <li><a href="#formations">Bac+4 Administrateur Système &amp; Réseau (ENI)</a></li>
+            <li><a href="#formations">Bac+4 Concepteur Développeur d'Applications (ENI)</a></li>
+            <li><a href="#formations">Bachelor Chef de Projet Digital (Digital Campus)</a></li>
+            <li><a href="#formations">Bac+5 Hacking &amp; Cybersécurité (ESD)</a></li>
+            <li><a href="#formations">Bac+5 Directeur de Projet Informatique (IPI)</a></li>
+            <li><a href="#formations">Certifications Microsoft 365, Copilot &amp; TOSA</a></li>
+          </ul>
+        </div>
+
+        <!-- Colonne 4 : Accessibilité & Légal -->
+        <div class="footer-col">
+          <h3 class="footer-heading">Accessibilité &amp; Légal</h3>
+          <ul class="footer-list footer-links">
+            <li>
+              <span class="rgaa-status">
+                Accessibilité numérique : <strong>Conformité RGAA</strong>
+              </span>
+            </li>
+            <li><a href="#candidature-section">Dépôt de candidature en ligne</a></li>
+            <li><a href="#candidature-section">Politique de confidentialité (RGPD)</a></li>
+            <li><a href="#top">Mentions Légales</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bas de page copyright -->
+      <div class="footer-bottom">
+        <p>&copy; {{ currentYear }} Expernet SAS &amp; Expernet Campus Réunion. Tous droits réservés.</p>
+        <p class="tagline">Façonner les talents tech et digitaux de l'océan Indien.</p>
+      </div>
+    </div>
+  </footer>
+</template>
+
+<style scoped>
+.app-footer {
+  background: var(--exp-navy-950);
+  color: #ffffff;
+  padding: 4.5rem 0 2rem;
+  border-top: 3px solid var(--exp-orange);
+  margin-top: auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1.3fr 1fr 1fr;
+  gap: 2.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--exp-orange), #ff9f24);
+  color: #fff;
+  font-size: 1.2rem;
+  border-radius: 8px;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--exp-blue);
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.footer-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.f-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.footer-heading {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.footer-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.campus-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.campus-item strong {
+  color: #ffffff;
+}
+
+.contact-link {
+  color: var(--exp-blue);
+  font-weight: 700;
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+  color: #7dd3fc;
+}
+
+.footer-links {
+  gap: 0.6rem;
+}
+
+.footer-links a {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--exp-orange);
+}
+
+.rgaa-status {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tagline {
+  color: var(--exp-orange);
+  font-weight: 600;
+}
+
+@media (max-width: 992px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+</style>
