@@ -22,9 +22,6 @@ export class CreateCandidatureDto {
   @ApiProperty({ example: 'campus', enum: ['campus', 'pro', 'info'], description: 'Type de démarche' })
   typeDemarche!: 'campus' | 'pro' | 'info';
 
-  @ApiProperty({ example: 'Sainte-Clotilde', enum: ['Sainte-Clotilde', 'Saint-Pierre', 'Distanciel'], description: 'Campus de préférence' })
-  campusPrefere!: string;
-
   @ApiProperty({ example: 'etudiant', enum: ['lyceen', 'etudiant', 'reconversion', 'salarie'], description: 'Statut actuel du candidat' })
   statutActuel!: string;
 

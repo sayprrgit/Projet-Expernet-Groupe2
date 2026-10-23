@@ -17,7 +17,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 2 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde', 'Saint-Pierre'],
+    campus: ['Le Port'],
     shortDescription: 'Apprenez à installer, administrer et sécuriser les parcs informatiques, serveurs et équipements réseaux des entreprises réunionnaises.',
     prerequisites: [
       'Titulaire d’un Baccalauréat (Général, STI2D, STMG, Bac Pro SN ou équivalent)',
@@ -62,7 +62,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 2 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde', 'Saint-Pierre'],
+    campus: ['Le Port'],
     shortDescription: 'Devenez développeur d’applications web, mobiles et logicielles d’entreprise au cœur de la tech à La Réunion.',
     prerequisites: [
       'Titulaire d’un Baccalauréat (toutes séries)',
@@ -105,7 +105,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 2 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde'],
+    campus: ['Le Port'],
     shortDescription: 'Apprenez à créer une identité visuelle complète, maîtriser les couleurs, typographies, la suite Adobe et intégrer les outils d’IA générative.',
     prerequisites: [
       'Titulaire d’un Baccalauréat',
@@ -147,7 +147,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 3 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde', 'Saint-Pierre'],
+    campus: ['Le Port'],
     shortDescription: 'Formation d’excellence en partenariat avec l’école ENI pour concevoir, sécuriser et administrer les infrastructures Cloud et systèmes hybrides.',
     prerequisites: [
       'Titulaire d’un Bac+2 en informatique (BTS SIO SISR, DUT/BUT Réseaux, Titre Pro TSSR)',
@@ -187,7 +187,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 3 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde'],
+    campus: ['Le Port'],
     shortDescription: 'Développez des architectures logicielles n-tiers, des applications web & mobiles avec les technologies les plus demandées (Java, React, Node, SQL).',
     prerequisites: [
       'Titulaire d’un Bac+2 informatique (BTS SIO SLAM, DUT Informatique, Titre Pro DWWM)',
@@ -228,7 +228,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 3 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde', 'Saint-Pierre'],
+    campus: ['Le Port'],
     shortDescription: 'Spécialisez-vous en stratégie webmarketing, référencement SEO/SEA, acquisition de trafic, social media et gestion de projet e-commerce.',
     prerequisites: [
       'Titulaire d’un Bac+2 (BTS Com, MCO, SAM, Graphisme, DUT TC, etc.)',
@@ -269,7 +269,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 3 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde'],
+    campus: ['Le Port'],
     shortDescription: 'Devenez expert en cybersécurité offensive (Ethical Hacking, pentest) et défensive (SOC, analyse forensique, gouvernance ISO 27001).',
     prerequisites: [
       'Bac+3 ou Bac+4 validé en informatique, réseaux ou cybersécurité',
@@ -311,7 +311,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 3 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde'],
+    campus: ['Le Port'],
     shortDescription: 'Pilotez la transformation numérique des entreprises réunionnaises, le budget des systèmes d’information et la conduite d’équipes tech.',
     prerequisites: [
       'Titulaire d’un Bac+3 ou Bac+4 en informatique, gestion ou sciences de l’ingénieur',
@@ -352,7 +352,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: '1 semaine en cours / 3 semaines en entreprise',
     isCpfEligible: true,
     isAlternance: true,
-    campus: ['Sainte-Clotilde'],
+    campus: ['Le Port'],
     shortDescription: 'Pilotez les stratégies de marque digitale, le brand content, la transformation par l’IA et la communication d’influence à La Réunion.',
     prerequisites: [
       'Bac+3 validé en communication, marketing ou digital',
@@ -392,7 +392,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: 'Temps plein présentiel ou distanciel',
     isCpfEligible: false,
     isAlternance: false,
-    campus: ['Sainte-Clotilde', 'Distanciel'],
+    campus: ['Le Port', 'Distanciel'],
     shortDescription: 'Maîtrisez le déploiement et la gestion d’Active Directory, DNS, DHCP, GPO et automatisez les tâches système avec des scripts PowerShell v7.',
     prerequisites: [
       'Bonnes connaissances de l’environnement Windows et notions de base en réseau'
@@ -430,7 +430,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: 'Temps plein intensif',
     isCpfEligible: true,
     isAlternance: false,
-    campus: ['Sainte-Clotilde', 'Saint-Pierre', 'Distanciel'],
+    campus: ['Le Port', 'Distanciel'],
     shortDescription: 'Prenez en main la gestion des licences Microsoft 365, Teams, SharePoint, la sécurité Entra ID et le déploiement de Copilot IA.',
     prerequisites: [
       'Pratique régulière des outils bureautiques et notions d’administration de base'
@@ -468,7 +468,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: 'En présentiel ou intra-entreprise',
     isCpfEligible: true,
     isAlternance: false,
-    campus: ['Sainte-Clotilde', 'Saint-Pierre'],
+    campus: ['Le Port'],
     shortDescription: 'Sensibilisez et formez vos collaborateurs aux cybermenaces réunionnaises (phishing, rançongiciels, faux ordres de virement) et à la conformité RGPD.',
     prerequisites: [
       'Aucun prérequis technique nécessaire : accessible à tout collaborateur ou dirigeant'
@@ -506,7 +506,7 @@ export const MOCK_FORMATIONS: Formation[] = [
     pace: 'Temps plein ou modules fractionnés',
     isCpfEligible: true,
     isAlternance: false,
-    campus: ['Sainte-Clotilde', 'Saint-Pierre', 'Distanciel'],
+    campus: ['Le Port', 'Distanciel'],
     shortDescription: 'Maîtrisez les fonctions complexes d’Excel (RECHERCHEX, tableaux croisés dynamiques, Power Query, macros) avec passage de l’examen TOSA.',
     prerequisites: [
       'Connaissance des fonctions de base d’Excel (calculs simples, mise en forme)'

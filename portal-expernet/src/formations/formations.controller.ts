@@ -33,7 +33,7 @@ export class FormationsController {
   @ApiQuery({ name: 'level', required: false, description: 'Niveau (bac+2, bac+3, bac+5, certification)' })
   @ApiQuery({ name: 'type', required: false, description: 'Type d’offre (campus, pro)' })
   @ApiQuery({ name: 'cpfOnly', required: false, type: Boolean, description: 'Filtrer sur les formations éligibles CPF' })
-  @ApiQuery({ name: 'campus', required: false, description: 'Campus (Sainte-Clotilde, Saint-Pierre)' })
+  @ApiQuery({ name: 'campus', required: false, description: 'Campus (Le Port)' })
   findAll(
     @Query('search') search?: string,
     @Query('category') category?: string,

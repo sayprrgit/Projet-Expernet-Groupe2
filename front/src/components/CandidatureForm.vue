@@ -16,7 +16,6 @@ const form = reactive<CandidatureFormInput>({
   codePostal: '97400',
   formationId: '',
   typeDemarche: 'campus',
-  campusPrefere: 'Sainte-Clotilde',
   statutActuel: 'etudiant',
   message: '',
   rgpdConsent: false,
@@ -268,11 +267,11 @@ const resetForm = () => {
               </div>
             </fieldset>
 
-            <!-- Formation souhaitée & Campus -->
+            <!-- Formation souhaitée -->
             <fieldset class="form-fieldset">
               <legend class="fieldset-legend">2. Choix de la formation</legend>
               <div class="form-row">
-                <div class="form-group flex-2">
+                <div class="form-group">
                   <label for="field-formationId" class="form-label">
                     Formation souhaitée <span class="required" aria-hidden="true">*</span>
                   </label>
@@ -302,21 +301,6 @@ const resetForm = () => {
                   >
                     {{ errors.formationId }}
                   </span>
-                </div>
-
-                <div class="form-group flex-1">
-                  <label for="field-campusPrefere" class="form-label">
-                    Campus préféré <span class="required" aria-hidden="true">*</span>
-                  </label>
-                  <select
-                    id="field-campusPrefere"
-                    v-model="form.campusPrefere"
-                    class="form-select"
-                  >
-                    <option value="Sainte-Clotilde">📍 Sainte-Clotilde (Campus Nord)</option>
-                    <option value="Saint-Pierre">📍 Saint-Pierre (Campus Sud)</option>
-                    <option value="Distanciel">🌐 Distanciel / Hybride</option>
-                  </select>
                 </div>
               </div>
             </fieldset>
@@ -659,10 +643,6 @@ const resetForm = () => {
   gap: 0.45rem;
   flex: 1;
   min-width: 220px;
-}
-
-.flex-2 {
-  flex: 2;
 }
 
 .flex-small {

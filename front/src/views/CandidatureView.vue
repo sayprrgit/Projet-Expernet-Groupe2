@@ -46,9 +46,9 @@ onMounted(async () => {
 
     <section class="section--tight">
       <div class="container">
-        <div class="candidature-intro">
+        <!-- <div class="candidature-intro">
           <img :src="IMAGES.logoMarkBlue" alt="Expernet" class="candidature-logo" loading="lazy" />
-        </div>
+        </div> -->
 
         <ul class="reassurance">
           <li v-for="item in REASSURANCE" :key="item.title">

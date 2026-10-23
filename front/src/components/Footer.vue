@@ -29,22 +29,11 @@ const currentYear = new Date().getFullYear();
 
         <!-- Colonne 2 : Campus Réunion -->
         <div class="footer-col">
-          <h3 class="footer-heading">Nos Campus à La Réunion</h3>
+          <h3 class="footer-heading">Notre campus à La Réunion</h3>
           <ul class="footer-list">
             <li class="campus-item">
               <strong>📍 Campus Le Port</strong>
               <span>6 rue Raymond Mondon, 97420 Le Port</span>
-              <a href="tel:+262262219045" class="contact-link">📞 0262 21 90 45</a>
-            </li>
-            <li class="campus-item">
-              <strong>📍 Campus Nord (Sainte-Clotilde)</strong>
-              <span>Parc Technologique Universitaire</span>
-              <span>2 rue Émile Hugot, 97490 Sainte-Clotilde</span>
-              <a href="tel:+262262294020" class="contact-link">📞 0262 29 40 20</a>
-            </li>
-            <li class="campus-item">
-              <strong>📍 Campus Sud (Saint-Pierre)</strong>
-              <span>Pôle d'activités Sud Ouest, 97410 Saint-Pierre</span>
               <a href="tel:+262262219045" class="contact-link">📞 0262 21 90 45</a>
             </li>
           </ul>

@@ -118,20 +118,6 @@ export const CAMPUS_SITES: CampusSite[] = [
     phone: '0262 21 90 45',
     note: 'Siège & pôle alternance',
   },
-  {
-    name: 'Campus Nord',
-    city: 'Sainte-Clotilde',
-    address: '2 rue Émile Hugot, Parc Technologique Universitaire, 97490 Sainte-Clotilde',
-    phone: '0262 29 40 20',
-    note: 'Cursus informatique & marketing',
-  },
-  {
-    name: 'Campus Sud',
-    city: 'Saint-Pierre',
-    address: "Pôle d'activités Sud Ouest, 97410 Saint-Pierre",
-    phone: '0262 21 90 45',
-    note: 'Alternance & formation continue',
-  },
 ];
 
 export const PARTNERS = ['ENI', 'IPI France', 'ESD Cybersecurity Academy', 'Digital Campus', 'Microsoft', 'Qualiopi'];

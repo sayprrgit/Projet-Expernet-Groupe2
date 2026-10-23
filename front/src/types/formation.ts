@@ -14,7 +14,7 @@ export interface Formation {
   pace: string;
   isCpfEligible: boolean;
   isAlternance: boolean;
-  campus: ('Sainte-Clotilde' | 'Saint-Pierre' | 'Distanciel')[];
+  campus: ('Le Port' | 'Distanciel')[];
   shortDescription: string;
   prerequisites: string[];
   objectives: string[];
@@ -42,7 +42,6 @@ export interface CandidatureFormInput {
   codePostal: string;
   formationId: string;
   typeDemarche: 'campus' | 'pro' | 'info';
-  campusPrefere: string;
   statutActuel: string;
   message: string;
   rgpdConsent: boolean;

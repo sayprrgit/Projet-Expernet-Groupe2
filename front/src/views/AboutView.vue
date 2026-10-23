@@ -132,7 +132,7 @@ const initials = (name: string) =>
       <div class="container split">
         <div>
           <span class="eyebrow">Nos campus</span>
-          <h2 class="section-title">Trois sites à La Réunion</h2>
+          <h2 class="section-title">Notre campus au Port</h2>
           <ul class="site-list">
             <li v-for="site in CAMPUS_SITES" :key="site.name">
               <h3>{{ site.name }} <span class="site-city">{{ site.city }}</span></h3>

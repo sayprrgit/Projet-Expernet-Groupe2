@@ -133,8 +133,7 @@ const hasActiveFilters = () => {
                 @change="updateField('campus', ($event.target as HTMLSelectElement).value)"
               >
                 <option value="all">Tous les campus (974)</option>
-                <option value="Sainte-Clotilde">📍 Sainte-Clotilde (Nord)</option>
-                <option value="Saint-Pierre">📍 Saint-Pierre (Sud)</option>
+                <option value="Le Port">📍 Le Port</option>
                 <option value="Distanciel">🌐 Distanciel / Hybride</option>
               </select>
             </div>

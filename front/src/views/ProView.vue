@@ -191,7 +191,7 @@ onMounted(loadFormations);
           <ul class="contact-list">
             <li><a href="tel:+262262294020">📞 0262 29 40 20</a></li>
             <li><a href="mailto:contact@expernet.re">✉️ contact@expernet.re</a></li>
-            <li>📍 Le Port · Sainte-Clotilde · Saint-Pierre</li>
+            <li>📍 Le Port</li>
           </ul>
           <BaseButton to="/candidature" block>Demander un devis</BaseButton>
         </aside>

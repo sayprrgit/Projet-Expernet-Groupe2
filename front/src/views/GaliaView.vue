@@ -137,7 +137,7 @@ const STEPS = [
               <span aria-hidden="true">🗓️</span>
               <div>
                 <strong>Prochain regroupement</strong>
-                <span>Lundi 9 novembre · Campus Nord</span>
+                <span>Lundi 9 novembre · Campus Le Port</span>
               </div>
             </li>
             <li>

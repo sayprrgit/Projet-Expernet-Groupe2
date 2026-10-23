@@ -19,7 +19,7 @@ const emit = defineEmits<{
         <div class="hero__badges">
           <span class="badge badge--tech">
             <span class="badge-dot"></span>
-            La Réunion • Le Port &amp; Sainte-Clotilde &amp; Saint-Pierre
+            La Réunion • Le Port
           </span>
           <span class="badge badge--qualiopi">
             CFA Qualiopi • Titres RNCP d'État &amp; Partenaires ENI, IPI, ESD, Digital Campus

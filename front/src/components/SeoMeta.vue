@@ -15,7 +15,7 @@ const props = withDefaults(
     description:
       'Portail unifié Expernet et Expernet Campus à La Réunion (974). Formations d’excellence du Bac+2 au Bac+5 en alternance (BTS SIO, Bachelors, Mastères) et certifications continues éligibles CPF.',
     keywords:
-      'Expernet, Expernet Campus, La Réunion, BTS SIO, Bachelor développeur web, Cybersécurité, Alternance 974, Formation CPF, Titre RNCP, Sainte-Clotilde, Saint-Pierre',
+      'Expernet, Expernet Campus, La Réunion, BTS SIO, Bachelor développeur web, Cybersécurité, Alternance 974, Formation CPF, Titre RNCP, Le Port',
     url: 'https://expernet.re/',
     totalFormations: 12,
   },
@@ -64,19 +64,13 @@ watchEffect(() => {
         url: 'https://expernet.re',
         logo: 'https://expernet-campus.re/wp-content/uploads/2022/02/expernet-campus-informatique-et-marketing-digital.png',
         description: props.description,
-        telephone: '+262262294020',
+        telephone: '+262262219045',
         address: [
           {
             '@type': 'PostalAddress',
-            streetAddress: '2 rue Émile Hugot, Parc Technologique Universitaire',
-            addressLocality: 'Sainte-Clotilde',
-            postalCode: '97490',
-            addressCountry: 'FR',
-          },
-          {
-            '@type': 'PostalAddress',
-            addressLocality: 'Saint-Pierre',
-            postalCode: '97410',
+            streetAddress: '6 rue Raymond Mondon',
+            addressLocality: 'Le Port',
+            postalCode: '97420',
             addressCountry: 'FR',
           },
         ],
