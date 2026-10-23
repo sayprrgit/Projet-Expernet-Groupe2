@@ -107,6 +107,11 @@ export type Competence = Prisma.CompetenceModel
  */
 export type Evaluation = Prisma.EvaluationModel
 /**
+ * Model PlanningEvent
+ * 
+ */
+export type PlanningEvent = Prisma.PlanningEventModel
+/**
  * Model Canal
  * 
  */

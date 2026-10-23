@@ -38,36 +38,51 @@ export type CandidatureSumAggregateOutputType = {
 
 export type CandidatureMinAggregateOutputType = {
   id: number | null
+  reference: string | null
   formationId: number | null
   nom: string | null
   prenom: string | null
   email: string | null
   telephone: string | null
+  codePostal: string | null
+  typeDemarche: string | null
+  statutActuel: string | null
   motivation: string | null
+  rgpdConsent: boolean | null
   statut: $Enums.StatutCandidature | null
   createdAt: Date | null
 }
 
 export type CandidatureMaxAggregateOutputType = {
   id: number | null
+  reference: string | null
   formationId: number | null
   nom: string | null
   prenom: string | null
   email: string | null
   telephone: string | null
+  codePostal: string | null
+  typeDemarche: string | null
+  statutActuel: string | null
   motivation: string | null
+  rgpdConsent: boolean | null
   statut: $Enums.StatutCandidature | null
   createdAt: Date | null
 }
 
 export type CandidatureCountAggregateOutputType = {
   id: number
+  reference: number
   formationId: number
   nom: number
   prenom: number
   email: number
   telephone: number
+  codePostal: number
+  typeDemarche: number
+  statutActuel: number
   motivation: number
+  rgpdConsent: number
   statut: number
   createdAt: number
   _all: number
@@ -86,36 +101,51 @@ export type CandidatureSumAggregateInputType = {
 
 export type CandidatureMinAggregateInputType = {
   id?: true
+  reference?: true
   formationId?: true
   nom?: true
   prenom?: true
   email?: true
   telephone?: true
+  codePostal?: true
+  typeDemarche?: true
+  statutActuel?: true
   motivation?: true
+  rgpdConsent?: true
   statut?: true
   createdAt?: true
 }
 
 export type CandidatureMaxAggregateInputType = {
   id?: true
+  reference?: true
   formationId?: true
   nom?: true
   prenom?: true
   email?: true
   telephone?: true
+  codePostal?: true
+  typeDemarche?: true
+  statutActuel?: true
   motivation?: true
+  rgpdConsent?: true
   statut?: true
   createdAt?: true
 }
 
 export type CandidatureCountAggregateInputType = {
   id?: true
+  reference?: true
   formationId?: true
   nom?: true
   prenom?: true
   email?: true
   telephone?: true
+  codePostal?: true
+  typeDemarche?: true
+  statutActuel?: true
   motivation?: true
+  rgpdConsent?: true
   statut?: true
   createdAt?: true
   _all?: true
@@ -209,12 +239,17 @@ export type CandidatureGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type CandidatureGroupByOutputType = {
   id: number
-  formationId: number
+  reference: string
+  formationId: number | null
   nom: string
   prenom: string
   email: string
-  telephone: string | null
+  telephone: string
+  codePostal: string
+  typeDemarche: string
+  statutActuel: string
   motivation: string
+  rgpdConsent: boolean
   statut: $Enums.StatutCandidature
   createdAt: Date
   _count: CandidatureCountAggregateOutputType | null
@@ -244,25 +279,35 @@ export type CandidatureWhereInput = {
   OR?: Prisma.CandidatureWhereInput[]
   NOT?: Prisma.CandidatureWhereInput | Prisma.CandidatureWhereInput[]
   id?: Prisma.IntFilter<"Candidature"> | number
-  formationId?: Prisma.IntFilter<"Candidature"> | number
+  reference?: Prisma.StringFilter<"Candidature"> | string
+  formationId?: Prisma.IntNullableFilter<"Candidature"> | number | null
   nom?: Prisma.StringFilter<"Candidature"> | string
   prenom?: Prisma.StringFilter<"Candidature"> | string
   email?: Prisma.StringFilter<"Candidature"> | string
-  telephone?: Prisma.StringNullableFilter<"Candidature"> | string | null
+  telephone?: Prisma.StringFilter<"Candidature"> | string
+  codePostal?: Prisma.StringFilter<"Candidature"> | string
+  typeDemarche?: Prisma.StringFilter<"Candidature"> | string
+  statutActuel?: Prisma.StringFilter<"Candidature"> | string
   motivation?: Prisma.StringFilter<"Candidature"> | string
+  rgpdConsent?: Prisma.BoolFilter<"Candidature"> | boolean
   statut?: Prisma.EnumStatutCandidatureFilter<"Candidature"> | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFilter<"Candidature"> | Date | string
-  formation?: Prisma.XOR<Prisma.FormationScalarRelationFilter, Prisma.FormationWhereInput>
+  formation?: Prisma.XOR<Prisma.FormationNullableScalarRelationFilter, Prisma.FormationWhereInput> | null
 }
 
 export type CandidatureOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  formationId?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
+  formationId?: Prisma.SortOrderInput | Prisma.SortOrder
   nom?: Prisma.SortOrder
   prenom?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  telephone?: Prisma.SortOrderInput | Prisma.SortOrder
+  telephone?: Prisma.SortOrder
+  codePostal?: Prisma.SortOrder
+  typeDemarche?: Prisma.SortOrder
+  statutActuel?: Prisma.SortOrder
   motivation?: Prisma.SortOrder
+  rgpdConsent?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   formation?: Prisma.FormationOrderByWithRelationInput
@@ -270,28 +315,38 @@ export type CandidatureOrderByWithRelationInput = {
 
 export type CandidatureWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  reference?: string
   AND?: Prisma.CandidatureWhereInput | Prisma.CandidatureWhereInput[]
   OR?: Prisma.CandidatureWhereInput[]
   NOT?: Prisma.CandidatureWhereInput | Prisma.CandidatureWhereInput[]
-  formationId?: Prisma.IntFilter<"Candidature"> | number
+  formationId?: Prisma.IntNullableFilter<"Candidature"> | number | null
   nom?: Prisma.StringFilter<"Candidature"> | string
   prenom?: Prisma.StringFilter<"Candidature"> | string
   email?: Prisma.StringFilter<"Candidature"> | string
-  telephone?: Prisma.StringNullableFilter<"Candidature"> | string | null
+  telephone?: Prisma.StringFilter<"Candidature"> | string
+  codePostal?: Prisma.StringFilter<"Candidature"> | string
+  typeDemarche?: Prisma.StringFilter<"Candidature"> | string
+  statutActuel?: Prisma.StringFilter<"Candidature"> | string
   motivation?: Prisma.StringFilter<"Candidature"> | string
+  rgpdConsent?: Prisma.BoolFilter<"Candidature"> | boolean
   statut?: Prisma.EnumStatutCandidatureFilter<"Candidature"> | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFilter<"Candidature"> | Date | string
-  formation?: Prisma.XOR<Prisma.FormationScalarRelationFilter, Prisma.FormationWhereInput>
-}, "id">
+  formation?: Prisma.XOR<Prisma.FormationNullableScalarRelationFilter, Prisma.FormationWhereInput> | null
+}, "id" | "reference">
 
 export type CandidatureOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  formationId?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
+  formationId?: Prisma.SortOrderInput | Prisma.SortOrder
   nom?: Prisma.SortOrder
   prenom?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  telephone?: Prisma.SortOrderInput | Prisma.SortOrder
+  telephone?: Prisma.SortOrder
+  codePostal?: Prisma.SortOrder
+  typeDemarche?: Prisma.SortOrder
+  statutActuel?: Prisma.SortOrder
   motivation?: Prisma.SortOrder
+  rgpdConsent?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CandidatureCountOrderByAggregateInput
@@ -306,92 +361,132 @@ export type CandidatureScalarWhereWithAggregatesInput = {
   OR?: Prisma.CandidatureScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CandidatureScalarWhereWithAggregatesInput | Prisma.CandidatureScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Candidature"> | number
-  formationId?: Prisma.IntWithAggregatesFilter<"Candidature"> | number
+  reference?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
+  formationId?: Prisma.IntNullableWithAggregatesFilter<"Candidature"> | number | null
   nom?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
   prenom?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
   email?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
-  telephone?: Prisma.StringNullableWithAggregatesFilter<"Candidature"> | string | null
+  telephone?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
+  codePostal?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
+  typeDemarche?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
+  statutActuel?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
   motivation?: Prisma.StringWithAggregatesFilter<"Candidature"> | string
+  rgpdConsent?: Prisma.BoolWithAggregatesFilter<"Candidature"> | boolean
   statut?: Prisma.EnumStatutCandidatureWithAggregatesFilter<"Candidature"> | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Candidature"> | Date | string
 }
 
 export type CandidatureCreateInput = {
+  reference: string
   nom: string
   prenom: string
   email: string
-  telephone?: string | null
-  motivation: string
+  telephone: string
+  codePostal: string
+  typeDemarche: string
+  statutActuel: string
+  motivation?: string
+  rgpdConsent?: boolean
   statut?: $Enums.StatutCandidature
   createdAt?: Date | string
-  formation: Prisma.FormationCreateNestedOneWithoutCandidaturesInput
+  formation?: Prisma.FormationCreateNestedOneWithoutCandidaturesInput
 }
 
 export type CandidatureUncheckedCreateInput = {
   id?: number
-  formationId: number
+  reference: string
+  formationId?: number | null
   nom: string
   prenom: string
   email: string
-  telephone?: string | null
-  motivation: string
+  telephone: string
+  codePostal: string
+  typeDemarche: string
+  statutActuel: string
+  motivation?: string
+  rgpdConsent?: boolean
   statut?: $Enums.StatutCandidature
   createdAt?: Date | string
 }
 
 export type CandidatureUpdateInput = {
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.StringFieldUpdateOperationsInput | string
+  codePostal?: Prisma.StringFieldUpdateOperationsInput | string
+  typeDemarche?: Prisma.StringFieldUpdateOperationsInput | string
+  statutActuel?: Prisma.StringFieldUpdateOperationsInput | string
   motivation?: Prisma.StringFieldUpdateOperationsInput | string
+  rgpdConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   statut?: Prisma.EnumStatutCandidatureFieldUpdateOperationsInput | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  formation?: Prisma.FormationUpdateOneRequiredWithoutCandidaturesNestedInput
+  formation?: Prisma.FormationUpdateOneWithoutCandidaturesNestedInput
 }
 
 export type CandidatureUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  formationId?: Prisma.IntFieldUpdateOperationsInput | number
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  formationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.StringFieldUpdateOperationsInput | string
+  codePostal?: Prisma.StringFieldUpdateOperationsInput | string
+  typeDemarche?: Prisma.StringFieldUpdateOperationsInput | string
+  statutActuel?: Prisma.StringFieldUpdateOperationsInput | string
   motivation?: Prisma.StringFieldUpdateOperationsInput | string
+  rgpdConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   statut?: Prisma.EnumStatutCandidatureFieldUpdateOperationsInput | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CandidatureCreateManyInput = {
   id?: number
-  formationId: number
+  reference: string
+  formationId?: number | null
   nom: string
   prenom: string
   email: string
-  telephone?: string | null
-  motivation: string
+  telephone: string
+  codePostal: string
+  typeDemarche: string
+  statutActuel: string
+  motivation?: string
+  rgpdConsent?: boolean
   statut?: $Enums.StatutCandidature
   createdAt?: Date | string
 }
 
 export type CandidatureUpdateManyMutationInput = {
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.StringFieldUpdateOperationsInput | string
+  codePostal?: Prisma.StringFieldUpdateOperationsInput | string
+  typeDemarche?: Prisma.StringFieldUpdateOperationsInput | string
+  statutActuel?: Prisma.StringFieldUpdateOperationsInput | string
   motivation?: Prisma.StringFieldUpdateOperationsInput | string
+  rgpdConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   statut?: Prisma.EnumStatutCandidatureFieldUpdateOperationsInput | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CandidatureUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  formationId?: Prisma.IntFieldUpdateOperationsInput | number
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  formationId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.StringFieldUpdateOperationsInput | string
+  codePostal?: Prisma.StringFieldUpdateOperationsInput | string
+  typeDemarche?: Prisma.StringFieldUpdateOperationsInput | string
+  statutActuel?: Prisma.StringFieldUpdateOperationsInput | string
   motivation?: Prisma.StringFieldUpdateOperationsInput | string
+  rgpdConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   statut?: Prisma.EnumStatutCandidatureFieldUpdateOperationsInput | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -408,12 +503,17 @@ export type CandidatureOrderByRelationAggregateInput = {
 
 export type CandidatureCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   prenom?: Prisma.SortOrder
   email?: Prisma.SortOrder
   telephone?: Prisma.SortOrder
+  codePostal?: Prisma.SortOrder
+  typeDemarche?: Prisma.SortOrder
+  statutActuel?: Prisma.SortOrder
   motivation?: Prisma.SortOrder
+  rgpdConsent?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -425,24 +525,34 @@ export type CandidatureAvgOrderByAggregateInput = {
 
 export type CandidatureMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   prenom?: Prisma.SortOrder
   email?: Prisma.SortOrder
   telephone?: Prisma.SortOrder
+  codePostal?: Prisma.SortOrder
+  typeDemarche?: Prisma.SortOrder
+  statutActuel?: Prisma.SortOrder
   motivation?: Prisma.SortOrder
+  rgpdConsent?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type CandidatureMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
   formationId?: Prisma.SortOrder
   nom?: Prisma.SortOrder
   prenom?: Prisma.SortOrder
   email?: Prisma.SortOrder
   telephone?: Prisma.SortOrder
+  codePostal?: Prisma.SortOrder
+  typeDemarche?: Prisma.SortOrder
+  statutActuel?: Prisma.SortOrder
   motivation?: Prisma.SortOrder
+  rgpdConsent?: Prisma.SortOrder
   statut?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -498,23 +608,41 @@ export type EnumStatutCandidatureFieldUpdateOperationsInput = {
   set?: $Enums.StatutCandidature
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type CandidatureCreateWithoutFormationInput = {
+  reference: string
   nom: string
   prenom: string
   email: string
-  telephone?: string | null
-  motivation: string
+  telephone: string
+  codePostal: string
+  typeDemarche: string
+  statutActuel: string
+  motivation?: string
+  rgpdConsent?: boolean
   statut?: $Enums.StatutCandidature
   createdAt?: Date | string
 }
 
 export type CandidatureUncheckedCreateWithoutFormationInput = {
   id?: number
+  reference: string
   nom: string
   prenom: string
   email: string
-  telephone?: string | null
-  motivation: string
+  telephone: string
+  codePostal: string
+  typeDemarche: string
+  statutActuel: string
+  motivation?: string
+  rgpdConsent?: boolean
   statut?: $Enums.StatutCandidature
   createdAt?: Date | string
 }
@@ -550,55 +678,80 @@ export type CandidatureScalarWhereInput = {
   OR?: Prisma.CandidatureScalarWhereInput[]
   NOT?: Prisma.CandidatureScalarWhereInput | Prisma.CandidatureScalarWhereInput[]
   id?: Prisma.IntFilter<"Candidature"> | number
-  formationId?: Prisma.IntFilter<"Candidature"> | number
+  reference?: Prisma.StringFilter<"Candidature"> | string
+  formationId?: Prisma.IntNullableFilter<"Candidature"> | number | null
   nom?: Prisma.StringFilter<"Candidature"> | string
   prenom?: Prisma.StringFilter<"Candidature"> | string
   email?: Prisma.StringFilter<"Candidature"> | string
-  telephone?: Prisma.StringNullableFilter<"Candidature"> | string | null
+  telephone?: Prisma.StringFilter<"Candidature"> | string
+  codePostal?: Prisma.StringFilter<"Candidature"> | string
+  typeDemarche?: Prisma.StringFilter<"Candidature"> | string
+  statutActuel?: Prisma.StringFilter<"Candidature"> | string
   motivation?: Prisma.StringFilter<"Candidature"> | string
+  rgpdConsent?: Prisma.BoolFilter<"Candidature"> | boolean
   statut?: Prisma.EnumStatutCandidatureFilter<"Candidature"> | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFilter<"Candidature"> | Date | string
 }
 
 export type CandidatureCreateManyFormationInput = {
   id?: number
+  reference: string
   nom: string
   prenom: string
   email: string
-  telephone?: string | null
-  motivation: string
+  telephone: string
+  codePostal: string
+  typeDemarche: string
+  statutActuel: string
+  motivation?: string
+  rgpdConsent?: boolean
   statut?: $Enums.StatutCandidature
   createdAt?: Date | string
 }
 
 export type CandidatureUpdateWithoutFormationInput = {
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.StringFieldUpdateOperationsInput | string
+  codePostal?: Prisma.StringFieldUpdateOperationsInput | string
+  typeDemarche?: Prisma.StringFieldUpdateOperationsInput | string
+  statutActuel?: Prisma.StringFieldUpdateOperationsInput | string
   motivation?: Prisma.StringFieldUpdateOperationsInput | string
+  rgpdConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   statut?: Prisma.EnumStatutCandidatureFieldUpdateOperationsInput | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CandidatureUncheckedUpdateWithoutFormationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.StringFieldUpdateOperationsInput | string
+  codePostal?: Prisma.StringFieldUpdateOperationsInput | string
+  typeDemarche?: Prisma.StringFieldUpdateOperationsInput | string
+  statutActuel?: Prisma.StringFieldUpdateOperationsInput | string
   motivation?: Prisma.StringFieldUpdateOperationsInput | string
+  rgpdConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   statut?: Prisma.EnumStatutCandidatureFieldUpdateOperationsInput | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CandidatureUncheckedUpdateManyWithoutFormationInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
   nom?: Prisma.StringFieldUpdateOperationsInput | string
   prenom?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.StringFieldUpdateOperationsInput | string
+  codePostal?: Prisma.StringFieldUpdateOperationsInput | string
+  typeDemarche?: Prisma.StringFieldUpdateOperationsInput | string
+  statutActuel?: Prisma.StringFieldUpdateOperationsInput | string
   motivation?: Prisma.StringFieldUpdateOperationsInput | string
+  rgpdConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   statut?: Prisma.EnumStatutCandidatureFieldUpdateOperationsInput | $Enums.StatutCandidature
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -607,79 +760,104 @@ export type CandidatureUncheckedUpdateManyWithoutFormationInput = {
 
 export type CandidatureSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  reference?: boolean
   formationId?: boolean
   nom?: boolean
   prenom?: boolean
   email?: boolean
   telephone?: boolean
+  codePostal?: boolean
+  typeDemarche?: boolean
+  statutActuel?: boolean
   motivation?: boolean
+  rgpdConsent?: boolean
   statut?: boolean
   createdAt?: boolean
-  formation?: boolean | Prisma.FormationDefaultArgs<ExtArgs>
+  formation?: boolean | Prisma.Candidature$formationArgs<ExtArgs>
 }, ExtArgs["result"]["candidature"]>
 
 export type CandidatureSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  reference?: boolean
   formationId?: boolean
   nom?: boolean
   prenom?: boolean
   email?: boolean
   telephone?: boolean
+  codePostal?: boolean
+  typeDemarche?: boolean
+  statutActuel?: boolean
   motivation?: boolean
+  rgpdConsent?: boolean
   statut?: boolean
   createdAt?: boolean
-  formation?: boolean | Prisma.FormationDefaultArgs<ExtArgs>
+  formation?: boolean | Prisma.Candidature$formationArgs<ExtArgs>
 }, ExtArgs["result"]["candidature"]>
 
 export type CandidatureSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  reference?: boolean
   formationId?: boolean
   nom?: boolean
   prenom?: boolean
   email?: boolean
   telephone?: boolean
+  codePostal?: boolean
+  typeDemarche?: boolean
+  statutActuel?: boolean
   motivation?: boolean
+  rgpdConsent?: boolean
   statut?: boolean
   createdAt?: boolean
-  formation?: boolean | Prisma.FormationDefaultArgs<ExtArgs>
+  formation?: boolean | Prisma.Candidature$formationArgs<ExtArgs>
 }, ExtArgs["result"]["candidature"]>
 
 export type CandidatureSelectScalar = {
   id?: boolean
+  reference?: boolean
   formationId?: boolean
   nom?: boolean
   prenom?: boolean
   email?: boolean
   telephone?: boolean
+  codePostal?: boolean
+  typeDemarche?: boolean
+  statutActuel?: boolean
   motivation?: boolean
+  rgpdConsent?: boolean
   statut?: boolean
   createdAt?: boolean
 }
 
-export type CandidatureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "formationId" | "nom" | "prenom" | "email" | "telephone" | "motivation" | "statut" | "createdAt", ExtArgs["result"]["candidature"]>
+export type CandidatureOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "formationId" | "nom" | "prenom" | "email" | "telephone" | "codePostal" | "typeDemarche" | "statutActuel" | "motivation" | "rgpdConsent" | "statut" | "createdAt", ExtArgs["result"]["candidature"]>
 export type CandidatureInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  formation?: boolean | Prisma.FormationDefaultArgs<ExtArgs>
+  formation?: boolean | Prisma.Candidature$formationArgs<ExtArgs>
 }
 export type CandidatureIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  formation?: boolean | Prisma.FormationDefaultArgs<ExtArgs>
+  formation?: boolean | Prisma.Candidature$formationArgs<ExtArgs>
 }
 export type CandidatureIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  formation?: boolean | Prisma.FormationDefaultArgs<ExtArgs>
+  formation?: boolean | Prisma.Candidature$formationArgs<ExtArgs>
 }
 
 export type $CandidaturePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Candidature"
   objects: {
-    formation: Prisma.$FormationPayload<ExtArgs>
+    formation: Prisma.$FormationPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    formationId: number
+    reference: string
+    formationId: number | null
     nom: string
     prenom: string
     email: string
-    telephone: string | null
+    telephone: string
+    codePostal: string
+    typeDemarche: string
+    statutActuel: string
     motivation: string
+    rgpdConsent: boolean
     statut: $Enums.StatutCandidature
     createdAt: Date
   }, ExtArgs["result"]["candidature"]>
@@ -1076,7 +1254,7 @@ readonly fields: CandidatureFieldRefs;
  */
 export interface Prisma__CandidatureClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  formation<T extends Prisma.FormationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FormationDefaultArgs<ExtArgs>>): Prisma.Prisma__FormationClient<runtime.Types.Result.GetResult<Prisma.$FormationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  formation<T extends Prisma.Candidature$formationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Candidature$formationArgs<ExtArgs>>): Prisma.Prisma__FormationClient<runtime.Types.Result.GetResult<Prisma.$FormationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1107,12 +1285,17 @@ export interface Prisma__CandidatureClient<T, Null = never, ExtArgs extends runt
  */
 export interface CandidatureFieldRefs {
   readonly id: Prisma.FieldRef<"Candidature", 'Int'>
+  readonly reference: Prisma.FieldRef<"Candidature", 'String'>
   readonly formationId: Prisma.FieldRef<"Candidature", 'Int'>
   readonly nom: Prisma.FieldRef<"Candidature", 'String'>
   readonly prenom: Prisma.FieldRef<"Candidature", 'String'>
   readonly email: Prisma.FieldRef<"Candidature", 'String'>
   readonly telephone: Prisma.FieldRef<"Candidature", 'String'>
+  readonly codePostal: Prisma.FieldRef<"Candidature", 'String'>
+  readonly typeDemarche: Prisma.FieldRef<"Candidature", 'String'>
+  readonly statutActuel: Prisma.FieldRef<"Candidature", 'String'>
   readonly motivation: Prisma.FieldRef<"Candidature", 'String'>
+  readonly rgpdConsent: Prisma.FieldRef<"Candidature", 'Boolean'>
   readonly statut: Prisma.FieldRef<"Candidature", 'StatutCandidature'>
   readonly createdAt: Prisma.FieldRef<"Candidature", 'DateTime'>
 }
@@ -1513,6 +1696,25 @@ export type CandidatureDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Candidatures to delete.
    */
   limit?: number
+}
+
+/**
+ * Candidature.formation
+ */
+export type Candidature$formationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Formation
+   */
+  select?: Prisma.FormationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Formation
+   */
+  omit?: Prisma.FormationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FormationInclude<ExtArgs> | null
+  where?: Prisma.FormationWhereInput
 }
 
 /**

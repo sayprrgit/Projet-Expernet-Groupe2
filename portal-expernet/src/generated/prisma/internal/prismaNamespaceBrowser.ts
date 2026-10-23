@@ -64,6 +64,7 @@ export const ModelName = {
   JuryMembre: 'JuryMembre',
   Competence: 'Competence',
   Evaluation: 'Evaluation',
+  PlanningEvent: 'PlanningEvent',
   Canal: 'Canal',
   Message: 'Message',
   Document: 'Document'
@@ -92,6 +93,10 @@ export const UserScalarFieldEnum = {
   nom: 'nom',
   prenom: 'prenom',
   role: 'role',
+  telephone: 'telephone',
+  adresse: 'adresse',
+  ville: 'ville',
+  codePostal: 'codePostal',
   mfaSecret: 'mfaSecret',
   mfaEnabled: 'mfaEnabled',
   createdAt: 'createdAt',
@@ -115,13 +120,27 @@ export const FormationScalarFieldEnum = {
   titre: 'titre',
   slug: 'slug',
   filiereId: 'filiereId',
+  libelle: 'libelle',
+  libelleNiveau: 'libelleNiveau',
+  type: 'type',
+  niveau: 'niveau',
   niveauRncp: 'niveauRncp',
+  rncpCode: 'rncpCode',
+  cpfCode: 'cpfCode',
   eligibleCpf: 'eligibleCpf',
+  alternance: 'alternance',
+  duree: 'duree',
+  dureeHeures: 'dureeHeures',
+  rythme: 'rythme',
+  lieux: 'lieux',
+  resume: 'resume',
   prerequis: 'prerequis',
   objectifs: 'objectifs',
   modalitesAcces: 'modalitesAcces',
   debouches: 'debouches',
-  dureeHeures: 'dureeHeures',
+  certificateur: 'certificateur',
+  prochainesSessions: 'prochainesSessions',
+  badge: 'badge',
   metaDescription: 'metaDescription',
   publiee: 'publiee',
   createdAt: 'createdAt',
@@ -133,12 +152,17 @@ export type FormationScalarFieldEnum = (typeof FormationScalarFieldEnum)[keyof t
 
 export const CandidatureScalarFieldEnum = {
   id: 'id',
+  reference: 'reference',
   formationId: 'formationId',
   nom: 'nom',
   prenom: 'prenom',
   email: 'email',
   telephone: 'telephone',
+  codePostal: 'codePostal',
+  typeDemarche: 'typeDemarche',
+  statutActuel: 'statutActuel',
   motivation: 'motivation',
+  rgpdConsent: 'rgpdConsent',
   statut: 'statut',
   createdAt: 'createdAt'
 } as const
@@ -240,10 +264,30 @@ export const EvaluationScalarFieldEnum = {
   etudiantId: 'etudiantId',
   competenceId: 'competenceId',
   niveau: 'niveau',
-  commentaire: 'commentaire'
+  valeur: 'valeur',
+  commentaire: 'commentaire',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type EvaluationScalarFieldEnum = (typeof EvaluationScalarFieldEnum)[keyof typeof EvaluationScalarFieldEnum]
+
+
+export const PlanningEventScalarFieldEnum = {
+  id: 'id',
+  titre: 'titre',
+  type: 'type',
+  date: 'date',
+  dateFin: 'dateFin',
+  heure: 'heure',
+  site: 'site',
+  description: 'description',
+  lienLabel: 'lienLabel',
+  lienUrl: 'lienUrl',
+  createdAt: 'createdAt'
+} as const
+
+export type PlanningEventScalarFieldEnum = (typeof PlanningEventScalarFieldEnum)[keyof typeof PlanningEventScalarFieldEnum]
 
 
 export const CanalScalarFieldEnum = {

@@ -410,6 +410,7 @@ export const ModelName = {
   JuryMembre: 'JuryMembre',
   Competence: 'Competence',
   Evaluation: 'Evaluation',
+  PlanningEvent: 'PlanningEvent',
   Canal: 'Canal',
   Message: 'Message',
   Document: 'Document'
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "filiere" | "formation" | "candidature" | "promotion" | "inscription" | "session" | "emargement" | "attestation" | "examen" | "juryMembre" | "competence" | "evaluation" | "canal" | "message" | "document"
+    modelProps: "user" | "filiere" | "formation" | "candidature" | "promotion" | "inscription" | "session" | "emargement" | "attestation" | "examen" | "juryMembre" | "competence" | "evaluation" | "planningEvent" | "canal" | "message" | "document"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1394,6 +1395,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PlanningEvent: {
+      payload: Prisma.$PlanningEventPayload<ExtArgs>
+      fields: Prisma.PlanningEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlanningEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlanningEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>
+        }
+        findFirst: {
+          args: Prisma.PlanningEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlanningEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>
+        }
+        findMany: {
+          args: Prisma.PlanningEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>[]
+        }
+        create: {
+          args: Prisma.PlanningEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>
+        }
+        createMany: {
+          args: Prisma.PlanningEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlanningEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>[]
+        }
+        delete: {
+          args: Prisma.PlanningEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>
+        }
+        update: {
+          args: Prisma.PlanningEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlanningEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlanningEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlanningEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlanningEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlanningEventPayload>
+        }
+        aggregate: {
+          args: Prisma.PlanningEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlanningEvent>
+        }
+        groupBy: {
+          args: Prisma.PlanningEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanningEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlanningEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanningEventCountAggregateOutputType> | number
+        }
+      }
+    }
     Canal: {
       payload: Prisma.$CanalPayload<ExtArgs>
       fields: Prisma.CanalFieldRefs
@@ -1662,6 +1737,10 @@ export const UserScalarFieldEnum = {
   nom: 'nom',
   prenom: 'prenom',
   role: 'role',
+  telephone: 'telephone',
+  adresse: 'adresse',
+  ville: 'ville',
+  codePostal: 'codePostal',
   mfaSecret: 'mfaSecret',
   mfaEnabled: 'mfaEnabled',
   createdAt: 'createdAt',
@@ -1685,13 +1764,27 @@ export const FormationScalarFieldEnum = {
   titre: 'titre',
   slug: 'slug',
   filiereId: 'filiereId',
+  libelle: 'libelle',
+  libelleNiveau: 'libelleNiveau',
+  type: 'type',
+  niveau: 'niveau',
   niveauRncp: 'niveauRncp',
+  rncpCode: 'rncpCode',
+  cpfCode: 'cpfCode',
   eligibleCpf: 'eligibleCpf',
+  alternance: 'alternance',
+  duree: 'duree',
+  dureeHeures: 'dureeHeures',
+  rythme: 'rythme',
+  lieux: 'lieux',
+  resume: 'resume',
   prerequis: 'prerequis',
   objectifs: 'objectifs',
   modalitesAcces: 'modalitesAcces',
   debouches: 'debouches',
-  dureeHeures: 'dureeHeures',
+  certificateur: 'certificateur',
+  prochainesSessions: 'prochainesSessions',
+  badge: 'badge',
   metaDescription: 'metaDescription',
   publiee: 'publiee',
   createdAt: 'createdAt',
@@ -1703,12 +1796,17 @@ export type FormationScalarFieldEnum = (typeof FormationScalarFieldEnum)[keyof t
 
 export const CandidatureScalarFieldEnum = {
   id: 'id',
+  reference: 'reference',
   formationId: 'formationId',
   nom: 'nom',
   prenom: 'prenom',
   email: 'email',
   telephone: 'telephone',
+  codePostal: 'codePostal',
+  typeDemarche: 'typeDemarche',
+  statutActuel: 'statutActuel',
   motivation: 'motivation',
+  rgpdConsent: 'rgpdConsent',
   statut: 'statut',
   createdAt: 'createdAt'
 } as const
@@ -1810,10 +1908,30 @@ export const EvaluationScalarFieldEnum = {
   etudiantId: 'etudiantId',
   competenceId: 'competenceId',
   niveau: 'niveau',
-  commentaire: 'commentaire'
+  valeur: 'valeur',
+  commentaire: 'commentaire',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type EvaluationScalarFieldEnum = (typeof EvaluationScalarFieldEnum)[keyof typeof EvaluationScalarFieldEnum]
+
+
+export const PlanningEventScalarFieldEnum = {
+  id: 'id',
+  titre: 'titre',
+  type: 'type',
+  date: 'date',
+  dateFin: 'dateFin',
+  heure: 'heure',
+  site: 'site',
+  description: 'description',
+  lienLabel: 'lienLabel',
+  lienUrl: 'lienUrl',
+  createdAt: 'createdAt'
+} as const
+
+export type PlanningEventScalarFieldEnum = (typeof PlanningEventScalarFieldEnum)[keyof typeof PlanningEventScalarFieldEnum]
 
 
 export const CanalScalarFieldEnum = {
@@ -1950,6 +2068,34 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'TypeFormation'
+ */
+export type EnumTypeFormationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeFormation'>
+    
+
+
+/**
+ * Reference to a field of type 'TypeFormation[]'
+ */
+export type ListEnumTypeFormationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeFormation[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NiveauFormation'
+ */
+export type EnumNiveauFormationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NiveauFormation'>
+    
+
+
+/**
+ * Reference to a field of type 'NiveauFormation[]'
+ */
+export type ListEnumNiveauFormationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NiveauFormation[]'>
+    
+
+
+/**
  * Reference to a field of type 'NiveauRncp'
  */
 export type EnumNiveauRncpFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NiveauRncp'>
@@ -2016,6 +2162,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PlanningType'
+ */
+export type EnumPlanningTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanningType'>
+    
+
+
+/**
+ * Reference to a field of type 'PlanningType[]'
+ */
+export type ListEnumPlanningTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanningType[]'>
     
 
 /**
@@ -2182,6 +2342,7 @@ export type GlobalOmitConfig = {
   juryMembre?: Prisma.JuryMembreOmit
   competence?: Prisma.CompetenceOmit
   evaluation?: Prisma.EvaluationOmit
+  planningEvent?: Prisma.PlanningEventOmit
   canal?: Prisma.CanalOmit
   message?: Prisma.MessageOmit
   document?: Prisma.DocumentOmit

@@ -31,6 +31,7 @@ export type EvaluationAvgAggregateOutputType = {
   examenId: number | null
   etudiantId: number | null
   competenceId: number | null
+  valeur: number | null
 }
 
 export type EvaluationSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type EvaluationSumAggregateOutputType = {
   examenId: number | null
   etudiantId: number | null
   competenceId: number | null
+  valeur: number | null
 }
 
 export type EvaluationMinAggregateOutputType = {
@@ -46,7 +48,10 @@ export type EvaluationMinAggregateOutputType = {
   etudiantId: number | null
   competenceId: number | null
   niveau: $Enums.NiveauAcquisition | null
+  valeur: number | null
   commentaire: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type EvaluationMaxAggregateOutputType = {
@@ -55,7 +60,10 @@ export type EvaluationMaxAggregateOutputType = {
   etudiantId: number | null
   competenceId: number | null
   niveau: $Enums.NiveauAcquisition | null
+  valeur: number | null
   commentaire: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type EvaluationCountAggregateOutputType = {
@@ -64,7 +72,10 @@ export type EvaluationCountAggregateOutputType = {
   etudiantId: number
   competenceId: number
   niveau: number
+  valeur: number
   commentaire: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -74,6 +85,7 @@ export type EvaluationAvgAggregateInputType = {
   examenId?: true
   etudiantId?: true
   competenceId?: true
+  valeur?: true
 }
 
 export type EvaluationSumAggregateInputType = {
@@ -81,6 +93,7 @@ export type EvaluationSumAggregateInputType = {
   examenId?: true
   etudiantId?: true
   competenceId?: true
+  valeur?: true
 }
 
 export type EvaluationMinAggregateInputType = {
@@ -89,7 +102,10 @@ export type EvaluationMinAggregateInputType = {
   etudiantId?: true
   competenceId?: true
   niveau?: true
+  valeur?: true
   commentaire?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type EvaluationMaxAggregateInputType = {
@@ -98,7 +114,10 @@ export type EvaluationMaxAggregateInputType = {
   etudiantId?: true
   competenceId?: true
   niveau?: true
+  valeur?: true
   commentaire?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type EvaluationCountAggregateInputType = {
@@ -107,7 +126,10 @@ export type EvaluationCountAggregateInputType = {
   etudiantId?: true
   competenceId?: true
   niveau?: true
+  valeur?: true
   commentaire?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -203,7 +225,10 @@ export type EvaluationGroupByOutputType = {
   etudiantId: number
   competenceId: number
   niveau: $Enums.NiveauAcquisition
+  valeur: number | null
   commentaire: string | null
+  createdAt: Date
+  updatedAt: Date
   _count: EvaluationCountAggregateOutputType | null
   _avg: EvaluationAvgAggregateOutputType | null
   _sum: EvaluationSumAggregateOutputType | null
@@ -235,7 +260,10 @@ export type EvaluationWhereInput = {
   etudiantId?: Prisma.IntFilter<"Evaluation"> | number
   competenceId?: Prisma.IntFilter<"Evaluation"> | number
   niveau?: Prisma.EnumNiveauAcquisitionFilter<"Evaluation"> | $Enums.NiveauAcquisition
+  valeur?: Prisma.FloatNullableFilter<"Evaluation"> | number | null
   commentaire?: Prisma.StringNullableFilter<"Evaluation"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Evaluation"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Evaluation"> | Date | string
   examen?: Prisma.XOR<Prisma.ExamenScalarRelationFilter, Prisma.ExamenWhereInput>
   etudiant?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   competence?: Prisma.XOR<Prisma.CompetenceScalarRelationFilter, Prisma.CompetenceWhereInput>
@@ -247,7 +275,10 @@ export type EvaluationOrderByWithRelationInput = {
   etudiantId?: Prisma.SortOrder
   competenceId?: Prisma.SortOrder
   niveau?: Prisma.SortOrder
+  valeur?: Prisma.SortOrderInput | Prisma.SortOrder
   commentaire?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   examen?: Prisma.ExamenOrderByWithRelationInput
   etudiant?: Prisma.UserOrderByWithRelationInput
   competence?: Prisma.CompetenceOrderByWithRelationInput
@@ -263,7 +294,10 @@ export type EvaluationWhereUniqueInput = Prisma.AtLeast<{
   etudiantId?: Prisma.IntFilter<"Evaluation"> | number
   competenceId?: Prisma.IntFilter<"Evaluation"> | number
   niveau?: Prisma.EnumNiveauAcquisitionFilter<"Evaluation"> | $Enums.NiveauAcquisition
+  valeur?: Prisma.FloatNullableFilter<"Evaluation"> | number | null
   commentaire?: Prisma.StringNullableFilter<"Evaluation"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Evaluation"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Evaluation"> | Date | string
   examen?: Prisma.XOR<Prisma.ExamenScalarRelationFilter, Prisma.ExamenWhereInput>
   etudiant?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   competence?: Prisma.XOR<Prisma.CompetenceScalarRelationFilter, Prisma.CompetenceWhereInput>
@@ -275,7 +309,10 @@ export type EvaluationOrderByWithAggregationInput = {
   etudiantId?: Prisma.SortOrder
   competenceId?: Prisma.SortOrder
   niveau?: Prisma.SortOrder
+  valeur?: Prisma.SortOrderInput | Prisma.SortOrder
   commentaire?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.EvaluationCountOrderByAggregateInput
   _avg?: Prisma.EvaluationAvgOrderByAggregateInput
   _max?: Prisma.EvaluationMaxOrderByAggregateInput
@@ -292,12 +329,18 @@ export type EvaluationScalarWhereWithAggregatesInput = {
   etudiantId?: Prisma.IntWithAggregatesFilter<"Evaluation"> | number
   competenceId?: Prisma.IntWithAggregatesFilter<"Evaluation"> | number
   niveau?: Prisma.EnumNiveauAcquisitionWithAggregatesFilter<"Evaluation"> | $Enums.NiveauAcquisition
+  valeur?: Prisma.FloatNullableWithAggregatesFilter<"Evaluation"> | number | null
   commentaire?: Prisma.StringNullableWithAggregatesFilter<"Evaluation"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Evaluation"> | Date | string
 }
 
 export type EvaluationCreateInput = {
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   examen: Prisma.ExamenCreateNestedOneWithoutEvaluationsInput
   etudiant: Prisma.UserCreateNestedOneWithoutEvaluationsInput
   competence: Prisma.CompetenceCreateNestedOneWithoutEvaluationsInput
@@ -309,12 +352,18 @@ export type EvaluationUncheckedCreateInput = {
   etudiantId: number
   competenceId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationUpdateInput = {
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examen?: Prisma.ExamenUpdateOneRequiredWithoutEvaluationsNestedInput
   etudiant?: Prisma.UserUpdateOneRequiredWithoutEvaluationsNestedInput
   competence?: Prisma.CompetenceUpdateOneRequiredWithoutEvaluationsNestedInput
@@ -326,7 +375,10 @@ export type EvaluationUncheckedUpdateInput = {
   etudiantId?: Prisma.IntFieldUpdateOperationsInput | number
   competenceId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationCreateManyInput = {
@@ -335,12 +387,18 @@ export type EvaluationCreateManyInput = {
   etudiantId: number
   competenceId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationUpdateManyMutationInput = {
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationUncheckedUpdateManyInput = {
@@ -349,7 +407,10 @@ export type EvaluationUncheckedUpdateManyInput = {
   etudiantId?: Prisma.IntFieldUpdateOperationsInput | number
   competenceId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationListRelationFilter = {
@@ -374,7 +435,10 @@ export type EvaluationCountOrderByAggregateInput = {
   etudiantId?: Prisma.SortOrder
   competenceId?: Prisma.SortOrder
   niveau?: Prisma.SortOrder
+  valeur?: Prisma.SortOrder
   commentaire?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type EvaluationAvgOrderByAggregateInput = {
@@ -382,6 +446,7 @@ export type EvaluationAvgOrderByAggregateInput = {
   examenId?: Prisma.SortOrder
   etudiantId?: Prisma.SortOrder
   competenceId?: Prisma.SortOrder
+  valeur?: Prisma.SortOrder
 }
 
 export type EvaluationMaxOrderByAggregateInput = {
@@ -390,7 +455,10 @@ export type EvaluationMaxOrderByAggregateInput = {
   etudiantId?: Prisma.SortOrder
   competenceId?: Prisma.SortOrder
   niveau?: Prisma.SortOrder
+  valeur?: Prisma.SortOrder
   commentaire?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type EvaluationMinOrderByAggregateInput = {
@@ -399,7 +467,10 @@ export type EvaluationMinOrderByAggregateInput = {
   etudiantId?: Prisma.SortOrder
   competenceId?: Prisma.SortOrder
   niveau?: Prisma.SortOrder
+  valeur?: Prisma.SortOrder
   commentaire?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type EvaluationSumOrderByAggregateInput = {
@@ -407,6 +478,7 @@ export type EvaluationSumOrderByAggregateInput = {
   examenId?: Prisma.SortOrder
   etudiantId?: Prisma.SortOrder
   competenceId?: Prisma.SortOrder
+  valeur?: Prisma.SortOrder
 }
 
 export type EvaluationCreateNestedManyWithoutEtudiantInput = {
@@ -539,9 +611,20 @@ export type EnumNiveauAcquisitionFieldUpdateOperationsInput = {
   set?: $Enums.NiveauAcquisition
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type EvaluationCreateWithoutEtudiantInput = {
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   examen: Prisma.ExamenCreateNestedOneWithoutEvaluationsInput
   competence: Prisma.CompetenceCreateNestedOneWithoutEvaluationsInput
 }
@@ -551,7 +634,10 @@ export type EvaluationUncheckedCreateWithoutEtudiantInput = {
   examenId: number
   competenceId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationCreateOrConnectWithoutEtudiantInput = {
@@ -589,12 +675,18 @@ export type EvaluationScalarWhereInput = {
   etudiantId?: Prisma.IntFilter<"Evaluation"> | number
   competenceId?: Prisma.IntFilter<"Evaluation"> | number
   niveau?: Prisma.EnumNiveauAcquisitionFilter<"Evaluation"> | $Enums.NiveauAcquisition
+  valeur?: Prisma.FloatNullableFilter<"Evaluation"> | number | null
   commentaire?: Prisma.StringNullableFilter<"Evaluation"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Evaluation"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Evaluation"> | Date | string
 }
 
 export type EvaluationCreateWithoutExamenInput = {
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   etudiant: Prisma.UserCreateNestedOneWithoutEvaluationsInput
   competence: Prisma.CompetenceCreateNestedOneWithoutEvaluationsInput
 }
@@ -604,7 +696,10 @@ export type EvaluationUncheckedCreateWithoutExamenInput = {
   etudiantId: number
   competenceId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationCreateOrConnectWithoutExamenInput = {
@@ -635,7 +730,10 @@ export type EvaluationUpdateManyWithWhereWithoutExamenInput = {
 
 export type EvaluationCreateWithoutCompetenceInput = {
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
   examen: Prisma.ExamenCreateNestedOneWithoutEvaluationsInput
   etudiant: Prisma.UserCreateNestedOneWithoutEvaluationsInput
 }
@@ -645,7 +743,10 @@ export type EvaluationUncheckedCreateWithoutCompetenceInput = {
   examenId: number
   etudiantId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationCreateOrConnectWithoutCompetenceInput = {
@@ -679,12 +780,18 @@ export type EvaluationCreateManyEtudiantInput = {
   examenId: number
   competenceId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationUpdateWithoutEtudiantInput = {
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examen?: Prisma.ExamenUpdateOneRequiredWithoutEvaluationsNestedInput
   competence?: Prisma.CompetenceUpdateOneRequiredWithoutEvaluationsNestedInput
 }
@@ -694,7 +801,10 @@ export type EvaluationUncheckedUpdateWithoutEtudiantInput = {
   examenId?: Prisma.IntFieldUpdateOperationsInput | number
   competenceId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationUncheckedUpdateManyWithoutEtudiantInput = {
@@ -702,7 +812,10 @@ export type EvaluationUncheckedUpdateManyWithoutEtudiantInput = {
   examenId?: Prisma.IntFieldUpdateOperationsInput | number
   competenceId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationCreateManyExamenInput = {
@@ -710,12 +823,18 @@ export type EvaluationCreateManyExamenInput = {
   etudiantId: number
   competenceId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationUpdateWithoutExamenInput = {
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etudiant?: Prisma.UserUpdateOneRequiredWithoutEvaluationsNestedInput
   competence?: Prisma.CompetenceUpdateOneRequiredWithoutEvaluationsNestedInput
 }
@@ -725,7 +844,10 @@ export type EvaluationUncheckedUpdateWithoutExamenInput = {
   etudiantId?: Prisma.IntFieldUpdateOperationsInput | number
   competenceId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationUncheckedUpdateManyWithoutExamenInput = {
@@ -733,7 +855,10 @@ export type EvaluationUncheckedUpdateManyWithoutExamenInput = {
   etudiantId?: Prisma.IntFieldUpdateOperationsInput | number
   competenceId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationCreateManyCompetenceInput = {
@@ -741,12 +866,18 @@ export type EvaluationCreateManyCompetenceInput = {
   examenId: number
   etudiantId: number
   niveau?: $Enums.NiveauAcquisition
+  valeur?: number | null
   commentaire?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type EvaluationUpdateWithoutCompetenceInput = {
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examen?: Prisma.ExamenUpdateOneRequiredWithoutEvaluationsNestedInput
   etudiant?: Prisma.UserUpdateOneRequiredWithoutEvaluationsNestedInput
 }
@@ -756,7 +887,10 @@ export type EvaluationUncheckedUpdateWithoutCompetenceInput = {
   examenId?: Prisma.IntFieldUpdateOperationsInput | number
   etudiantId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EvaluationUncheckedUpdateManyWithoutCompetenceInput = {
@@ -764,7 +898,10 @@ export type EvaluationUncheckedUpdateManyWithoutCompetenceInput = {
   examenId?: Prisma.IntFieldUpdateOperationsInput | number
   etudiantId?: Prisma.IntFieldUpdateOperationsInput | number
   niveau?: Prisma.EnumNiveauAcquisitionFieldUpdateOperationsInput | $Enums.NiveauAcquisition
+  valeur?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   commentaire?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -775,7 +912,10 @@ export type EvaluationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   etudiantId?: boolean
   competenceId?: boolean
   niveau?: boolean
+  valeur?: boolean
   commentaire?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   examen?: boolean | Prisma.ExamenDefaultArgs<ExtArgs>
   etudiant?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   competence?: boolean | Prisma.CompetenceDefaultArgs<ExtArgs>
@@ -787,7 +927,10 @@ export type EvaluationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   etudiantId?: boolean
   competenceId?: boolean
   niveau?: boolean
+  valeur?: boolean
   commentaire?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   examen?: boolean | Prisma.ExamenDefaultArgs<ExtArgs>
   etudiant?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   competence?: boolean | Prisma.CompetenceDefaultArgs<ExtArgs>
@@ -799,7 +942,10 @@ export type EvaluationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   etudiantId?: boolean
   competenceId?: boolean
   niveau?: boolean
+  valeur?: boolean
   commentaire?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   examen?: boolean | Prisma.ExamenDefaultArgs<ExtArgs>
   etudiant?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   competence?: boolean | Prisma.CompetenceDefaultArgs<ExtArgs>
@@ -811,10 +957,13 @@ export type EvaluationSelectScalar = {
   etudiantId?: boolean
   competenceId?: boolean
   niveau?: boolean
+  valeur?: boolean
   commentaire?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type EvaluationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "examenId" | "etudiantId" | "competenceId" | "niveau" | "commentaire", ExtArgs["result"]["evaluation"]>
+export type EvaluationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "examenId" | "etudiantId" | "competenceId" | "niveau" | "valeur" | "commentaire" | "createdAt" | "updatedAt", ExtArgs["result"]["evaluation"]>
 export type EvaluationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   examen?: boolean | Prisma.ExamenDefaultArgs<ExtArgs>
   etudiant?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -844,7 +993,10 @@ export type $EvaluationPayload<ExtArgs extends runtime.Types.Extensions.Internal
     etudiantId: number
     competenceId: number
     niveau: $Enums.NiveauAcquisition
+    valeur: number | null
     commentaire: string | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["evaluation"]>
   composites: {}
 }
@@ -1276,7 +1428,10 @@ export interface EvaluationFieldRefs {
   readonly etudiantId: Prisma.FieldRef<"Evaluation", 'Int'>
   readonly competenceId: Prisma.FieldRef<"Evaluation", 'Int'>
   readonly niveau: Prisma.FieldRef<"Evaluation", 'NiveauAcquisition'>
+  readonly valeur: Prisma.FieldRef<"Evaluation", 'Float'>
   readonly commentaire: Prisma.FieldRef<"Evaluation", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Evaluation", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Evaluation", 'DateTime'>
 }
     
 

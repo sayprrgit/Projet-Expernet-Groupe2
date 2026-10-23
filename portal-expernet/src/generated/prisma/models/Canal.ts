@@ -414,14 +414,6 @@ export type CanalUncheckedUpdateManyWithoutPromotionNestedInput = {
   deleteMany?: Prisma.CanalScalarWhereInput | Prisma.CanalScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type CanalCreateNestedOneWithoutMessagesInput = {
   create?: Prisma.XOR<Prisma.CanalCreateWithoutMessagesInput, Prisma.CanalUncheckedCreateWithoutMessagesInput>
   connectOrCreate?: Prisma.CanalCreateOrConnectWithoutMessagesInput

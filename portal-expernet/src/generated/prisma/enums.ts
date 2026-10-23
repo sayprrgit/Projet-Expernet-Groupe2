@@ -18,6 +18,35 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const FormationType = {
+  CAMPUS: 'CAMPUS',
+  PRO: 'PRO'
+} as const
+
+export type FormationType = (typeof FormationType)[keyof typeof FormationType]
+
+
+export const FormationLevel = {
+  BAC2: 'BAC2',
+  BAC3: 'BAC3',
+  BAC5: 'BAC5',
+  CERTIFICATION: 'CERTIFICATION'
+} as const
+
+export type FormationLevel = (typeof FormationLevel)[keyof typeof FormationLevel]
+
+
+export const FormationCategory = {
+  DEV: 'DEV',
+  RESEAUX: 'RESEAUX',
+  MARKETING: 'MARKETING',
+  MANAGEMENT: 'MANAGEMENT',
+  DATA: 'DATA'
+} as const
+
+export type FormationCategory = (typeof FormationCategory)[keyof typeof FormationCategory]
+
+
 export const NiveauRncp = {
   NIVEAU_3: 'NIVEAU_3',
   NIVEAU_4: 'NIVEAU_4',
@@ -27,6 +56,24 @@ export const NiveauRncp = {
 } as const
 
 export type NiveauRncp = (typeof NiveauRncp)[keyof typeof NiveauRncp]
+
+
+export const TypeFormation = {
+  CAMPUS: 'CAMPUS',
+  PRO: 'PRO'
+} as const
+
+export type TypeFormation = (typeof TypeFormation)[keyof typeof TypeFormation]
+
+
+export const NiveauFormation = {
+  BAC_PLUS_2: 'BAC_PLUS_2',
+  BAC_PLUS_3: 'BAC_PLUS_3',
+  BAC_PLUS_5: 'BAC_PLUS_5',
+  CERTIFICATION: 'CERTIFICATION'
+} as const
+
+export type NiveauFormation = (typeof NiveauFormation)[keyof typeof NiveauFormation]
 
 
 export const StatutCandidature = {
@@ -53,3 +100,13 @@ export const NiveauAcquisition = {
 } as const
 
 export type NiveauAcquisition = (typeof NiveauAcquisition)[keyof typeof NiveauAcquisition]
+
+
+export const PlanningType = {
+  FORMATION: 'FORMATION',
+  EVENEMENT: 'EVENEMENT',
+  ATELIER: 'ATELIER',
+  EXAMEN: 'EXAMEN'
+} as const
+
+export type PlanningType = (typeof PlanningType)[keyof typeof PlanningType]

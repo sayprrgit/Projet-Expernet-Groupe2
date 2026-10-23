@@ -540,10 +540,6 @@ export type MessageUncheckedCreateNestedManyWithoutParentInput = {
   connect?: Prisma.MessageWhereUniqueInput | Prisma.MessageWhereUniqueInput[]
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type MessageUpdateOneWithoutReponsesNestedInput = {
   create?: Prisma.XOR<Prisma.MessageCreateWithoutReponsesInput, Prisma.MessageUncheckedCreateWithoutReponsesInput>
   connectOrCreate?: Prisma.MessageCreateOrConnectWithoutReponsesInput

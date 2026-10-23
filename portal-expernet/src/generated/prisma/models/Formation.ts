@@ -43,13 +43,21 @@ export type FormationMinAggregateOutputType = {
   titre: string | null
   slug: string | null
   filiereId: number | null
+  libelle: string | null
+  libelleNiveau: string | null
+  type: $Enums.TypeFormation | null
+  niveau: $Enums.NiveauFormation | null
   niveauRncp: $Enums.NiveauRncp | null
+  rncpCode: string | null
+  cpfCode: string | null
   eligibleCpf: boolean | null
-  prerequis: string | null
-  objectifs: string | null
-  modalitesAcces: string | null
-  debouches: string | null
+  alternance: boolean | null
+  duree: string | null
   dureeHeures: number | null
+  rythme: string | null
+  resume: string | null
+  certificateur: string | null
+  badge: string | null
   metaDescription: string | null
   publiee: boolean | null
   createdAt: Date | null
@@ -61,13 +69,21 @@ export type FormationMaxAggregateOutputType = {
   titre: string | null
   slug: string | null
   filiereId: number | null
+  libelle: string | null
+  libelleNiveau: string | null
+  type: $Enums.TypeFormation | null
+  niveau: $Enums.NiveauFormation | null
   niveauRncp: $Enums.NiveauRncp | null
+  rncpCode: string | null
+  cpfCode: string | null
   eligibleCpf: boolean | null
-  prerequis: string | null
-  objectifs: string | null
-  modalitesAcces: string | null
-  debouches: string | null
+  alternance: boolean | null
+  duree: string | null
   dureeHeures: number | null
+  rythme: string | null
+  resume: string | null
+  certificateur: string | null
+  badge: string | null
   metaDescription: string | null
   publiee: boolean | null
   createdAt: Date | null
@@ -79,13 +95,27 @@ export type FormationCountAggregateOutputType = {
   titre: number
   slug: number
   filiereId: number
+  libelle: number
+  libelleNiveau: number
+  type: number
+  niveau: number
   niveauRncp: number
+  rncpCode: number
+  cpfCode: number
   eligibleCpf: number
+  alternance: number
+  duree: number
+  dureeHeures: number
+  rythme: number
+  lieux: number
+  resume: number
   prerequis: number
   objectifs: number
   modalitesAcces: number
   debouches: number
-  dureeHeures: number
+  certificateur: number
+  prochainesSessions: number
+  badge: number
   metaDescription: number
   publiee: number
   createdAt: number
@@ -111,13 +141,21 @@ export type FormationMinAggregateInputType = {
   titre?: true
   slug?: true
   filiereId?: true
+  libelle?: true
+  libelleNiveau?: true
+  type?: true
+  niveau?: true
   niveauRncp?: true
+  rncpCode?: true
+  cpfCode?: true
   eligibleCpf?: true
-  prerequis?: true
-  objectifs?: true
-  modalitesAcces?: true
-  debouches?: true
+  alternance?: true
+  duree?: true
   dureeHeures?: true
+  rythme?: true
+  resume?: true
+  certificateur?: true
+  badge?: true
   metaDescription?: true
   publiee?: true
   createdAt?: true
@@ -129,13 +167,21 @@ export type FormationMaxAggregateInputType = {
   titre?: true
   slug?: true
   filiereId?: true
+  libelle?: true
+  libelleNiveau?: true
+  type?: true
+  niveau?: true
   niveauRncp?: true
+  rncpCode?: true
+  cpfCode?: true
   eligibleCpf?: true
-  prerequis?: true
-  objectifs?: true
-  modalitesAcces?: true
-  debouches?: true
+  alternance?: true
+  duree?: true
   dureeHeures?: true
+  rythme?: true
+  resume?: true
+  certificateur?: true
+  badge?: true
   metaDescription?: true
   publiee?: true
   createdAt?: true
@@ -147,13 +193,27 @@ export type FormationCountAggregateInputType = {
   titre?: true
   slug?: true
   filiereId?: true
+  libelle?: true
+  libelleNiveau?: true
+  type?: true
+  niveau?: true
   niveauRncp?: true
+  rncpCode?: true
+  cpfCode?: true
   eligibleCpf?: true
+  alternance?: true
+  duree?: true
+  dureeHeures?: true
+  rythme?: true
+  lieux?: true
+  resume?: true
   prerequis?: true
   objectifs?: true
   modalitesAcces?: true
   debouches?: true
-  dureeHeures?: true
+  certificateur?: true
+  prochainesSessions?: true
+  badge?: true
   metaDescription?: true
   publiee?: true
   createdAt?: true
@@ -252,13 +312,27 @@ export type FormationGroupByOutputType = {
   titre: string
   slug: string
   filiereId: number
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp: $Enums.NiveauRncp | null
+  rncpCode: string | null
+  cpfCode: string | null
   eligibleCpf: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux: string[]
+  resume: string
+  prerequis: string[]
+  objectifs: string[]
+  modalitesAcces: string[]
+  debouches: string[]
+  certificateur: string
+  prochainesSessions: string[]
+  badge: string | null
   metaDescription: string | null
   publiee: boolean
   createdAt: Date
@@ -293,13 +367,27 @@ export type FormationWhereInput = {
   titre?: Prisma.StringFilter<"Formation"> | string
   slug?: Prisma.StringFilter<"Formation"> | string
   filiereId?: Prisma.IntFilter<"Formation"> | number
-  niveauRncp?: Prisma.EnumNiveauRncpFilter<"Formation"> | $Enums.NiveauRncp
+  libelle?: Prisma.StringFilter<"Formation"> | string
+  libelleNiveau?: Prisma.StringFilter<"Formation"> | string
+  type?: Prisma.EnumTypeFormationFilter<"Formation"> | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFilter<"Formation"> | $Enums.NiveauFormation
+  niveauRncp?: Prisma.EnumNiveauRncpNullableFilter<"Formation"> | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.StringNullableFilter<"Formation"> | string | null
+  cpfCode?: Prisma.StringNullableFilter<"Formation"> | string | null
   eligibleCpf?: Prisma.BoolFilter<"Formation"> | boolean
-  prerequis?: Prisma.StringFilter<"Formation"> | string
-  objectifs?: Prisma.StringFilter<"Formation"> | string
-  modalitesAcces?: Prisma.StringFilter<"Formation"> | string
-  debouches?: Prisma.StringFilter<"Formation"> | string
+  alternance?: Prisma.BoolFilter<"Formation"> | boolean
+  duree?: Prisma.StringFilter<"Formation"> | string
   dureeHeures?: Prisma.IntFilter<"Formation"> | number
+  rythme?: Prisma.StringFilter<"Formation"> | string
+  lieux?: Prisma.StringNullableListFilter<"Formation">
+  resume?: Prisma.StringFilter<"Formation"> | string
+  prerequis?: Prisma.StringNullableListFilter<"Formation">
+  objectifs?: Prisma.StringNullableListFilter<"Formation">
+  modalitesAcces?: Prisma.StringNullableListFilter<"Formation">
+  debouches?: Prisma.StringNullableListFilter<"Formation">
+  certificateur?: Prisma.StringFilter<"Formation"> | string
+  prochainesSessions?: Prisma.StringNullableListFilter<"Formation">
+  badge?: Prisma.StringNullableFilter<"Formation"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Formation"> | string | null
   publiee?: Prisma.BoolFilter<"Formation"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Formation"> | Date | string
@@ -315,13 +403,27 @@ export type FormationOrderByWithRelationInput = {
   titre?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   filiereId?: Prisma.SortOrder
-  niveauRncp?: Prisma.SortOrder
+  libelle?: Prisma.SortOrder
+  libelleNiveau?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  niveau?: Prisma.SortOrder
+  niveauRncp?: Prisma.SortOrderInput | Prisma.SortOrder
+  rncpCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  cpfCode?: Prisma.SortOrderInput | Prisma.SortOrder
   eligibleCpf?: Prisma.SortOrder
+  alternance?: Prisma.SortOrder
+  duree?: Prisma.SortOrder
+  dureeHeures?: Prisma.SortOrder
+  rythme?: Prisma.SortOrder
+  lieux?: Prisma.SortOrder
+  resume?: Prisma.SortOrder
   prerequis?: Prisma.SortOrder
   objectifs?: Prisma.SortOrder
   modalitesAcces?: Prisma.SortOrder
   debouches?: Prisma.SortOrder
-  dureeHeures?: Prisma.SortOrder
+  certificateur?: Prisma.SortOrder
+  prochainesSessions?: Prisma.SortOrder
+  badge?: Prisma.SortOrderInput | Prisma.SortOrder
   metaDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   publiee?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -340,13 +442,27 @@ export type FormationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.FormationWhereInput | Prisma.FormationWhereInput[]
   titre?: Prisma.StringFilter<"Formation"> | string
   filiereId?: Prisma.IntFilter<"Formation"> | number
-  niveauRncp?: Prisma.EnumNiveauRncpFilter<"Formation"> | $Enums.NiveauRncp
+  libelle?: Prisma.StringFilter<"Formation"> | string
+  libelleNiveau?: Prisma.StringFilter<"Formation"> | string
+  type?: Prisma.EnumTypeFormationFilter<"Formation"> | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFilter<"Formation"> | $Enums.NiveauFormation
+  niveauRncp?: Prisma.EnumNiveauRncpNullableFilter<"Formation"> | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.StringNullableFilter<"Formation"> | string | null
+  cpfCode?: Prisma.StringNullableFilter<"Formation"> | string | null
   eligibleCpf?: Prisma.BoolFilter<"Formation"> | boolean
-  prerequis?: Prisma.StringFilter<"Formation"> | string
-  objectifs?: Prisma.StringFilter<"Formation"> | string
-  modalitesAcces?: Prisma.StringFilter<"Formation"> | string
-  debouches?: Prisma.StringFilter<"Formation"> | string
+  alternance?: Prisma.BoolFilter<"Formation"> | boolean
+  duree?: Prisma.StringFilter<"Formation"> | string
   dureeHeures?: Prisma.IntFilter<"Formation"> | number
+  rythme?: Prisma.StringFilter<"Formation"> | string
+  lieux?: Prisma.StringNullableListFilter<"Formation">
+  resume?: Prisma.StringFilter<"Formation"> | string
+  prerequis?: Prisma.StringNullableListFilter<"Formation">
+  objectifs?: Prisma.StringNullableListFilter<"Formation">
+  modalitesAcces?: Prisma.StringNullableListFilter<"Formation">
+  debouches?: Prisma.StringNullableListFilter<"Formation">
+  certificateur?: Prisma.StringFilter<"Formation"> | string
+  prochainesSessions?: Prisma.StringNullableListFilter<"Formation">
+  badge?: Prisma.StringNullableFilter<"Formation"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Formation"> | string | null
   publiee?: Prisma.BoolFilter<"Formation"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Formation"> | Date | string
@@ -362,13 +478,27 @@ export type FormationOrderByWithAggregationInput = {
   titre?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   filiereId?: Prisma.SortOrder
-  niveauRncp?: Prisma.SortOrder
+  libelle?: Prisma.SortOrder
+  libelleNiveau?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  niveau?: Prisma.SortOrder
+  niveauRncp?: Prisma.SortOrderInput | Prisma.SortOrder
+  rncpCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  cpfCode?: Prisma.SortOrderInput | Prisma.SortOrder
   eligibleCpf?: Prisma.SortOrder
+  alternance?: Prisma.SortOrder
+  duree?: Prisma.SortOrder
+  dureeHeures?: Prisma.SortOrder
+  rythme?: Prisma.SortOrder
+  lieux?: Prisma.SortOrder
+  resume?: Prisma.SortOrder
   prerequis?: Prisma.SortOrder
   objectifs?: Prisma.SortOrder
   modalitesAcces?: Prisma.SortOrder
   debouches?: Prisma.SortOrder
-  dureeHeures?: Prisma.SortOrder
+  certificateur?: Prisma.SortOrder
+  prochainesSessions?: Prisma.SortOrder
+  badge?: Prisma.SortOrderInput | Prisma.SortOrder
   metaDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   publiee?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -388,13 +518,27 @@ export type FormationScalarWhereWithAggregatesInput = {
   titre?: Prisma.StringWithAggregatesFilter<"Formation"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Formation"> | string
   filiereId?: Prisma.IntWithAggregatesFilter<"Formation"> | number
-  niveauRncp?: Prisma.EnumNiveauRncpWithAggregatesFilter<"Formation"> | $Enums.NiveauRncp
+  libelle?: Prisma.StringWithAggregatesFilter<"Formation"> | string
+  libelleNiveau?: Prisma.StringWithAggregatesFilter<"Formation"> | string
+  type?: Prisma.EnumTypeFormationWithAggregatesFilter<"Formation"> | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationWithAggregatesFilter<"Formation"> | $Enums.NiveauFormation
+  niveauRncp?: Prisma.EnumNiveauRncpNullableWithAggregatesFilter<"Formation"> | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.StringNullableWithAggregatesFilter<"Formation"> | string | null
+  cpfCode?: Prisma.StringNullableWithAggregatesFilter<"Formation"> | string | null
   eligibleCpf?: Prisma.BoolWithAggregatesFilter<"Formation"> | boolean
-  prerequis?: Prisma.StringWithAggregatesFilter<"Formation"> | string
-  objectifs?: Prisma.StringWithAggregatesFilter<"Formation"> | string
-  modalitesAcces?: Prisma.StringWithAggregatesFilter<"Formation"> | string
-  debouches?: Prisma.StringWithAggregatesFilter<"Formation"> | string
+  alternance?: Prisma.BoolWithAggregatesFilter<"Formation"> | boolean
+  duree?: Prisma.StringWithAggregatesFilter<"Formation"> | string
   dureeHeures?: Prisma.IntWithAggregatesFilter<"Formation"> | number
+  rythme?: Prisma.StringWithAggregatesFilter<"Formation"> | string
+  lieux?: Prisma.StringNullableListFilter<"Formation">
+  resume?: Prisma.StringWithAggregatesFilter<"Formation"> | string
+  prerequis?: Prisma.StringNullableListFilter<"Formation">
+  objectifs?: Prisma.StringNullableListFilter<"Formation">
+  modalitesAcces?: Prisma.StringNullableListFilter<"Formation">
+  debouches?: Prisma.StringNullableListFilter<"Formation">
+  certificateur?: Prisma.StringWithAggregatesFilter<"Formation"> | string
+  prochainesSessions?: Prisma.StringNullableListFilter<"Formation">
+  badge?: Prisma.StringNullableWithAggregatesFilter<"Formation"> | string | null
   metaDescription?: Prisma.StringNullableWithAggregatesFilter<"Formation"> | string | null
   publiee?: Prisma.BoolWithAggregatesFilter<"Formation"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Formation"> | Date | string
@@ -404,13 +548,27 @@ export type FormationScalarWhereWithAggregatesInput = {
 export type FormationCreateInput = {
   titre: string
   slug: string
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -426,13 +584,27 @@ export type FormationUncheckedCreateInput = {
   titre: string
   slug: string
   filiereId: number
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -445,13 +617,27 @@ export type FormationUncheckedCreateInput = {
 export type FormationUpdateInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -467,13 +653,27 @@ export type FormationUncheckedUpdateInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   filiereId?: Prisma.IntFieldUpdateOperationsInput | number
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -488,13 +688,27 @@ export type FormationCreateManyInput = {
   titre: string
   slug: string
   filiereId: number
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -504,13 +718,27 @@ export type FormationCreateManyInput = {
 export type FormationUpdateManyMutationInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -522,13 +750,27 @@ export type FormationUncheckedUpdateManyInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   filiereId?: Prisma.IntFieldUpdateOperationsInput | number
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -545,18 +787,40 @@ export type FormationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type FormationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   titre?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   filiereId?: Prisma.SortOrder
+  libelle?: Prisma.SortOrder
+  libelleNiveau?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  niveau?: Prisma.SortOrder
   niveauRncp?: Prisma.SortOrder
+  rncpCode?: Prisma.SortOrder
+  cpfCode?: Prisma.SortOrder
   eligibleCpf?: Prisma.SortOrder
+  alternance?: Prisma.SortOrder
+  duree?: Prisma.SortOrder
+  dureeHeures?: Prisma.SortOrder
+  rythme?: Prisma.SortOrder
+  lieux?: Prisma.SortOrder
+  resume?: Prisma.SortOrder
   prerequis?: Prisma.SortOrder
   objectifs?: Prisma.SortOrder
   modalitesAcces?: Prisma.SortOrder
   debouches?: Prisma.SortOrder
-  dureeHeures?: Prisma.SortOrder
+  certificateur?: Prisma.SortOrder
+  prochainesSessions?: Prisma.SortOrder
+  badge?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
   publiee?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -574,13 +838,21 @@ export type FormationMaxOrderByAggregateInput = {
   titre?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   filiereId?: Prisma.SortOrder
+  libelle?: Prisma.SortOrder
+  libelleNiveau?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  niveau?: Prisma.SortOrder
   niveauRncp?: Prisma.SortOrder
+  rncpCode?: Prisma.SortOrder
+  cpfCode?: Prisma.SortOrder
   eligibleCpf?: Prisma.SortOrder
-  prerequis?: Prisma.SortOrder
-  objectifs?: Prisma.SortOrder
-  modalitesAcces?: Prisma.SortOrder
-  debouches?: Prisma.SortOrder
+  alternance?: Prisma.SortOrder
+  duree?: Prisma.SortOrder
   dureeHeures?: Prisma.SortOrder
+  rythme?: Prisma.SortOrder
+  resume?: Prisma.SortOrder
+  certificateur?: Prisma.SortOrder
+  badge?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
   publiee?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -592,13 +864,21 @@ export type FormationMinOrderByAggregateInput = {
   titre?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   filiereId?: Prisma.SortOrder
+  libelle?: Prisma.SortOrder
+  libelleNiveau?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  niveau?: Prisma.SortOrder
   niveauRncp?: Prisma.SortOrder
+  rncpCode?: Prisma.SortOrder
+  cpfCode?: Prisma.SortOrder
   eligibleCpf?: Prisma.SortOrder
-  prerequis?: Prisma.SortOrder
-  objectifs?: Prisma.SortOrder
-  modalitesAcces?: Prisma.SortOrder
-  debouches?: Prisma.SortOrder
+  alternance?: Prisma.SortOrder
+  duree?: Prisma.SortOrder
   dureeHeures?: Prisma.SortOrder
+  rythme?: Prisma.SortOrder
+  resume?: Prisma.SortOrder
+  certificateur?: Prisma.SortOrder
+  badge?: Prisma.SortOrder
   metaDescription?: Prisma.SortOrder
   publiee?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -609,6 +889,11 @@ export type FormationSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   filiereId?: Prisma.SortOrder
   dureeHeures?: Prisma.SortOrder
+}
+
+export type FormationNullableScalarRelationFilter = {
+  is?: Prisma.FormationWhereInput | null
+  isNot?: Prisma.FormationWhereInput | null
 }
 
 export type FormationScalarRelationFilter = {
@@ -658,8 +943,70 @@ export type FormationUncheckedUpdateManyWithoutFiliereNestedInput = {
   deleteMany?: Prisma.FormationScalarWhereInput | Prisma.FormationScalarWhereInput[]
 }
 
-export type EnumNiveauRncpFieldUpdateOperationsInput = {
-  set?: $Enums.NiveauRncp
+export type FormationCreatelieuxInput = {
+  set: string[]
+}
+
+export type FormationCreateprerequisInput = {
+  set: string[]
+}
+
+export type FormationCreateobjectifsInput = {
+  set: string[]
+}
+
+export type FormationCreatemodalitesAccesInput = {
+  set: string[]
+}
+
+export type FormationCreatedebouchesInput = {
+  set: string[]
+}
+
+export type FormationCreateprochainesSessionsInput = {
+  set: string[]
+}
+
+export type EnumTypeFormationFieldUpdateOperationsInput = {
+  set?: $Enums.TypeFormation
+}
+
+export type EnumNiveauFormationFieldUpdateOperationsInput = {
+  set?: $Enums.NiveauFormation
+}
+
+export type NullableEnumNiveauRncpFieldUpdateOperationsInput = {
+  set?: $Enums.NiveauRncp | null
+}
+
+export type FormationUpdatelieuxInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type FormationUpdateprerequisInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type FormationUpdateobjectifsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type FormationUpdatemodalitesAccesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type FormationUpdatedebouchesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type FormationUpdateprochainesSessionsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type FormationCreateNestedOneWithoutCandidaturesInput = {
@@ -668,10 +1015,12 @@ export type FormationCreateNestedOneWithoutCandidaturesInput = {
   connect?: Prisma.FormationWhereUniqueInput
 }
 
-export type FormationUpdateOneRequiredWithoutCandidaturesNestedInput = {
+export type FormationUpdateOneWithoutCandidaturesNestedInput = {
   create?: Prisma.XOR<Prisma.FormationCreateWithoutCandidaturesInput, Prisma.FormationUncheckedCreateWithoutCandidaturesInput>
   connectOrCreate?: Prisma.FormationCreateOrConnectWithoutCandidaturesInput
   upsert?: Prisma.FormationUpsertWithoutCandidaturesInput
+  disconnect?: Prisma.FormationWhereInput | boolean
+  delete?: Prisma.FormationWhereInput | boolean
   connect?: Prisma.FormationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.FormationUpdateToOneWithWhereWithoutCandidaturesInput, Prisma.FormationUpdateWithoutCandidaturesInput>, Prisma.FormationUncheckedUpdateWithoutCandidaturesInput>
 }
@@ -707,13 +1056,27 @@ export type FormationUpdateOneRequiredWithoutCompetencesNestedInput = {
 export type FormationCreateWithoutFiliereInput = {
   titre: string
   slug: string
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -727,13 +1090,27 @@ export type FormationUncheckedCreateWithoutFiliereInput = {
   id?: number
   titre: string
   slug: string
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -777,13 +1154,27 @@ export type FormationScalarWhereInput = {
   titre?: Prisma.StringFilter<"Formation"> | string
   slug?: Prisma.StringFilter<"Formation"> | string
   filiereId?: Prisma.IntFilter<"Formation"> | number
-  niveauRncp?: Prisma.EnumNiveauRncpFilter<"Formation"> | $Enums.NiveauRncp
+  libelle?: Prisma.StringFilter<"Formation"> | string
+  libelleNiveau?: Prisma.StringFilter<"Formation"> | string
+  type?: Prisma.EnumTypeFormationFilter<"Formation"> | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFilter<"Formation"> | $Enums.NiveauFormation
+  niveauRncp?: Prisma.EnumNiveauRncpNullableFilter<"Formation"> | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.StringNullableFilter<"Formation"> | string | null
+  cpfCode?: Prisma.StringNullableFilter<"Formation"> | string | null
   eligibleCpf?: Prisma.BoolFilter<"Formation"> | boolean
-  prerequis?: Prisma.StringFilter<"Formation"> | string
-  objectifs?: Prisma.StringFilter<"Formation"> | string
-  modalitesAcces?: Prisma.StringFilter<"Formation"> | string
-  debouches?: Prisma.StringFilter<"Formation"> | string
+  alternance?: Prisma.BoolFilter<"Formation"> | boolean
+  duree?: Prisma.StringFilter<"Formation"> | string
   dureeHeures?: Prisma.IntFilter<"Formation"> | number
+  rythme?: Prisma.StringFilter<"Formation"> | string
+  lieux?: Prisma.StringNullableListFilter<"Formation">
+  resume?: Prisma.StringFilter<"Formation"> | string
+  prerequis?: Prisma.StringNullableListFilter<"Formation">
+  objectifs?: Prisma.StringNullableListFilter<"Formation">
+  modalitesAcces?: Prisma.StringNullableListFilter<"Formation">
+  debouches?: Prisma.StringNullableListFilter<"Formation">
+  certificateur?: Prisma.StringFilter<"Formation"> | string
+  prochainesSessions?: Prisma.StringNullableListFilter<"Formation">
+  badge?: Prisma.StringNullableFilter<"Formation"> | string | null
   metaDescription?: Prisma.StringNullableFilter<"Formation"> | string | null
   publiee?: Prisma.BoolFilter<"Formation"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Formation"> | Date | string
@@ -793,13 +1184,27 @@ export type FormationScalarWhereInput = {
 export type FormationCreateWithoutCandidaturesInput = {
   titre: string
   slug: string
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -814,13 +1219,27 @@ export type FormationUncheckedCreateWithoutCandidaturesInput = {
   titre: string
   slug: string
   filiereId: number
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -848,13 +1267,27 @@ export type FormationUpdateToOneWithWhereWithoutCandidaturesInput = {
 export type FormationUpdateWithoutCandidaturesInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -869,13 +1302,27 @@ export type FormationUncheckedUpdateWithoutCandidaturesInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   filiereId?: Prisma.IntFieldUpdateOperationsInput | number
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -887,13 +1334,27 @@ export type FormationUncheckedUpdateWithoutCandidaturesInput = {
 export type FormationCreateWithoutPromotionsInput = {
   titre: string
   slug: string
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -908,13 +1369,27 @@ export type FormationUncheckedCreateWithoutPromotionsInput = {
   titre: string
   slug: string
   filiereId: number
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -942,13 +1417,27 @@ export type FormationUpdateToOneWithWhereWithoutPromotionsInput = {
 export type FormationUpdateWithoutPromotionsInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -963,13 +1452,27 @@ export type FormationUncheckedUpdateWithoutPromotionsInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   filiereId?: Prisma.IntFieldUpdateOperationsInput | number
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -981,13 +1484,27 @@ export type FormationUncheckedUpdateWithoutPromotionsInput = {
 export type FormationCreateWithoutCompetencesInput = {
   titre: string
   slug: string
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -1002,13 +1519,27 @@ export type FormationUncheckedCreateWithoutCompetencesInput = {
   titre: string
   slug: string
   filiereId: number
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -1036,13 +1567,27 @@ export type FormationUpdateToOneWithWhereWithoutCompetencesInput = {
 export type FormationUpdateWithoutCompetencesInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1057,13 +1602,27 @@ export type FormationUncheckedUpdateWithoutCompetencesInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   filiereId?: Prisma.IntFieldUpdateOperationsInput | number
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1076,13 +1635,27 @@ export type FormationCreateManyFiliereInput = {
   id?: number
   titre: string
   slug: string
-  niveauRncp: $Enums.NiveauRncp
+  libelle: string
+  libelleNiveau: string
+  type: $Enums.TypeFormation
+  niveau: $Enums.NiveauFormation
+  niveauRncp?: $Enums.NiveauRncp | null
+  rncpCode?: string | null
+  cpfCode?: string | null
   eligibleCpf?: boolean
-  prerequis: string
-  objectifs: string
-  modalitesAcces: string
-  debouches: string
+  alternance?: boolean
+  duree: string
   dureeHeures: number
+  rythme: string
+  lieux?: Prisma.FormationCreatelieuxInput | string[]
+  resume: string
+  prerequis?: Prisma.FormationCreateprerequisInput | string[]
+  objectifs?: Prisma.FormationCreateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationCreatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationCreatedebouchesInput | string[]
+  certificateur: string
+  prochainesSessions?: Prisma.FormationCreateprochainesSessionsInput | string[]
+  badge?: string | null
   metaDescription?: string | null
   publiee?: boolean
   createdAt?: Date | string
@@ -1092,13 +1665,27 @@ export type FormationCreateManyFiliereInput = {
 export type FormationUpdateWithoutFiliereInput = {
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1112,13 +1699,27 @@ export type FormationUncheckedUpdateWithoutFiliereInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1132,13 +1733,27 @@ export type FormationUncheckedUpdateManyWithoutFiliereInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   titre?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  niveauRncp?: Prisma.EnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  libelleNiveau?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeFormationFieldUpdateOperationsInput | $Enums.TypeFormation
+  niveau?: Prisma.EnumNiveauFormationFieldUpdateOperationsInput | $Enums.NiveauFormation
+  niveauRncp?: Prisma.NullableEnumNiveauRncpFieldUpdateOperationsInput | $Enums.NiveauRncp | null
+  rncpCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cpfCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   eligibleCpf?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  prerequis?: Prisma.StringFieldUpdateOperationsInput | string
-  objectifs?: Prisma.StringFieldUpdateOperationsInput | string
-  modalitesAcces?: Prisma.StringFieldUpdateOperationsInput | string
-  debouches?: Prisma.StringFieldUpdateOperationsInput | string
+  alternance?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  duree?: Prisma.StringFieldUpdateOperationsInput | string
   dureeHeures?: Prisma.IntFieldUpdateOperationsInput | number
+  rythme?: Prisma.StringFieldUpdateOperationsInput | string
+  lieux?: Prisma.FormationUpdatelieuxInput | string[]
+  resume?: Prisma.StringFieldUpdateOperationsInput | string
+  prerequis?: Prisma.FormationUpdateprerequisInput | string[]
+  objectifs?: Prisma.FormationUpdateobjectifsInput | string[]
+  modalitesAcces?: Prisma.FormationUpdatemodalitesAccesInput | string[]
+  debouches?: Prisma.FormationUpdatedebouchesInput | string[]
+  certificateur?: Prisma.StringFieldUpdateOperationsInput | string
+  prochainesSessions?: Prisma.FormationUpdateprochainesSessionsInput | string[]
+  badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metaDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   publiee?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1199,13 +1814,27 @@ export type FormationSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   titre?: boolean
   slug?: boolean
   filiereId?: boolean
+  libelle?: boolean
+  libelleNiveau?: boolean
+  type?: boolean
+  niveau?: boolean
   niveauRncp?: boolean
+  rncpCode?: boolean
+  cpfCode?: boolean
   eligibleCpf?: boolean
+  alternance?: boolean
+  duree?: boolean
+  dureeHeures?: boolean
+  rythme?: boolean
+  lieux?: boolean
+  resume?: boolean
   prerequis?: boolean
   objectifs?: boolean
   modalitesAcces?: boolean
   debouches?: boolean
-  dureeHeures?: boolean
+  certificateur?: boolean
+  prochainesSessions?: boolean
+  badge?: boolean
   metaDescription?: boolean
   publiee?: boolean
   createdAt?: boolean
@@ -1222,13 +1851,27 @@ export type FormationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   titre?: boolean
   slug?: boolean
   filiereId?: boolean
+  libelle?: boolean
+  libelleNiveau?: boolean
+  type?: boolean
+  niveau?: boolean
   niveauRncp?: boolean
+  rncpCode?: boolean
+  cpfCode?: boolean
   eligibleCpf?: boolean
+  alternance?: boolean
+  duree?: boolean
+  dureeHeures?: boolean
+  rythme?: boolean
+  lieux?: boolean
+  resume?: boolean
   prerequis?: boolean
   objectifs?: boolean
   modalitesAcces?: boolean
   debouches?: boolean
-  dureeHeures?: boolean
+  certificateur?: boolean
+  prochainesSessions?: boolean
+  badge?: boolean
   metaDescription?: boolean
   publiee?: boolean
   createdAt?: boolean
@@ -1241,13 +1884,27 @@ export type FormationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   titre?: boolean
   slug?: boolean
   filiereId?: boolean
+  libelle?: boolean
+  libelleNiveau?: boolean
+  type?: boolean
+  niveau?: boolean
   niveauRncp?: boolean
+  rncpCode?: boolean
+  cpfCode?: boolean
   eligibleCpf?: boolean
+  alternance?: boolean
+  duree?: boolean
+  dureeHeures?: boolean
+  rythme?: boolean
+  lieux?: boolean
+  resume?: boolean
   prerequis?: boolean
   objectifs?: boolean
   modalitesAcces?: boolean
   debouches?: boolean
-  dureeHeures?: boolean
+  certificateur?: boolean
+  prochainesSessions?: boolean
+  badge?: boolean
   metaDescription?: boolean
   publiee?: boolean
   createdAt?: boolean
@@ -1260,20 +1917,34 @@ export type FormationSelectScalar = {
   titre?: boolean
   slug?: boolean
   filiereId?: boolean
+  libelle?: boolean
+  libelleNiveau?: boolean
+  type?: boolean
+  niveau?: boolean
   niveauRncp?: boolean
+  rncpCode?: boolean
+  cpfCode?: boolean
   eligibleCpf?: boolean
+  alternance?: boolean
+  duree?: boolean
+  dureeHeures?: boolean
+  rythme?: boolean
+  lieux?: boolean
+  resume?: boolean
   prerequis?: boolean
   objectifs?: boolean
   modalitesAcces?: boolean
   debouches?: boolean
-  dureeHeures?: boolean
+  certificateur?: boolean
+  prochainesSessions?: boolean
+  badge?: boolean
   metaDescription?: boolean
   publiee?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FormationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "titre" | "slug" | "filiereId" | "niveauRncp" | "eligibleCpf" | "prerequis" | "objectifs" | "modalitesAcces" | "debouches" | "dureeHeures" | "metaDescription" | "publiee" | "createdAt" | "updatedAt", ExtArgs["result"]["formation"]>
+export type FormationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "titre" | "slug" | "filiereId" | "libelle" | "libelleNiveau" | "type" | "niveau" | "niveauRncp" | "rncpCode" | "cpfCode" | "eligibleCpf" | "alternance" | "duree" | "dureeHeures" | "rythme" | "lieux" | "resume" | "prerequis" | "objectifs" | "modalitesAcces" | "debouches" | "certificateur" | "prochainesSessions" | "badge" | "metaDescription" | "publiee" | "createdAt" | "updatedAt", ExtArgs["result"]["formation"]>
 export type FormationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   filiere?: boolean | Prisma.FiliereDefaultArgs<ExtArgs>
   promotions?: boolean | Prisma.Formation$promotionsArgs<ExtArgs>
@@ -1301,13 +1972,27 @@ export type $FormationPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     titre: string
     slug: string
     filiereId: number
-    niveauRncp: $Enums.NiveauRncp
+    libelle: string
+    libelleNiveau: string
+    type: $Enums.TypeFormation
+    niveau: $Enums.NiveauFormation
+    niveauRncp: $Enums.NiveauRncp | null
+    rncpCode: string | null
+    cpfCode: string | null
     eligibleCpf: boolean
-    prerequis: string
-    objectifs: string
-    modalitesAcces: string
-    debouches: string
+    alternance: boolean
+    duree: string
     dureeHeures: number
+    rythme: string
+    lieux: string[]
+    resume: string
+    prerequis: string[]
+    objectifs: string[]
+    modalitesAcces: string[]
+    debouches: string[]
+    certificateur: string
+    prochainesSessions: string[]
+    badge: string | null
     metaDescription: string | null
     publiee: boolean
     createdAt: Date
@@ -1743,13 +2428,27 @@ export interface FormationFieldRefs {
   readonly titre: Prisma.FieldRef<"Formation", 'String'>
   readonly slug: Prisma.FieldRef<"Formation", 'String'>
   readonly filiereId: Prisma.FieldRef<"Formation", 'Int'>
+  readonly libelle: Prisma.FieldRef<"Formation", 'String'>
+  readonly libelleNiveau: Prisma.FieldRef<"Formation", 'String'>
+  readonly type: Prisma.FieldRef<"Formation", 'TypeFormation'>
+  readonly niveau: Prisma.FieldRef<"Formation", 'NiveauFormation'>
   readonly niveauRncp: Prisma.FieldRef<"Formation", 'NiveauRncp'>
+  readonly rncpCode: Prisma.FieldRef<"Formation", 'String'>
+  readonly cpfCode: Prisma.FieldRef<"Formation", 'String'>
   readonly eligibleCpf: Prisma.FieldRef<"Formation", 'Boolean'>
-  readonly prerequis: Prisma.FieldRef<"Formation", 'String'>
-  readonly objectifs: Prisma.FieldRef<"Formation", 'String'>
-  readonly modalitesAcces: Prisma.FieldRef<"Formation", 'String'>
-  readonly debouches: Prisma.FieldRef<"Formation", 'String'>
+  readonly alternance: Prisma.FieldRef<"Formation", 'Boolean'>
+  readonly duree: Prisma.FieldRef<"Formation", 'String'>
   readonly dureeHeures: Prisma.FieldRef<"Formation", 'Int'>
+  readonly rythme: Prisma.FieldRef<"Formation", 'String'>
+  readonly lieux: Prisma.FieldRef<"Formation", 'String[]'>
+  readonly resume: Prisma.FieldRef<"Formation", 'String'>
+  readonly prerequis: Prisma.FieldRef<"Formation", 'String[]'>
+  readonly objectifs: Prisma.FieldRef<"Formation", 'String[]'>
+  readonly modalitesAcces: Prisma.FieldRef<"Formation", 'String[]'>
+  readonly debouches: Prisma.FieldRef<"Formation", 'String[]'>
+  readonly certificateur: Prisma.FieldRef<"Formation", 'String'>
+  readonly prochainesSessions: Prisma.FieldRef<"Formation", 'String[]'>
+  readonly badge: Prisma.FieldRef<"Formation", 'String'>
   readonly metaDescription: Prisma.FieldRef<"Formation", 'String'>
   readonly publiee: Prisma.FieldRef<"Formation", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Formation", 'DateTime'>
