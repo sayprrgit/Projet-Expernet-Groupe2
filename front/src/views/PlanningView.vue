@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import {
-  PLANNING_ENTRIES,
   PLANNING_KIND_LABELS,
   PLANNING_SITES,
   type PlanningEntry,
   type PlanningKind,
 } from '@/data/planning';
+import { apiService } from '@/services/api';
 import { IMAGES } from '@/data/images';
 import SeoMeta from '@/components/SeoMeta.vue';
 import PageHero from '@/components/PageHero.vue';
@@ -26,6 +26,18 @@ const kindFilter = ref<KindFilter>('all');
 const DEFAULT_SITE = 'Tous les sites';
 const siteFilter = ref<string>(DEFAULT_SITE);
 
+// Les rendez-vous viennent de la base de données (via l'API), avec repli local en cas d'indisponibilité
+const entries = ref<PlanningEntry[]>([]);
+const isLoading = ref(true);
+
+onMounted(async () => {
+  try {
+    entries.value = await apiService.getPlanning();
+  } finally {
+    isLoading.value = false;
+  }
+});
+
 const startOfToday = () => {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
@@ -35,7 +47,7 @@ const startOfToday = () => {
 const parseDate = (value: string) => new Date(`${value}T00:00:00`);
 
 const filteredEntries = computed(() =>
-  PLANNING_ENTRIES.filter((entry) => {
+  entries.value.filter((entry) => {
     const kindMatches = kindFilter.value === 'all' || entry.kind === kindFilter.value;
     const siteMatches =
       siteFilter.value === DEFAULT_SITE ||
@@ -74,8 +86,8 @@ const groupedEntries = computed(() => {
 const nextEntry = computed(() => {
   const today = startOfToday();
   return (
-    PLANNING_ENTRIES.find((entry) => parseDate(entry.date) >= today) ??
-    PLANNING_ENTRIES[PLANNING_ENTRIES.length - 1] ??
+    entries.value.find((entry) => parseDate(entry.date) >= today) ??
+    entries.value[entries.value.length - 1] ??
     null
   );
 });
@@ -144,7 +156,7 @@ const resetFilters = () => {
 
           <label class="site-filter">
             <span class="sr-only">Filtrer par site</span>
-            <select v-model="siteFilter">
+            <select v-model="siteFilter" @keydown.space.prevent.stop>
               <option v-for="site in PLANNING_SITES" :key="site" :value="site">{{ site }}</option>
             </select>
           </label>
@@ -162,7 +174,11 @@ const resetFilters = () => {
           </button>
         </div>
 
-        <div v-if="groupedEntries.length" class="timeline">
+        <div v-if="isLoading" class="empty">
+          <p>Chargement du planning…</p>
+        </div>
+
+        <div v-else-if="groupedEntries.length" class="timeline">
           <section v-for="group in groupedEntries" :key="group.label" class="month-group">
             <h2 class="month-title">{{ group.label }}</h2>
             <ul class="entry-list">

@@ -1,85 +1,182 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { MOCK_FORMATIONS, Formation } from './formations.data.js';
+import { PrismaService } from '../prisma/prisma.service.js';
+import { NiveauFormation, Prisma, TypeFormation } from '../generated/prisma/client.js';
 import { CreateCandidatureDto } from './dto/candidature.dto.js';
 
-export interface CandidatureRecord extends CreateCandidatureDto {
+export interface FormationFilters {
+  search?: string;
+  category?: string;
+  level?: string;
+  type?: string;
+  cpfOnly?: boolean;
+  campus?: string;
+}
+
+// ───────── Cartographie entre l'API publique (contrat front) et la base ─────────
+
+type FormationLevel = 'bac+2' | 'bac+3' | 'bac+5' | 'certification';
+
+const NIVEAU_TO_API: Record<NiveauFormation, FormationLevel> = {
+  [NiveauFormation.BAC_PLUS_2]: 'bac+2',
+  [NiveauFormation.BAC_PLUS_3]: 'bac+3',
+  [NiveauFormation.BAC_PLUS_5]: 'bac+5',
+  [NiveauFormation.CERTIFICATION]: 'certification',
+};
+
+const NIVEAU_FROM_API: Record<string, NiveauFormation> = {
+  'bac+2': NiveauFormation.BAC_PLUS_2,
+  'bac+3': NiveauFormation.BAC_PLUS_3,
+  'bac+5': NiveauFormation.BAC_PLUS_5,
+  certification: NiveauFormation.CERTIFICATION,
+};
+
+const TYPE_FROM_API: Record<string, TypeFormation> = {
+  campus: TypeFormation.CAMPUS,
+  pro: TypeFormation.PRO,
+};
+
+type FormationRow = Prisma.FormationGetPayload<{ include: { filiere: true } }>;
+
+export interface FormationDto {
   id: string;
-  createdAt: string;
-  status: 'recue' | 'en_cours' | 'validee';
+  title: string;
+  slug: string;
+  category: string;
+  categoryLabel: string;
+  type: 'campus' | 'pro';
+  typeLabel: string;
+  level: 'bac+2' | 'bac+3' | 'bac+5' | 'certification';
+  levelLabel: string;
+  rncpCode?: string;
+  cpfCode?: string;
+  duration: string;
+  pace: string;
+  isCpfEligible: boolean;
+  isAlternance: boolean;
+  campus: string[];
+  shortDescription: string;
+  prerequisites: string[];
+  objectives: string[];
+  admissionModalities: string[];
+  careerOutcomes: string[];
+  certifyingPartner: string;
+  startingDates: string[];
+  badge?: string;
+}
+
+function toFormationDto(row: FormationRow): FormationDto {
+  const isCampus = row.type === TypeFormation.CAMPUS;
+  const typeLabel = isCampus
+    ? 'Expernet Campus (Alternance)'
+    : row.eligibleCpf
+      ? 'Expernet Pro (Formation Continue & CPF)'
+      : 'Expernet Pro (Formation Continue)';
+
+  return {
+    id: row.slug,
+    title: row.titre,
+    slug: row.slug,
+    category: row.filiere.slug,
+    categoryLabel: row.libelle,
+    type: isCampus ? 'campus' : 'pro',
+    typeLabel,
+    level: NIVEAU_TO_API[row.niveau],
+    levelLabel: row.libelleNiveau,
+    rncpCode: row.rncpCode ?? undefined,
+    cpfCode: row.cpfCode ?? undefined,
+    duration: row.duree,
+    pace: row.rythme,
+    isCpfEligible: row.eligibleCpf,
+    isAlternance: row.alternance,
+    campus: row.lieux,
+    shortDescription: row.resume,
+    prerequisites: row.prerequis,
+    objectives: row.objectifs,
+    admissionModalities: row.modalitesAcces,
+    careerOutcomes: row.debouches,
+    certifyingPartner: row.certificateur,
+    startingDates: row.prochainesSessions,
+    badge: row.badge ?? undefined,
+  };
 }
 
 @Injectable()
 export class FormationsService {
-  private formations: Formation[] = [...MOCK_FORMATIONS];
-  private candidatures: CandidatureRecord[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  findAll(filters?: {
-    search?: string;
-    category?: string;
-    level?: string;
-    type?: string;
-    cpfOnly?: boolean;
-    campus?: string;
-  }): { total: number; data: Formation[] } {
-    let result = [...this.formations];
-
-    if (filters?.search) {
-      const q = filters.search.toLowerCase().trim();
-      result = result.filter(
-        (f) =>
-          f.title.toLowerCase().includes(q) ||
-          f.shortDescription.toLowerCase().includes(q) ||
-          f.categoryLabel.toLowerCase().includes(q) ||
-          f.careerOutcomes.some((c) => c.toLowerCase().includes(q)) ||
-          (f.rncpCode && f.rncpCode.toLowerCase().includes(q)),
-      );
-    }
+  async findAll(filters?: FormationFilters): Promise<{ total: number; data: FormationDto[] }> {
+    const where: Prisma.FormationWhereInput = { publiee: true };
 
     if (filters?.category && filters.category !== 'all') {
-      result = result.filter((f) => f.category === filters.category);
+      where.filiere = { slug: filters.category };
     }
-
     if (filters?.level && filters.level !== 'all') {
-      result = result.filter((f) => f.level === filters.level);
+      where.niveau = NIVEAU_FROM_API[filters.level];
     }
-
     if (filters?.type && filters.type !== 'all') {
-      result = result.filter((f) => f.type === filters.type);
+      where.type = TYPE_FROM_API[filters.type];
     }
-
     if (filters?.cpfOnly) {
-      result = result.filter((f) => f.isCpfEligible === true);
+      where.eligibleCpf = true;
+    }
+    if (filters?.campus && filters.campus !== 'all') {
+      where.lieux = { has: filters.campus };
+    }
+    if (filters?.search) {
+      const q = filters.search.trim();
+      if (q) {
+        where.OR = [
+          { titre: { contains: q, mode: 'insensitive' } },
+          { resume: { contains: q, mode: 'insensitive' } },
+          { certificateur: { contains: q, mode: 'insensitive' } },
+          { rncpCode: { contains: q, mode: 'insensitive' } },
+          { filiere: { nom: { contains: q, mode: 'insensitive' } } },
+        ];
+      }
     }
 
-    if (filters?.campus && filters.campus !== 'all') {
-      result = result.filter((f) => f.campus.includes(filters.campus as any));
-    }
+    const rows = await this.prisma.formation.findMany({
+      where,
+      include: { filiere: true },
+      orderBy: { id: 'asc' },
+    });
 
     return {
-      total: result.length,
-      data: result,
+      total: rows.length,
+      data: rows.map(toFormationDto),
     };
   }
 
-  findOne(idOrSlug: string): Formation {
-    const formation = this.formations.find(
-      (f) => f.id === idOrSlug || f.slug === idOrSlug,
-    );
-    if (!formation) {
+  async findOne(idOrSlug: string): Promise<FormationDto> {
+    const or: Prisma.FormationWhereInput[] = [{ slug: idOrSlug }];
+    const numericId = Number.parseInt(idOrSlug, 10);
+    if (Number.isFinite(numericId)) {
+      or.push({ id: numericId });
+    }
+
+    const row = await this.prisma.formation.findFirst({
+      where: { OR: or },
+      include: { filiere: true },
+    });
+
+    if (!row) {
       throw new NotFoundException(`Formation introuvable avec l'identifiant ${idOrSlug}`);
     }
-    return formation;
+    return toFormationDto(row);
   }
 
-  getCategoriesSummary() {
+  async getCategoriesSummary() {
+    const filieres = await this.prisma.filiere.findMany({
+      include: { formations: { where: { publiee: true } } },
+      orderBy: { id: 'asc' },
+    });
+
+    const totalFormations = filieres.reduce((total, f) => total + f.formations.length, 0);
+
     return {
       categories: [
-        { id: 'all', label: 'Toutes les filières', count: this.formations.length },
-        { id: 'dev', label: 'Développement Web & Logiciel', count: this.formations.filter((f) => f.category === 'dev').length },
-        { id: 'reseaux', label: 'Systèmes, Réseaux & Cybersécurité', count: this.formations.filter((f) => f.category === 'reseaux').length },
-        { id: 'marketing', label: 'Marketing Digital & Communication', count: this.formations.filter((f) => f.category === 'marketing').length },
-        { id: 'data', label: 'Data & Intelligence Artificielle', count: this.formations.filter((f) => f.category === 'data').length },
-        { id: 'management', label: 'Gestion de projet & Management', count: this.formations.filter((f) => f.category === 'management').length },
+        { id: 'all', label: 'Toutes les filières', count: totalFormations },
+        ...filieres.map((f) => ({ id: f.slug, label: f.nom, count: f.formations.length })),
       ],
       levels: [
         { id: 'all', label: 'Tous les niveaux' },
@@ -94,7 +191,7 @@ export class FormationsService {
         { id: 'pro', label: 'Expernet Pro (Formation continue & Reconversion)' },
       ],
       stats: {
-        totalFormations: this.formations.length,
+        totalFormations,
         insertionTaux: '92%',
         anneesExperience: '+20 ans à La Réunion',
         diplomesCertifies: '100% Titres RNCP & Diplômes d’État',
@@ -102,24 +199,67 @@ export class FormationsService {
     };
   }
 
-  createCandidature(dto: CreateCandidatureDto) {
-    const record: CandidatureRecord = {
-      ...dto,
-      id: 'EXP-' + Math.floor(100000 + Math.random() * 900000),
-      createdAt: new Date().toISOString(),
-      status: 'recue',
-    };
-    this.candidatures.push(record);
+  async createCandidature(dto: CreateCandidatureDto) {
+    // La formation est optionnelle (démarche « info » sans formation précise)
+    let formationId: number | null = null;
+    if (dto.formationId) {
+      const or: Prisma.FormationWhereInput[] = [{ slug: dto.formationId }];
+      const numericId = Number.parseInt(dto.formationId, 10);
+      if (Number.isFinite(numericId)) {
+        or.push({ id: numericId });
+      }
+      const formation = await this.prisma.formation.findFirst({ where: { OR: or } });
+      if (!formation) {
+        throw new NotFoundException(`Formation inconnue : ${dto.formationId}`);
+      }
+      formationId = formation.id;
+    }
+
+    // Référence publique de candidature, unique
+    let reference = this.generateReference();
+    while (await this.prisma.candidature.findUnique({ where: { reference } })) {
+      reference = this.generateReference();
+    }
+
+    const record = await this.prisma.candidature.create({
+      data: {
+        reference,
+        formationId,
+        nom: dto.nom,
+        prenom: dto.prenom,
+        email: dto.email,
+        telephone: dto.telephone,
+        codePostal: dto.codePostal,
+        typeDemarche: dto.typeDemarche,
+        statutActuel: dto.statutActuel,
+        motivation: dto.message ?? '',
+        rgpdConsent: dto.rgpdConsent,
+      },
+    });
 
     return {
       success: true,
-      reference: record.id,
-      message: 'Votre candidature a bien été enregistrée. Un conseiller pédagogique Expernet vous recontactera sous 48h.',
-      candidature: record,
+      reference: record.reference,
+      message:
+        'Votre candidature a bien été enregistrée. Un conseiller pédagogique Expernet vous recontactera sous 48h.',
+      candidature: {
+        ...dto,
+        id: record.reference,
+        createdAt: record.createdAt.toISOString(),
+      },
     };
   }
 
-  findAllCandidatures() {
-    return this.candidatures;
+  async findAllCandidatures() {
+    return this.prisma.candidature.findMany({
+      include: {
+        formation: { select: { id: true, slug: true, titre: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  private generateReference(): string {
+    return 'EXP-' + Math.floor(100000 + Math.random() * 900000);
   }
 }

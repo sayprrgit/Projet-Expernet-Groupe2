@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { authApi, jetonActuel, type Role } from './auth';
+import type { Role } from '@/types/user';
 
-export type { Role } from './auth';
+export type { Role } from '@/types/user';
 
 export interface Canal {
   id: number;
@@ -36,18 +36,21 @@ export interface DocumentPartage {
 
 const client = axios.create({ baseURL: '/api', timeout: 8000 });
 
-// Chaque appel envoie le jeton JWT de la session
+// Même session que le reste du site : jeton stocké par le store d'authentification (stores/auth.ts)
 client.interceptors.request.use((config) => {
-  const jeton = jetonActuel();
+  const jeton = localStorage.getItem('token');
   if (jeton) config.headers.set('Authorization', `Bearer ${jeton}`);
   return config;
 });
 
-// Jeton expiré ou invalide : on ferme la session
+// Jeton expiré ou invalide : déconnexion globale (écoutée dans main.ts)
 client.interceptors.response.use(
   (reponse) => reponse,
   (err: unknown) => {
-    if (axios.isAxiosError(err) && err.response?.status === 401) authApi.deconnexion();
+    if (axios.isAxiosError(err) && err.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.dispatchEvent(new CustomEvent('auth:logout'));
+    }
     return Promise.reject(err);
   },
 );
@@ -85,4 +88,12 @@ export const collabApi = {
   },
 };
 
-export { messageErreur } from './auth';
+export function messageErreur(err: unknown): string {
+  if (axios.isAxiosError(err)) {
+    if (!err.response) return 'Le serveur ne répond pas. Vérifiez que le backend est démarré.';
+    const message = (err.response.data as { message?: unknown } | undefined)?.message;
+    if (Array.isArray(message)) return message.join(', ');
+    if (typeof message === 'string') return message;
+  }
+  return 'Une erreur est survenue.';
+}

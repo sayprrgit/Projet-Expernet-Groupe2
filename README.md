@@ -165,21 +165,21 @@ Toutes les routes sont préfixées par `/api`.
 
 ## 🔐 Authentification (JWT)
 
-Connexion par **email + mot de passe** (vérifié avec le hash bcrypt de la table `User`), qui renvoie un **jeton JWT** valable 8 heures, signé avec `JWT_SECRET`.
+Connexion par **email + mot de passe** (vérifié avec le hash bcrypt de la table `User`), qui renvoie un **jeton JWT** valable 8 heures, signé en HS256 avec `JWT_SECRET`.
 
 | Méthode | Route | Description |
 |---|---|---|
-| `POST` | `/api/auth/login` | Corps `{ "email", "motDePasse" }` → `{ accessToken, utilisateur }` |
+| `POST` | `/api/auth/login` | Corps `{ "email", "password" }` → `{ token, user }` |
 | `GET` | `/api/auth/me` | Profil de l'utilisateur connecté (jeton requis) |
 
 - Les routes protégées attendent l'en-tête `Authorization: Bearer <jeton>`. Sans jeton valide : **401**.
-- Le `JwtAuthGuard` relit l'utilisateur en base à chaque requête (un compte supprimé ou un rôle modifié est pris en compte immédiatement).
+- `AuthGuard` (`portal-expernet/src/auth/auth.guard.ts`) vérifie le jeton, relit l'utilisateur en base et l'attache à la requête (sans le hash du mot de passe ni le secret MFA).
+- **RBAC** : le décorateur `@Roles('ADMIN', 'FORMATEUR')` limite une route à certains rôles (sinon **403**) ; `@CurrentUser()` donne l'utilisateur connecté dans un contrôleur.
 - Le message d'erreur de connexion est identique pour un email inconnu et un mauvais mot de passe, et le temps de réponse est égalisé, pour ne pas révéler quels comptes existent.
-- Code : `portal-expernet/src/auth/` (module global : `JwtAuthGuard` et le décorateur `@UtilisateurActuel()` sont utilisables dans tous les modules).
-- Côté front : `front/src/services/auth.ts` gère la session (jeton envoyé sur chaque appel, déconnexion automatique si le jeton expire).
-- **Dans Swagger** : appeler `POST /api/auth/login`, copier `accessToken`, cliquer sur **Authorize** et le coller.
+- Côté front : page de connexion commune **`/login`**, store Pinia `front/src/stores/auth.ts` ; une route avec `meta: { requiresAuth: true }` redirige vers `/login?redirect=...` puis revient à la page demandée après connexion.
+- **Dans Swagger** : appeler `POST /api/auth/login`, copier `token`, cliquer sur **Authorize** et le coller.
 
-> `JWT_SECRET` doit être défini dans le `.env` de la racine (Docker) et dans `portal-expernet/.env` pour un lancement local ; sans lui, le backend refuse de démarrer.
+> `JWT_SECRET` est **obligatoire** (aucune valeur par défaut) : dans le `.env` de la racine pour Docker et dans `portal-expernet/.env` pour un lancement local.
 
 **À venir** : double authentification (TOTP) pour les rôles ADMIN et FORMATEUR (champs `mfaEnabled` et `mfaSecret` déjà présents en base).
 
@@ -191,8 +191,8 @@ Objectif : remplacer Microsoft Teams par des canaux de discussion et un espace d
 
 ### Interface
 
-- Accès depuis l'onglet **Espaces → Teams — Espace collaboratif**, bouton **Connexion Teams**.
-- Page plein écran `/teams/messagerie` (sans navbar ni footer) : écran de connexion, puis l'espace de travail avec les canaux à gauche, la conversation au centre (fils de réponses) et les fichiers du canal à droite.
+- Accès depuis l'onglet **Espaces → Teams — Espace collaboratif**, bouton **Connexion Teams** : passage par la page de connexion commune `/login`, puis ouverture de l'espace.
+- Page plein écran `/teams/messagerie` (sans navbar ni footer) : canaux à gauche, conversation au centre (fils de réponses), fichiers du canal à droite.
 - Les nouveaux messages s'affichent automatiquement (actualisation toutes les 4 secondes).
 - Code : `front/src/views/TeamsChatView.vue` et `front/src/services/collab.ts`.
 
@@ -217,7 +217,7 @@ Objectif : remplacer Microsoft Teams par des canaux de discussion et un espace d
 
 ### Tester dans Swagger
 
-1. `POST /api/auth/login` avec un compte de démonstration, puis **Authorize** avec le jeton.
+1. `POST /api/auth/login` avec un compte de démonstration, puis **Authorize** avec le `token` obtenu.
 2. `POST /api/documents` (connecté en formateur) avec un fichier, un titre et le `promotionId`.
 3. Se reconnecter en étudiant inscrit : `GET /api/documents` affiche le document.
 4. Déposer un document avec `visiblePar` = `ADMIN,FORMATEUR` : l'étudiant ne le voit plus, l'admin si.

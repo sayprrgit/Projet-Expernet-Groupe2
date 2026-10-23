@@ -14,9 +14,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
-import type { UtilisateurConnecte } from '../auth/auth.types.js';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
-import { UtilisateurActuel } from '../auth/utilisateur-actuel.decorator.js';
+import { AuthGuard } from '../auth/auth.guard.js';
+import type { AuthenticatedUser } from '../auth/auth.guard.js';
+import { CurrentUser } from '../auth/current-user.decorator.js';
 import { DocumentsService } from './documents.service.js';
 import type { FichierTeleverse, TeleversementDto } from './documents.service.js';
 
@@ -24,7 +24,7 @@ const TAILLE_MAX = 10 * 1024 * 1024; // 10 Mo
 
 @ApiTags('documents')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard)
 @Controller('documents')
 export class DocumentsController {
   constructor(private readonly documents: DocumentsService) {}
@@ -34,7 +34,7 @@ export class DocumentsController {
   @ApiQuery({ name: 'promotionId', required: false })
   @ApiQuery({ name: 'canalId', required: false })
   lister(
-    @UtilisateurActuel() user: UtilisateurConnecte,
+    @CurrentUser() user: AuthenticatedUser,
     @Query('promotionId') promotionId?: string,
     @Query('canalId') canalId?: string,
   ) {
@@ -59,7 +59,7 @@ export class DocumentsController {
   })
   @UseInterceptors(FileInterceptor('file', { limits: { fileSize: TAILLE_MAX } }))
   televerser(
-    @UtilisateurActuel() user: UtilisateurConnecte,
+    @CurrentUser() user: AuthenticatedUser,
     @UploadedFile() fichier: FichierTeleverse | undefined,
     @Body() dto: TeleversementDto,
   ) {
@@ -69,7 +69,7 @@ export class DocumentsController {
   @Get(':id/download')
   @ApiOperation({ summary: 'Télécharger un document' })
   async telecharger(
-    @UtilisateurActuel() user: UtilisateurConnecte,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id', ParseIntPipe) id: number,
     @Res() res: Response,
   ) {

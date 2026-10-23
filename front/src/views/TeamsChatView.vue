@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import SeoMeta from '@/components/SeoMeta.vue';
 import { IMAGES } from '@/data/images';
-import { authApi, messageErreur, utilisateurConnecte, type Role } from '@/services/auth';
-import { collabApi, type Canal, type DocumentPartage, type Message } from '@/services/collab';
+import { useAuthStore } from '@/stores/auth';
+import type { Role } from '@/types/user';
+import { collabApi, messageErreur, type Canal, type DocumentPartage, type Message } from '@/services/collab';
 
 const INTERVALLE_RAFRAICHISSEMENT = 4000;
 const LONGUEUR_MAX = 2000;
@@ -15,26 +16,13 @@ const ROLES: Record<Role, string> = {
   ETUDIANT: 'Étudiant',
 };
 
-// Comptes créés par le seed (développement uniquement) : un clic remplit l'email
-const COMPTES_DEMO: { email: string; libelle: string; role: Role }[] = [
-  { email: 'admin@expernet.re', libelle: 'Marie Payet', role: 'ADMIN' },
-  { email: 'j.hoarau@expernet.re', libelle: 'Jean Hoarau', role: 'FORMATEUR' },
-  { email: 'lynho@exemple.re', libelle: 'Lynho Demo', role: 'ETUDIANT' },
-  { email: 's.grondin@exemple.re', libelle: 'Sarah Grondin', role: 'ETUDIANT' },
-];
-
 const canaux = ref<Canal[]>([]);
 const canalActifId = ref<number | null>(null);
 const messages = ref<Message[]>([]);
 const documents = ref<DocumentPartage[]>([]);
 
-const verificationSession = ref(true);
-const connexionEnCours = ref(false);
-const email = ref('');
-const motDePasse = ref('');
 const chargementCanaux = ref(false);
 const chargementMessages = ref(false);
-const erreurConnexion = ref('');
 const erreurGenerale = ref('');
 const erreurEnvoi = ref('');
 const erreurDocuments = ref('');
@@ -47,11 +35,13 @@ const fichiersOuverts = ref(false); // panneau fichiers sur petits écrans
 
 const zoneMessages = ref<HTMLElement | null>(null);
 const champMessage = ref<HTMLTextAreaElement | null>(null);
-const champMotDePasse = ref<HTMLInputElement | null>(null);
 
 let minuterie: ReturnType<typeof setInterval> | undefined;
 
-const utilisateurCourant = utilisateurConnecte;
+// La route exige une connexion (router/index.ts) : on arrive ici déjà authentifié via /login
+const auth = useAuthStore();
+const router = useRouter();
+const utilisateurCourant = computed(() => auth.user);
 const connecte = computed(() => utilisateurCourant.value !== null);
 const canalActif = computed(() => canaux.value.find((c) => c.id === canalActifId.value) ?? null);
 
@@ -179,29 +169,9 @@ async function ouvrirEspace() {
   }
 }
 
-async function seConnecter() {
-  if (connexionEnCours.value) return;
-  erreurConnexion.value = '';
-  connexionEnCours.value = true;
-  try {
-    await authApi.connexion(email.value, motDePasse.value);
-    motDePasse.value = '';
-  } catch (err) {
-    erreurConnexion.value = messageErreur(err);
-    nextTick(() => champMotDePasse.value?.focus());
-  } finally {
-    connexionEnCours.value = false;
-  }
-}
-
-function remplirCompteDemo(adresse: string) {
-  email.value = adresse;
-  erreurConnexion.value = '';
-  nextTick(() => champMotDePasse.value?.focus());
-}
-
 function seDeconnecter() {
-  authApi.deconnexion();
+  auth.logout();
+  router.push('/teams');
 }
 
 function selectionnerCanal(id: number) {
@@ -285,17 +255,12 @@ watch(() => utilisateurCourant.value?.id ?? null, (id) => {
   repondreA.value = null;
   brouillon.value = '';
   if (id !== null) ouvrirEspace();
+  // Session expirée pendant l'utilisation : retour à la page de connexion
+  else router.replace({ name: 'login', query: { redirect: '/teams/messagerie' } });
 });
 
 onMounted(async () => {
-  // Une session sauvegardée est revérifiée auprès du serveur (jeton expiré, compte supprimé…)
-  try {
-    await authApi.verifierSession();
-  } catch (err) {
-    erreurConnexion.value = messageErreur(err);
-  } finally {
-    verificationSession.value = false;
-  }
+  await auth.ensureSession();
   if (connecte.value) await ouvrirEspace();
   minuterie = setInterval(() => {
     if (connecte.value && document.visibilityState === 'visible') chargerMessages(true);
@@ -312,85 +277,8 @@ onBeforeUnmount(() => clearInterval(minuterie));
       description="Les canaux de discussion et les documents partagés de votre promotion, directement dans la plateforme Expernet."
     />
 
-    <!-- ================= Écran de connexion ================= -->
-    <div v-if="!connecte" class="login-screen">
-      <div class="login-glow" aria-hidden="true"></div>
-
-      <RouterLink to="/teams" class="login-back">← Retour à l’espace collaboratif</RouterLink>
-
-      <section class="login-card" aria-labelledby="titre-connexion">
-        <div class="login-brand">
-          <img :src="IMAGES.logoMarkWhite" alt="" width="44" height="42" />
-          <span>EXPERNET <strong>Teams</strong></span>
-        </div>
-
-        <h1 id="titre-connexion" class="login-title">Connexion à l’espace collaboratif</h1>
-        <p class="login-desc">
-          Retrouvez les canaux de votre promotion, vos fils de discussion et les documents partagés.
-        </p>
-
-        <p v-if="verificationSession" class="login-state">Vérification de la session…</p>
-
-        <form v-else class="login-form" novalidate @submit.prevent="seConnecter">
-          <div class="field">
-            <label for="connexion-email">Adresse email</label>
-            <input
-              id="connexion-email"
-              v-model="email"
-              type="email"
-              autocomplete="username"
-              required
-              placeholder="prenom.nom@expernet.re"
-            />
-          </div>
-          <div class="field">
-            <label for="connexion-mot-de-passe">Mot de passe</label>
-            <input
-              id="connexion-mot-de-passe"
-              ref="champMotDePasse"
-              v-model="motDePasse"
-              type="password"
-              autocomplete="current-password"
-              required
-            />
-          </div>
-
-          <p v-if="erreurConnexion" class="login-error" role="alert">{{ erreurConnexion }}</p>
-
-          <button
-            type="submit"
-            class="btn btn--primary btn--block btn--lg"
-            :disabled="connexionEnCours || !email.trim() || !motDePasse"
-          >
-            {{ connexionEnCours ? 'Connexion…' : 'Se connecter' }}
-          </button>
-        </form>
-
-        <details v-if="!verificationSession" class="demo-accounts">
-          <summary>Comptes de démonstration</summary>
-          <p>
-            Mot de passe commun : <code>Password123!</code> (données de test, à retirer en production).
-          </p>
-          <ul class="account-list">
-            <li v-for="compte in COMPTES_DEMO" :key="compte.email">
-              <button type="button" class="account" @click="remplirCompteDemo(compte.email)">
-                <span class="avatar avatar--sm" :class="`avatar--${compte.role.toLowerCase()}`" aria-hidden="true">
-                  {{ compte.libelle.split(' ').map((m) => m.charAt(0)).join('') }}
-                </span>
-                <span class="account__info">
-                  <strong>{{ compte.libelle }}</strong>
-                  <span>{{ compte.email }} · {{ ROLES[compte.role] }}</span>
-                </span>
-                <span class="account__arrow" aria-hidden="true">→</span>
-              </button>
-            </li>
-          </ul>
-        </details>
-      </section>
-    </div>
-
     <!-- ================= Application ================= -->
-    <div v-else class="app">
+    <div v-if="connecte" class="app">
       <header class="app-bar">
         <RouterLink to="/teams" class="app-bar__brand" aria-label="Retour à l’espace collaboratif">
           <img :src="IMAGES.logoMarkWhite" alt="" width="34" height="32" />
@@ -637,227 +525,6 @@ onBeforeUnmount(() => clearInterval(minuterie));
   height: 100dvh;
   overflow: hidden;
   background: var(--color-bg-inset);
-}
-
-/* ================= Écran de connexion ================= */
-.login-screen {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 2rem 1rem;
-  overflow-x: hidden;
-  overflow-y: auto;
-  background: linear-gradient(180deg, var(--exp-blue-dark) 0%, var(--exp-navy-950) 100%);
-}
-
-.login-glow {
-  position: absolute;
-  top: -25%;
-  right: -10%;
-  width: 640px;
-  height: 640px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--accent) 0%, transparent 65%);
-  opacity: 0.3;
-  filter: blur(70px);
-  pointer-events: none;
-}
-
-.login-back {
-  position: absolute;
-  top: 1.25rem;
-  left: 1.5rem;
-  z-index: 1;
-  font-size: 0.88rem;
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.85);
-  text-decoration: none;
-}
-
-.login-back:hover {
-  color: #ffffff;
-}
-
-.login-card {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 460px;
-  padding: 2rem;
-  background: var(--color-bg-card);
-  border-top: 4px solid var(--accent);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xl);
-}
-
-.login-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1.25rem;
-  padding: 0.45rem 0.9rem 0.45rem 0.5rem;
-  border-radius: var(--radius-md);
-  background: var(--exp-navy-950);
-  color: #ffffff;
-  font-size: 0.95rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-}
-
-.login-brand img {
-  width: 30px;
-  height: auto;
-}
-
-.login-brand strong,
-.app-bar__brand strong {
-  color: var(--accent-bright);
-}
-
-.login-title {
-  margin-bottom: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 900;
-  line-height: 1.2;
-  color: var(--color-text-main);
-}
-
-.login-desc {
-  margin-bottom: 1rem;
-  font-size: 0.93rem;
-  line-height: 1.6;
-  color: var(--color-text-muted);
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.field label {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--color-text-main);
-}
-
-.field input {
-  padding: 0.75rem 0.9rem;
-  border: 1.5px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--color-text-main);
-}
-
-.field input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.demo-accounts {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border-subtle);
-}
-
-.demo-accounts summary {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--accent-strong);
-  cursor: pointer;
-}
-
-.demo-accounts p {
-  margin: 0.6rem 0;
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
-
-.demo-accounts code {
-  padding: 0.05rem 0.35rem;
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-card-subtle);
-  font-size: 0.8rem;
-  color: var(--color-text-main);
-}
-
-.login-state {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-}
-
-.login-error {
-  padding: 0.65rem 0.85rem;
-  border-radius: var(--radius-md);
-  background: #fef2f2;
-  font-size: 0.88rem;
-  color: #b91c1c;
-}
-
-.account-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.account {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  width: 100%;
-  padding: 0.75rem 0.9rem;
-  border: 1.5px solid var(--color-border-subtle);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-card);
-  font-family: var(--font-body);
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
-}
-
-.account:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  transform: translateY(-1px);
-}
-
-.account:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-.account__info {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-}
-
-.account__info strong {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--color-text-main);
-}
-
-.account__info span {
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-}
-
-.account__arrow {
-  font-weight: 900;
-  color: var(--accent-strong);
 }
 
 /* ================= Application ================= */

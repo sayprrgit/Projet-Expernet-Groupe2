@@ -15,12 +15,44 @@ enum Role {
   ETUDIANT
 }
 
+enum FormationType {
+  CAMPUS
+  PRO
+}
+
+enum FormationLevel {
+  BAC2
+  BAC3
+  BAC5
+  CERTIFICATION
+}
+
+enum FormationCategory {
+  DEV
+  RESEAUX
+  MARKETING
+  MANAGEMENT
+  DATA
+}
+
 enum NiveauRncp {
   NIVEAU_3
   NIVEAU_4
   NIVEAU_5
   NIVEAU_6
   NIVEAU_7
+}
+
+enum TypeFormation {
+  CAMPUS
+  PRO
+}
+
+enum NiveauFormation {
+  BAC_PLUS_2
+  BAC_PLUS_3
+  BAC_PLUS_5
+  CERTIFICATION
 }
 
 enum StatutCandidature {
@@ -40,6 +72,13 @@ enum NiveauAcquisition {
   ACQUIS
 }
 
+enum PlanningType {
+  FORMATION
+  EVENEMENT
+  ATELIER
+  EXAMEN
+}
+
 // ───────── Utilisateurs & authentification ─────────
 
 model User {
@@ -49,6 +88,10 @@ model User {
   nom          String
   prenom       String
   role         Role     @default(ETUDIANT)
+  telephone    String?
+  adresse      String?
+  ville        String?
+  codePostal   String?
   mfaSecret    String?
   mfaEnabled   Boolean  @default(false)
   createdAt    DateTime @default(now())
@@ -74,44 +117,66 @@ model Filiere {
 }
 
 model Formation {
-  id               Int        @id @default(autoincrement())
-  titre            String
-  slug             String     @unique
-  filiereId        Int
-  niveauRncp       NiveauRncp
-  eligibleCpf      Boolean    @default(false)
-  prerequis        String
-  objectifs        String
-  modalitesAcces   String
-  debouches        String
-  dureeHeures      Int
-  metaDescription  String?
-  publiee          Boolean    @default(false)
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id                 Int             @id @default(autoincrement())
+  titre              String
+  slug               String          @unique
+  filiereId          Int
+  // Libellés d'affichage (fiches publiques)
+  libelle            String
+  libelleNiveau      String
+  type               TypeFormation
+  niveau             NiveauFormation
+  niveauRncp         NiveauRncp?
+  rncpCode           String?
+  cpfCode            String?
+  eligibleCpf        Boolean         @default(false)
+  alternance         Boolean         @default(false)
+  duree              String
+  dureeHeures        Int
+  rythme             String
+  lieux              String[]
+  resume             String
+  prerequis          String[]
+  objectifs          String[]
+  modalitesAcces     String[]
+  debouches          String[]
+  certificateur      String
+  prochainesSessions String[]
+  badge              String?
+  metaDescription    String?
+  publiee            Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
   filiere      Filiere        @relation(fields: [filiereId], references: [id])
   promotions   Promotion[]
   candidatures Candidature[]
   competences  Competence[]
 
-  @@index([filiereId, niveauRncp, eligibleCpf])
+  @@index([filiereId, type, niveau])
+  @@index([eligibleCpf, publiee])
 }
 
 model Candidature {
-  id          Int               @id @default(autoincrement())
-  formationId Int
-  nom         String
-  prenom      String
-  email       String
-  telephone   String?
-  motivation  String
-  statut      StatutCandidature @default(EN_ATTENTE)
-  createdAt   DateTime          @default(now())
+  id             Int               @id @default(autoincrement())
+  reference      String            @unique
+  formationId    Int?
+  nom            String
+  prenom         String
+  email          String
+  telephone      String
+  codePostal     String
+  typeDemarche   String // 'campus' | 'pro' | 'info'
+  statutActuel   String
+  motivation     String            @default("")
+  rgpdConsent    Boolean           @default(false)
+  statut         StatutCandidature @default(EN_ATTENTE)
+  createdAt      DateTime          @default(now())
 
-  formation Formation @relation(fields: [formationId], references: [id])
+  formation Formation? @relation(fields: [formationId], references: [id])
 
   @@index([formationId, statut])
+  @@index([statut, createdAt])
 }
 
 // ───────── Promotions & sessions ─────────
@@ -230,13 +295,34 @@ model Evaluation {
   etudiantId   Int
   competenceId Int
   niveau       NiveauAcquisition @default(NON_ACQUIS)
+  valeur       Float? // note sur 20 saisie par le formateur
   commentaire  String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt @default(now())
 
   examen     Examen     @relation(fields: [examenId], references: [id])
   etudiant   User       @relation(fields: [etudiantId], references: [id])
   competence Competence @relation(fields: [competenceId], references: [id])
 
   @@unique([examenId, etudiantId, competenceId])
+}
+
+// ───────── Agenda public (planning du site) ─────────
+
+model PlanningEvent {
+  id          Int          @id @default(autoincrement())
+  titre       String
+  type        PlanningType
+  date        DateTime     @db.Date
+  dateFin     DateTime?    @db.Date
+  heure       String?
+  site        String
+  description String
+  lienLabel   String?
+  lienUrl     String?
+  createdAt   DateTime     @default(now())
+
+  @@index([date])
 }
 
 // ───────── Collaboration (remplace Teams) ─────────

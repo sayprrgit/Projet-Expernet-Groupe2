@@ -1,27 +1,27 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { UtilisateurConnecte } from '../auth/auth.types.js';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
-import { UtilisateurActuel } from '../auth/utilisateur-actuel.decorator.js';
+import { AuthGuard } from '../auth/auth.guard.js';
+import type { AuthenticatedUser } from '../auth/auth.guard.js';
+import { CurrentUser } from '../auth/current-user.decorator.js';
 import { CanauxService } from './canaux.service.js';
 import type { NouveauMessageDto } from './canaux.service.js';
 
 @ApiTags('Canaux')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard)
 @Controller('canaux')
 export class CanauxController {
   constructor(private readonly canaux: CanauxService) {}
 
   @Get()
   @ApiOperation({ summary: "Canaux accessibles à l'utilisateur connecté" })
-  lister(@UtilisateurActuel() user: UtilisateurConnecte) {
+  lister(@CurrentUser() user: AuthenticatedUser) {
     return this.canaux.lister(user);
   }
 
   @Get(':id/messages')
   @ApiOperation({ summary: "Historique des messages d'un canal (200 derniers)" })
-  messages(@UtilisateurActuel() user: UtilisateurConnecte, @Param('id', ParseIntPipe) id: number) {
+  messages(@CurrentUser() user: AuthenticatedUser, @Param('id', ParseIntPipe) id: number) {
     return this.canaux.messages(user, id);
   }
 
@@ -38,7 +38,7 @@ export class CanauxController {
     },
   })
   envoyer(
-    @UtilisateurActuel() user: UtilisateurConnecte,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: NouveauMessageDto,
   ) {

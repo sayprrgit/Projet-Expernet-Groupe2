@@ -1,8 +1,19 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue';
 import SeoMeta from '@/components/SeoMeta.vue';
 import PageHero from '@/components/PageHero.vue';
 import BaseButton from '@/components/BaseButton.vue';
 import { IMAGES } from '@/data/images';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
+const isAuthenticated = computed(() => !!auth.token && !!auth.user);
+const accessLabel = computed(() =>
+  isAuthenticated.value ? 'Accéder à mon espace' : 'Se connecter à Galia',
+);
+const accessTarget = computed(() => (isAuthenticated.value ? '/galia/espace' : '/login'));
+
+onMounted(() => auth.ensureSession());
 
 const FEATURES = [
   {
@@ -69,8 +80,8 @@ const STEPS = [
       image-alt="Intelligence artificielle et productivité bureautique"
     >
       <template #actions>
-        <BaseButton to="/candidature" size="lg">Demander mes accès</BaseButton>
-        <BaseButton to="/teams" variant="outline" size="lg">Découvrir l’espace Teams</BaseButton>
+        <BaseButton :to="accessTarget" size="lg">{{ accessLabel }}</BaseButton>
+        <BaseButton to="/candidature" variant="outline" size="lg">Demander mes accès</BaseButton>
       </template>
     </PageHero>
 
@@ -112,7 +123,8 @@ const STEPS = [
             </li>
           </ol>
           <div class="section-actions">
-            <BaseButton to="/candidature">Je n’ai pas reçu mes identifiants</BaseButton>
+            <BaseButton :to="accessTarget" size="lg">{{ accessLabel }}</BaseButton>
+            <BaseButton to="/candidature" variant="outline" size="lg">Je n’ai pas reçu mes identifiants</BaseButton>
           </div>
           <figure class="galia-photo">
             <img :src="IMAGES.galiaPhoto" alt="Les ressources numériques GALIA" loading="lazy" decoding="async" />

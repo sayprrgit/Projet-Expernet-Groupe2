@@ -5,17 +5,16 @@ import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
 
 const route = useRoute();
-// Les pages d'application (ex. messagerie Teams) s'affichent en plein écran, sans navbar ni footer
-const pleinEcran = computed(() => route.meta.pleinEcran === true);
+const bare = computed(() => route.meta.bare === true);
 </script>
 
 <template>
-  <a v-if="!pleinEcran" class="skip-link" href="#main-content">Aller au contenu principal</a>
-  <Navbar v-if="!pleinEcran" />
+  <a v-if="!bare" class="skip-link" href="#main-content">Aller au contenu principal</a>
+  <Navbar v-if="!bare" />
   <main id="main-content" class="site-main" tabindex="-1">
     <RouterView />
   </main>
-  <Footer v-if="!pleinEcran" />
+  <Footer v-if="!bare" />
 </template>
 
 <style scoped>

@@ -25,9 +25,21 @@ const router = createRouter({
       component: () => import('@/views/ProView.vue'),
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/LoginView.vue'),
+      meta: { guest: true, bare: true },
+    },
+    {
       path: '/galia',
       name: 'galia',
       component: () => import('@/views/GaliaView.vue'),
+    },
+    {
+      path: '/galia/espace',
+      name: 'galia-espace',
+      component: () => import('@/views/galia/GaliaEspaceView.vue'),
+      meta: { requiresAuth: true, bare: true },
     },
     {
       path: '/teams',
@@ -38,7 +50,7 @@ const router = createRouter({
       path: '/teams/messagerie',
       name: 'teams-messagerie',
       component: () => import('@/views/TeamsChatView.vue'),
-      meta: { pleinEcran: true },
+      meta: { requiresAuth: true, bare: true },
     },
     {
       path: '/a-propos',
@@ -75,6 +87,37 @@ const router = createRouter({
     }
     return { top: 0 };
   },
+});
+
+router.beforeEach(async (to) => {
+  const token = localStorage.getItem('token');
+
+  if (to.meta.requiresAuth) {
+    if (!token) {
+      return { name: 'login', query: { redirect: to.fullPath } };
+    }
+    const { useAuthStore } = await import('@/stores/auth');
+    const auth = useAuthStore();
+    await auth.ensureSession();
+    if (!auth.user) {
+      return { name: 'login', query: { redirect: to.fullPath } };
+    }
+  }
+
+  if (to.meta.guest && token) {
+    const { useAuthStore } = await import('@/stores/auth');
+    const auth = useAuthStore();
+    await auth.ensureSession();
+    if (auth.user) {
+      return { name: 'galia-espace' };
+    }
+  }
+
+  return true;
+});
+
+router.afterEach(() => {
+  window.scrollTo({ top: 0 });
 });
 
 export default router;

@@ -6,7 +6,7 @@ import { apiService } from '@/services/api';
 import { UNIVERS } from '@/data/univers';
 import { CAMPUS_HISTORY } from '@/data/bureau';
 import { IMAGES } from '@/data/images';
-import { PLANNING_ENTRIES } from '@/data/planning';
+import type { PlanningEntry } from '@/data/planning';
 import SeoMeta from '@/components/SeoMeta.vue';
 import HeroSection from '@/components/HeroSection.vue';
 import UniversCard from '@/components/UniversCard.vue';
@@ -25,8 +25,11 @@ const featured = computed(() => formations.value.slice(0, 6));
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
+// Prochains rendez-vous chargés depuis la base de données (via l'API)
+const planningEntries = ref<PlanningEntry[]>([]);
+
 const upcoming = computed(() =>
-  PLANNING_ENTRIES.filter((entry) => new Date(`${entry.date}T00:00:00`) >= today).slice(0, 3),
+  planningEntries.value.filter((entry) => new Date(`${entry.date}T00:00:00`) >= today).slice(0, 3),
 );
 
 const historyTeaser = CAMPUS_HISTORY.slice(0, 3);
@@ -46,12 +49,13 @@ const handleApply = (formation: Formation) => {
 };
 
 onMounted(async () => {
-  try {
-    const res = await apiService.getFormations();
-    formations.value = res.data;
-  } finally {
-    isLoading.value = false;
-  }
+  const [formationsRes, planning] = await Promise.all([
+    apiService.getFormations(),
+    apiService.getPlanning(),
+  ]);
+  formations.value = formationsRes.data;
+  planningEntries.value = planning;
+  isLoading.value = false;
 });
 </script>
 
