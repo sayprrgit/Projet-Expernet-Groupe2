@@ -2,43 +2,42 @@ import {
   Body,
   Controller,
   Get,
-  Headers,
   Param,
   ParseIntPipe,
   Post,
   Query,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiHeader, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
+import type { UtilisateurConnecte } from '../auth/auth.types.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { UtilisateurActuel } from '../auth/utilisateur-actuel.decorator.js';
 import { DocumentsService } from './documents.service.js';
 import type { FichierTeleverse, TeleversementDto } from './documents.service.js';
 
 const TAILLE_MAX = 10 * 1024 * 1024; // 10 Mo
 
 @ApiTags('documents')
-@ApiHeader({
-  name: 'x-user-id',
-  description: "Identifiant de l'utilisateur (temporaire, remplacé par le JWT quand le module auth sera prêt)",
-  required: true,
-})
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('documents')
 export class DocumentsController {
   constructor(private readonly documents: DocumentsService) {}
 
   @Get()
-  @ApiOperation({ summary: "Liste des documents visibles par l'utilisateur" })
+  @ApiOperation({ summary: "Liste des documents visibles par l'utilisateur connecté" })
   @ApiQuery({ name: 'promotionId', required: false })
   @ApiQuery({ name: 'canalId', required: false })
-  async lister(
-    @Headers('x-user-id') userId: string | undefined,
+  lister(
+    @UtilisateurActuel() user: UtilisateurConnecte,
     @Query('promotionId') promotionId?: string,
     @Query('canalId') canalId?: string,
   ) {
-    const user = await this.documents.utilisateurDepuis(userId);
     return this.documents.lister(user, promotionId, canalId);
   }
 
@@ -59,23 +58,21 @@ export class DocumentsController {
     },
   })
   @UseInterceptors(FileInterceptor('file', { limits: { fileSize: TAILLE_MAX } }))
-  async televerser(
-    @Headers('x-user-id') userId: string | undefined,
+  televerser(
+    @UtilisateurActuel() user: UtilisateurConnecte,
     @UploadedFile() fichier: FichierTeleverse | undefined,
     @Body() dto: TeleversementDto,
   ) {
-    const user = await this.documents.utilisateurDepuis(userId);
     return this.documents.televerser(user, fichier, dto);
   }
 
   @Get(':id/download')
   @ApiOperation({ summary: 'Télécharger un document' })
   async telecharger(
-    @Headers('x-user-id') userId: string | undefined,
+    @UtilisateurActuel() user: UtilisateurConnecte,
     @Param('id', ParseIntPipe) id: number,
     @Res() res: Response,
   ) {
-    const user = await this.documents.utilisateurDepuis(userId);
     const { chemin, nomFichier } = await this.documents.cheminPourTelechargement(user, id);
     res.download(chemin, nomFichier);
   }

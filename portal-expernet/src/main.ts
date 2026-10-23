@@ -17,6 +17,7 @@ async function bootstrap() {
     .setDescription("Documentation de l'API du portail Expernet")
     .setVersion('1.0')
     .addServer('http://localhost:3000', 'Serveur de développement')
+    .addBearerAuth()
     .addTag('App', "Points d'entrée généraux")
     .build();
 

@@ -60,7 +60,8 @@ const RULES = [
       image-alt="Classes virtuelles et travail collaboratif"
     >
       <template #actions>
-        <BaseButton to="/candidature" size="lg">Obtenir mes accès Teams</BaseButton>
+        <BaseButton to="/teams/messagerie" size="lg">Connexion Teams</BaseButton>
+        <BaseButton to="/candidature" variant="outline" size="lg">Obtenir mes accès Teams</BaseButton>
         <BaseButton to="/galia" variant="outline" size="lg">Découvrir GALIA</BaseButton>
       </template>
     </PageHero>

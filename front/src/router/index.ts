@@ -35,6 +35,12 @@ const router = createRouter({
       component: () => import('@/views/TeamsView.vue'),
     },
     {
+      path: '/teams/messagerie',
+      name: 'teams-messagerie',
+      component: () => import('@/views/TeamsChatView.vue'),
+      meta: { pleinEcran: true },
+    },
+    {
       path: '/a-propos',
       name: 'about',
       component: () => import('@/views/AboutView.vue'),

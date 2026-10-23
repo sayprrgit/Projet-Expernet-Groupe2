@@ -163,42 +163,69 @@ Toutes les routes sont préfixées par `/api`.
 
 ---
 
+## 🔐 Authentification (JWT)
+
+Connexion par **email + mot de passe** (vérifié avec le hash bcrypt de la table `User`), qui renvoie un **jeton JWT** valable 8 heures, signé avec `JWT_SECRET`.
+
+| Méthode | Route | Description |
+|---|---|---|
+| `POST` | `/api/auth/login` | Corps `{ "email", "motDePasse" }` → `{ accessToken, utilisateur }` |
+| `GET` | `/api/auth/me` | Profil de l'utilisateur connecté (jeton requis) |
+
+- Les routes protégées attendent l'en-tête `Authorization: Bearer <jeton>`. Sans jeton valide : **401**.
+- Le `JwtAuthGuard` relit l'utilisateur en base à chaque requête (un compte supprimé ou un rôle modifié est pris en compte immédiatement).
+- Le message d'erreur de connexion est identique pour un email inconnu et un mauvais mot de passe, et le temps de réponse est égalisé, pour ne pas révéler quels comptes existent.
+- Code : `portal-expernet/src/auth/` (module global : `JwtAuthGuard` et le décorateur `@UtilisateurActuel()` sont utilisables dans tous les modules).
+- Côté front : `front/src/services/auth.ts` gère la session (jeton envoyé sur chaque appel, déconnexion automatique si le jeton expire).
+- **Dans Swagger** : appeler `POST /api/auth/login`, copier `accessToken`, cliquer sur **Authorize** et le coller.
+
+> `JWT_SECRET` doit être défini dans le `.env` de la racine (Docker) et dans `portal-expernet/.env` pour un lancement local ; sans lui, le backend refuse de démarrer.
+
+**À venir** : double authentification (TOTP) pour les rôles ADMIN et FORMATEUR (champs `mfaEnabled` et `mfaSecret` déjà présents en base).
+
+---
+
 ## 💬 Module Collaboration (remplacement de Teams)
 
 Objectif : remplacer Microsoft Teams par des canaux de discussion et un espace documentaire **intégrés à la plateforme** et **liés aux promotions** : un étudiant inscrit à une promotion accède automatiquement à ses canaux et à ses documents, sans compte séparé.
 
-### Routes disponibles
+### Interface
+
+- Accès depuis l'onglet **Espaces → Teams — Espace collaboratif**, bouton **Connexion Teams**.
+- Page plein écran `/teams/messagerie` (sans navbar ni footer) : écran de connexion, puis l'espace de travail avec les canaux à gauche, la conversation au centre (fils de réponses) et les fichiers du canal à droite.
+- Les nouveaux messages s'affichent automatiquement (actualisation toutes les 4 secondes).
+- Code : `front/src/views/TeamsChatView.vue` et `front/src/services/collab.ts`.
+
+### Routes disponibles (jeton JWT requis)
 
 | Méthode | Route | Description |
 |---|---|---|
-| `GET` | `/api/canaux` | Liste des canaux |
+| `GET` | `/api/canaux` | Canaux accessibles à l'utilisateur connecté |
+| `GET` | `/api/canaux/:id/messages` | Historique d'un canal (200 derniers messages) |
+| `POST` | `/api/canaux/:id/messages` | Envoi d'un message `{ contenu, parentId? }` (`parentId` pour répondre dans un fil) |
 | `GET` | `/api/documents?promotionId=&canalId=` | Documents visibles par l'utilisateur |
 | `POST` | `/api/documents` | Dépôt d'un fichier (`multipart/form-data` : `file`, `titre`, et en option `promotionId`, `canalId`, `visiblePar`) |
 | `GET` | `/api/documents/:id/download` | Téléchargement d'un document |
 
-### Règles d'accès aux documents
+### Règles d'accès
 
-- **ADMIN** : voit tous les documents.
-- **FORMATEUR / ETUDIANT** : voit les documents de ses promotions (formateur de la promotion ou étudiant inscrit) et les documents généraux, à condition que son rôle figure dans `visiblePar`.
-- Le dépôt dans une promotion n'est autorisé qu'à ses membres.
-- Taille maximale : **10 Mo**. Les fichiers sont stockés dans `portal-expernet/uploads/` (ignoré par Git) sous un nom aléatoire (UUID) ; la base conserve le nom d'origine.
-
-### ⚠️ Authentification temporaire
-
-En attendant le module d'authentification (JWT), l'utilisateur est identifié par l'en-tête **`x-user-id`** (id d'un utilisateur de la table `User`). Il s'agit d'un échafaudage de développement : il sera remplacé par la vérification du JWT.
+- **ADMIN** : accède à tous les canaux et à tous les documents.
+- **FORMATEUR / ETUDIANT** : accède aux canaux généraux et à ceux de ses promotions (formateur de la promotion ou étudiant inscrit). Pour les documents, son rôle doit en plus figurer dans `visiblePar`.
+- Le dépôt d'un document dans une promotion n'est autorisé qu'à ses membres.
+- Messages : 2000 caractères maximum ; une réponse à une réponse est rattachée au message d'origine (un seul niveau de fil).
+- Fichiers : **10 Mo** maximum, stockés dans `portal-expernet/uploads/` (ignoré par Git) sous un nom aléatoire (UUID) ; la base conserve le nom d'origine.
 
 ### Tester dans Swagger
 
-1. Relever les `id` des utilisateurs et de la promotion dans Prisma Studio.
-2. `POST /api/documents` avec l'id du formateur dans `x-user-id`, un fichier, un titre et le `promotionId`.
-3. `GET /api/documents` avec l'id d'un étudiant inscrit : le document apparaît.
+1. `POST /api/auth/login` avec un compte de démonstration, puis **Authorize** avec le jeton.
+2. `POST /api/documents` (connecté en formateur) avec un fichier, un titre et le `promotionId`.
+3. Se reconnecter en étudiant inscrit : `GET /api/documents` affiche le document.
 4. Déposer un document avec `visiblePar` = `ADMIN,FORMATEUR` : l'étudiant ne le voit plus, l'admin si.
 
 ### Prochaines étapes
 
-- `GET /api/canaux/:id/messages` : historique des messages d'un canal.
-- Chat en temps réel avec **Socket.IO** (namespace `/chat`, événements `join` et `message`).
-- Remplacement de `x-user-id` par le JWT du module d'authentification.
+- Remplacer l'actualisation périodique par du temps réel avec **Socket.IO**.
+- Double authentification (TOTP) pour les comptes ADMIN et FORMATEUR.
 
 ---
 
@@ -212,6 +239,8 @@ En attendant le module d'authentification (JWT), l'utilisateur est identifié pa
 | `Cannot resolve environment variable: DATABASE_URL` | Le fichier `portal-expernet/.env` est absent ou incomplet |
 | `Authentication failed` | Le mot de passe diffère entre les deux fichiers `.env` |
 | `npx prisma` ne reconnaît pas `migrate` | Prisma n'est pas installé dans le projet : `npm install` depuis `portal-expernet/` |
+| `Cannot find module` dans le conteneur backend après l'ajout d'une dépendance | Reconstruire l'image et son `node_modules` : `docker compose up -d --build -V backend` |
+| `JWT_SECRET manquant` au démarrage | Ajouter `JWT_SECRET` dans le `.env` concerné |
 
 ---
 

@@ -3,7 +3,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
@@ -49,21 +48,6 @@ const SELECTION_PUBLIQUE = {
 @Injectable()
 export class DocumentsService {
   constructor(private readonly prisma: PrismaService) {}
-
-  // TEMPORAIRE : l'utilisateur est identifié par l'en-tête x-user-id.
-  // À remplacer par le JWT dès que le module auth est prêt.
-  async utilisateurDepuis(entete?: string): Promise<UtilisateurCourant> {
-    const id = Number(entete);
-    if (!entete || !Number.isInteger(id)) {
-      throw new UnauthorizedException('En-tête x-user-id manquant ou invalide');
-    }
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: { id: true, role: true },
-    });
-    if (!user) throw new UnauthorizedException('Utilisateur inconnu');
-    return user;
-  }
 
   async lister(user: UtilisateurCourant, promotionId?: string, canalId?: string) {
     const promo = this.entierOptionnel(promotionId, 'promotionId');
