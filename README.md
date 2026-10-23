@@ -244,11 +244,10 @@ Les messages de commit suivent les **Conventional Commits** : `type(portée): de
 
 | Type | Usage |
 |---|---|
-| `feat` | Nouvelle fonctionnalité |
-| `fix` | Correction de bug |
-| `chore` | Configuration, dépendances, outillage |
-| `docs` | Documentation |
-| `test` | Tests |
-| `refactor` | Réorganisation du code sans changement de comportement |
-
-Exemples : `feat(documents): add upload endpoint`, `fix(swagger): remove duplicated /api prefix`.
+| `[ADD]` | Nouvelle fonctionnalité |
+| `[FIX]` | Correction de bug |
+| `[DEL]` | Suppression |
+| `[UPD]` | Mise a jour |
+| `[MRG]` | Fusion des branches |
+| `[BCK] ` | Backup |
+| `[CFL] ` | Resolution de conflit |
