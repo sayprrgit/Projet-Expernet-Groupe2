@@ -7,6 +7,7 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -14,9 +15,12 @@ import {
   ApiResponse,
   ApiQuery,
   ApiParam,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { FormationsService } from './formations.service.js';
 import { CreateCandidatureDto } from './dto/candidature.dto.js';
+import { AuthGuard } from '../auth/auth.guard.js';
+import { Roles } from '../auth/roles.decorator.js';
 
 @ApiTags('Formations & Candidatures')
 @Controller('formations')
@@ -58,7 +62,11 @@ export class FormationsController {
     return this.formationsService.getCategoriesSummary();
   }
 
+  // Données personnelles des candidats (RGPD) : réservé aux administrateurs
   @Get('candidatures')
+  @UseGuards(AuthGuard)
+  @Roles('ADMIN')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Liste des candidatures reçues',
     description: 'Renvoie l’ensemble des candidatures (plus récente en premier), avec la formation visée.',
