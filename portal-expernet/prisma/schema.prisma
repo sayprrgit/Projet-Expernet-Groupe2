@@ -1,0 +1,381 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────── Enums ─────────
+
+enum Role {
+  ADMIN
+  FORMATEUR
+  ETUDIANT
+}
+
+enum FormationType {
+  CAMPUS
+  PRO
+}
+
+enum FormationLevel {
+  BAC2
+  BAC3
+  BAC5
+  CERTIFICATION
+}
+
+enum FormationCategory {
+  DEV
+  RESEAUX
+  MARKETING
+  MANAGEMENT
+  DATA
+}
+
+enum NiveauRncp {
+  NIVEAU_3
+  NIVEAU_4
+  NIVEAU_5
+  NIVEAU_6
+  NIVEAU_7
+}
+
+enum TypeFormation {
+  CAMPUS
+  PRO
+}
+
+enum NiveauFormation {
+  BAC_PLUS_2
+  BAC_PLUS_3
+  BAC_PLUS_5
+  CERTIFICATION
+}
+
+enum StatutCandidature {
+  EN_ATTENTE
+  ACCEPTEE
+  REFUSEE
+}
+
+enum RoleJury {
+  PRESIDENT
+  MEMBRE
+}
+
+enum NiveauAcquisition {
+  NON_ACQUIS
+  EN_COURS
+  ACQUIS
+}
+
+enum PlanningType {
+  FORMATION
+  EVENEMENT
+  ATELIER
+  EXAMEN
+}
+
+// ───────── Utilisateurs & authentification ─────────
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  nom          String
+  prenom       String
+  role         Role     @default(ETUDIANT)
+  telephone    String?
+  adresse      String?
+  ville        String?
+  codePostal   String?
+  mfaSecret    String?
+  mfaEnabled   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  promotionsEnseignees Promotion[]   @relation("FormateurPromotion")
+  inscriptions         Inscription[]
+  emargements          Emargement[]
+  juryMembres          JuryMembre[]
+  evaluations          Evaluation[]
+  attestations         Attestation[]
+  messages             Message[]
+  documents            Document[]
+}
+
+// ───────── Catalogue de formations (module public) ─────────
+
+model Filiere {
+  id         Int         @id @default(autoincrement())
+  nom        String      @unique
+  slug       String      @unique
+  formations Formation[]
+}
+
+model Formation {
+  id                 Int             @id @default(autoincrement())
+  titre              String
+  slug               String          @unique
+  filiereId          Int
+  // Libellés d'affichage (fiches publiques)
+  libelle            String
+  libelleNiveau      String
+  type               TypeFormation
+  niveau             NiveauFormation
+  niveauRncp         NiveauRncp?
+  rncpCode           String?
+  cpfCode            String?
+  eligibleCpf        Boolean         @default(false)
+  alternance         Boolean         @default(false)
+  duree              String
+  dureeHeures        Int
+  rythme             String
+  lieux              String[]
+  resume             String
+  prerequis          String[]
+  objectifs          String[]
+  modalitesAcces     String[]
+  debouches          String[]
+  certificateur      String
+  prochainesSessions String[]
+  badge              String?
+  metaDescription    String?
+  publiee            Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  filiere      Filiere        @relation(fields: [filiereId], references: [id])
+  promotions   Promotion[]
+  candidatures Candidature[]
+  competences  Competence[]
+
+  @@index([filiereId, type, niveau])
+  @@index([eligibleCpf, publiee])
+}
+
+model Candidature {
+  id             Int               @id @default(autoincrement())
+  reference      String            @unique
+  formationId    Int?
+  nom            String
+  prenom         String
+  email          String
+  telephone      String
+  codePostal     String
+  typeDemarche   String // 'campus' | 'pro' | 'info'
+  statutActuel   String
+  motivation     String            @default("")
+  rgpdConsent    Boolean           @default(false)
+  statut         StatutCandidature @default(EN_ATTENTE)
+  createdAt      DateTime          @default(now())
+
+  formation Formation? @relation(fields: [formationId], references: [id])
+
+  @@index([formationId, statut])
+  @@index([statut, createdAt])
+}
+
+// ───────── Promotions & sessions ─────────
+
+model Promotion {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  formationId Int
+  formateurId Int
+  dateDebut   DateTime
+  dateFin     DateTime
+
+  formation    Formation     @relation(fields: [formationId], references: [id])
+  formateur    User          @relation("FormateurPromotion", fields: [formateurId], references: [id])
+  inscriptions Inscription[]
+  sessions     Session[]
+  examens      Examen[]
+  canaux       Canal[]
+  documents    Document[]
+}
+
+model Inscription {
+  id          Int @id @default(autoincrement())
+  promotionId Int
+  etudiantId  Int
+
+  promotion Promotion @relation(fields: [promotionId], references: [id])
+  etudiant  User      @relation(fields: [etudiantId], references: [id])
+
+  @@unique([promotionId, etudiantId])
+}
+
+model Session {
+  id          Int      @id @default(autoincrement())
+  promotionId Int
+  titre       String
+  debut       DateTime
+  fin         DateTime
+
+  promotion   Promotion    @relation(fields: [promotionId], references: [id])
+  emargements Emargement[]
+
+  @@index([promotionId, debut])
+}
+
+// ───────── Émargement numérique ─────────
+
+model Emargement {
+  id            Int      @id @default(autoincrement())
+  sessionId     Int
+  etudiantId    Int
+  signature     String   // image de la signature (base64) ou chemin de fichier
+  signeLe       DateTime @default(now())
+  adresseIp     String?
+  empreinte     String   // hash SHA-256 (sessionId + etudiantId + horodatage + signature)
+
+  session  Session @relation(fields: [sessionId], references: [id])
+  etudiant User    @relation(fields: [etudiantId], references: [id])
+
+  // un étudiant ne peut signer qu'une fois par session
+  @@unique([sessionId, etudiantId])
+}
+
+model Attestation {
+  id         Int      @id @default(autoincrement())
+  etudiantId Int
+  periodeDu  DateTime
+  periodeAu  DateTime
+  cheminPdf  String
+  generee    DateTime @default(now())
+
+  etudiant User @relation(fields: [etudiantId], references: [id])
+}
+
+// ───────── Examens, jurys, grilles de compétences ─────────
+
+model Examen {
+  id          Int      @id @default(autoincrement())
+  promotionId Int
+  intitule    String
+  dateExamen  DateTime
+  salle       String?
+
+  promotion   Promotion    @relation(fields: [promotionId], references: [id])
+  jury        JuryMembre[]
+  evaluations Evaluation[]
+}
+
+model JuryMembre {
+  id       Int      @id @default(autoincrement())
+  examenId Int
+  userId   Int
+  roleJury RoleJury @default(MEMBRE)
+
+  examen Examen @relation(fields: [examenId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([examenId, userId])
+}
+
+model Competence {
+  id          Int    @id @default(autoincrement())
+  formationId Int
+  code        String
+  libelle     String
+
+  formation   Formation    @relation(fields: [formationId], references: [id])
+  evaluations Evaluation[]
+
+  @@unique([formationId, code])
+}
+
+model Evaluation {
+  id           Int               @id @default(autoincrement())
+  examenId     Int
+  etudiantId   Int
+  competenceId Int
+  niveau       NiveauAcquisition @default(NON_ACQUIS)
+  valeur       Float? // note sur 20 saisie par le formateur
+  commentaire  String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt @default(now())
+
+  examen     Examen     @relation(fields: [examenId], references: [id])
+  etudiant   User       @relation(fields: [etudiantId], references: [id])
+  competence Competence @relation(fields: [competenceId], references: [id])
+
+  @@unique([examenId, etudiantId, competenceId])
+}
+
+// ───────── Agenda public (planning du site) ─────────
+
+model PlanningEvent {
+  id          Int          @id @default(autoincrement())
+  titre       String
+  type        PlanningType
+  date        DateTime     @db.Date
+  dateFin     DateTime?    @db.Date
+  heure       String?
+  site        String
+  description String
+  lienLabel   String?
+  lienUrl     String?
+  createdAt   DateTime     @default(now())
+
+  @@index([date])
+}
+
+// ───────── Collaboration (remplace Teams) ─────────
+
+// Un canal de discussion. promotionId = null : canal général ouvert à tout le centre.
+model Canal {
+  id          Int      @id @default(autoincrement())
+  nom         String
+  promotionId Int?
+  createdAt   DateTime @default(now())
+
+  promotion Promotion? @relation(fields: [promotionId], references: [id])
+  messages  Message[]
+  documents Document[]
+
+  @@unique([promotionId, nom])
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  canalId   Int
+  auteurId  Int
+  contenu   String
+  parentId  Int?      // réponse dans un fil de discussion
+  createdAt DateTime  @default(now())
+  modifieLe DateTime?
+
+  canal    Canal     @relation(fields: [canalId], references: [id])
+  auteur   User      @relation(fields: [auteurId], references: [id])
+  parent   Message?  @relation("Reponses", fields: [parentId], references: [id])
+  reponses Message[] @relation("Reponses")
+
+  @@index([canalId, createdAt])
+}
+
+// Un document partagé (cours, consignes, rendus...). Le fichier lui-même est stocké sur disque,
+// la base ne garde que ses informations.
+model Document {
+  id             Int      @id @default(autoincrement())
+  titre          String
+  nomFichier     String
+  cheminStockage String
+  typeMime       String
+  tailleOctets   Int
+  auteurId       Int
+  promotionId    Int?
+  canalId        Int?
+  visiblePar     Role[]   @default([ADMIN, FORMATEUR, ETUDIANT])
+  createdAt      DateTime @default(now())
+
+  auteur    User       @relation(fields: [auteurId], references: [id])
+  promotion Promotion? @relation(fields: [promotionId], references: [id])
+  canal     Canal?     @relation(fields: [canalId], references: [id])
+
+  @@index([promotionId, createdAt])
+}

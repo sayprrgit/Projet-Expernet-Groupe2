@@ -1,0 +1,7 @@
+# Variables d'environnement (contiennent les mots de passe et secrets)
+.env
+.env.*
+!.env.example
+
+# Dépendances
+node_modules/
