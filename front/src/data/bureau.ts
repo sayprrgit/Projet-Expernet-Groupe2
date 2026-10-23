@@ -3,13 +3,21 @@ export interface BureauMember {
   role: string;
   scope: string;
   quote?: string;
+  /** Photo du membre. Sans photo, ses initiales sont affichées. */
+  photo?: string;
 }
+
+// Photos publiées sur https://expernet-campus.re/notre-equipe/
+// Pour ajouter une photo : déposer le fichier dans front/public/images/equipe/
+// puis renseigner `photo: '/images/equipe/prenom-nom.jpg'` sur le membre concerné.
+const PHOTOS_SITE = 'https://expernet-campus.re/wp-content/uploads';
 
 export const BUREAU_MEMBERS: BureauMember[] = [
   {
     name: 'Marc-Henri Ravaux',
     role: 'Directeur Général',
     scope: 'Direction',
+    photo: `${PHOTOS_SITE}/2026/01/marc-henri-ravaux-directeur.png`,
     quote:
       'Contribuer au développement du territoire réunionnais en proposant des diplômes de qualité, en phase avec les besoins en compétences de nos entreprises.',
   },
@@ -61,6 +69,19 @@ export const BUREAU_MEMBERS: BureauMember[] = [
     scope: 'Mayotte',
     quote: 'La persévérance et le travail finissent toujours par payer.',
   },
+];
+
+export interface PhotoMascotte {
+  src: string;
+  alt: string;
+}
+
+// « Et bien sûr notre Experpote ! » : la mascotte du Campus en voyage
+export const EXPERPOTE_PHOTOS: PhotoMascotte[] = [
+  { src: `${PHOTOS_SITE}/2023/08/Experpote-chez-Google.png`, alt: 'Experpote en visite chez Google' },
+  { src: `${PHOTOS_SITE}/2022/01/Experpote-sur-la-route.png`, alt: 'Experpote sur la route' },
+  { src: `${PHOTOS_SITE}/2023/08/Experpote-time-square.png`, alt: 'Experpote à Times Square, New York' },
+  { src: `${PHOTOS_SITE}/2022/01/Experpote-chill.png`, alt: 'Experpote en mode détente' },
 ];
 
 export interface HistoryEvent {

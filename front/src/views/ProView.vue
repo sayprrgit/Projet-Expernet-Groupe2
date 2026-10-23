@@ -182,7 +182,7 @@ onMounted(loadFormations);
           </ul>
         </div>
 
-        <aside class="contact-card">
+        <div class="contact-card">
           <h3>Un besoin spécifique ?</h3>
           <p>
             Décrivez-nous votre projet : nous construisons un programme sur mesure et vous accompagnons dans le
@@ -194,7 +194,7 @@ onMounted(loadFormations);
             <li>📍 Le Port</li>
           </ul>
           <BaseButton to="/candidature" block>Demander un devis</BaseButton>
-        </aside>
+        </div>
       </div>
     </section>
 

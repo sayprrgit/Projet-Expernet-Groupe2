@@ -84,7 +84,7 @@ onMounted(async () => {
 
 <style scoped>
 .page { display: flex; flex-direction: column; gap: 1rem; }
-.eyebrow { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--exp-orange); }
+.eyebrow { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--exp-orange-dark); }
 .page-head h1 { font-size: 1.6rem; font-weight: 900; color: var(--exp-navy-950); margin: 0.35rem 0; }
 .page-head p { color: var(--color-text-muted); margin-bottom: 0.75rem; }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.9rem; }
@@ -98,7 +98,7 @@ onMounted(async () => {
 .absence { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem; background: #fff; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); border-left: 4px solid #ef4444; }
 .absence strong { display: block; font-size: 0.9rem; color: var(--exp-navy-950); }
 .absence span { display: block; font-size: 0.78rem; color: var(--color-text-muted); text-transform: capitalize; }
-.absence .time { color: var(--exp-blue); font-weight: 600; }
+.absence .time { color: var(--exp-blue-dark); font-weight: 600; }
 .badge { padding: 0.25rem 0.65rem; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
 .badge--ok { background: #dcfce7; color: #047857; }
 .badge--ko { background: #fee2e2; color: #b91c1c; }

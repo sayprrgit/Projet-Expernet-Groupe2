@@ -80,7 +80,7 @@ onMounted(async () => {
 .page-head { margin-bottom: 1rem; }
 .eyebrow {
   font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--exp-orange);
+  text-transform: uppercase; color: var(--exp-orange-dark);
 }
 .page-head h1 { font-size: 1.6rem; font-weight: 900; color: var(--exp-navy-950); margin: 0.35rem 0; }
 .page-head p { color: var(--color-text-muted); }
@@ -97,7 +97,7 @@ onMounted(async () => {
 .session-grid--past .session-card { border-left-color: var(--color-border-strong); opacity: 0.85; }
 .session-card h3 { font-size: 0.98rem; font-weight: 800; color: var(--exp-navy-950); margin-bottom: 0.4rem; }
 .date { font-size: 0.85rem; font-weight: 700; color: var(--exp-navy-900); text-transform: capitalize; }
-.time { font-size: 0.82rem; color: var(--exp-blue); font-weight: 600; }
+.time { font-size: 0.82rem; color: var(--exp-blue-dark); font-weight: 600; }
 .meta { margin-top: 0.4rem; font-size: 0.78rem; color: var(--color-text-muted); }
 .badge {
   position: absolute; top: 0.9rem; right: 0.9rem; padding: 0.18rem 0.55rem;

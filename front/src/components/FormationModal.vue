@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 import type { Formation } from '@/types/formation';
 
 const props = defineProps<{
@@ -19,18 +19,31 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 };
 
-onMounted(() => {
+// Le composant reste monté en permanence : le défilement de la page n'est bloqué
+// que pendant que la fenêtre est réellement ouverte (sinon la navbar « sticky » ne fonctionne plus)
+function ouvrir() {
   document.addEventListener('keydown', handleKeyDown);
   document.body.style.overflow = 'hidden';
   setTimeout(() => {
     closeButtonRef.value?.focus();
   }, 50);
-});
+}
 
-onUnmounted(() => {
+function fermer() {
   document.removeEventListener('keydown', handleKeyDown);
   document.body.style.overflow = '';
-});
+}
+
+watch(
+  () => props.formation,
+  (formation, precedente) => {
+    if (formation && !precedente) ouvrir();
+    else if (!formation && precedente) fermer();
+  },
+  { immediate: true },
+);
+
+onUnmounted(fermer);
 
 const onApply = () => {
   if (props.formation) {
@@ -332,7 +345,7 @@ const onApply = () => {
 .fact-title {
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--exp-blue);
+  color: var(--exp-blue-dark);
   text-transform: uppercase;
 }
 
@@ -380,7 +393,7 @@ const onApply = () => {
   content: '•';
   position: absolute;
   left: 0.5rem;
-  color: var(--exp-orange);
+  color: var(--exp-orange-dark);
   font-weight: 900;
   font-size: 1.2rem;
   line-height: 1;
@@ -443,7 +456,7 @@ const onApply = () => {
 
 .btn--primary {
   background: var(--exp-orange);
-  color: #ffffff;
+  color: var(--exp-navy-950);
   box-shadow: 0 4px 14px rgba(242, 140, 5, 0.4);
 }
 

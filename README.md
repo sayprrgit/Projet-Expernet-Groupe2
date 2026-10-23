@@ -145,10 +145,15 @@ Mot de passe commun, **uniquement pour le développement** : `Password123!`
 
 | Email | Rôle |
 |---|---|
-| admin@expernet.re | ADMIN |
-| j.hoarau@expernet.re | FORMATEUR |
-| lynho@exemple.re | ETUDIANT |
-| s.grondin@exemple.re | ETUDIANT |
+| marie.payet@expernet.re | ADMIN |
+| laetitia.laurence-nicosia@expernet.re | ADMIN |
+| jean.hoarau@expernet.re | FORMATEUR |
+| sophie.menicoce@expernet.re | FORMATEUR |
+| marc.beauregard@expernet.re | FORMATEUR |
+| lynho.rasoamanana@exemple.re | ETUDIANT |
+| sarah.grondin@exemple.re | ETUDIANT |
+
+> Le seed crée aussi d'autres étudiants (voir `portal-expernet/prisma/seed.ts`), tous avec le même mot de passe.
 
 > Les `id` changent à chaque exécution du seed : toujours les relire dans Prisma Studio, ne jamais les écrire en dur dans le code.
 

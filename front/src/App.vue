@@ -9,7 +9,7 @@ const bare = computed(() => route.meta.bare === true);
 </script>
 
 <template>
-  <a v-if="!bare" class="skip-link" href="#main-content">Aller au contenu principal</a>
+  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
   <Navbar v-if="!bare" />
   <main id="main-content" class="site-main" tabindex="-1">
     <RouterView />

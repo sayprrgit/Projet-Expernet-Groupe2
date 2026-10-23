@@ -4,7 +4,7 @@
   /* Couleurs officielles Expernet.re demandées */
   --exp-orange: #F28C05;
   --exp-orange-hover: #d97d04;
-  --exp-orange-dark: #b86400;
+  --exp-orange-dark: #9a5300; /* texte orange : contraste >= 4.5:1 sur fonds clairs (RGAA 3.2) */
   --exp-orange-light: #fff8f0;
   --exp-orange-subtle: rgba(242, 140, 5, 0.12);
 
@@ -65,7 +65,8 @@ html {
   color: var(--color-text-main);
   background-color: var(--color-bg-page);
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  /* « clip » et non « hidden » : hidden sur html + body casse position: sticky (navbar, en-têtes d'espace) */
+  overflow-x: clip;
   height: auto;
 }
 
@@ -73,7 +74,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  /* « clip » et non « hidden » : hidden sur html + body casse position: sticky (navbar, en-têtes d'espace) */
+  overflow-x: clip;
   position: relative;
 }
 
@@ -90,7 +92,7 @@ body {
   top: -100px;
   left: 1rem;
   background: var(--exp-orange);
-  color: #ffffff;
+  color: var(--exp-navy-950);
   padding: 0.75rem 1.25rem;
   border-radius: var(--radius-sm);
   font-weight: 700;
@@ -155,7 +157,7 @@ a {
 .accent-orange {
   --accent: #F28C05;
   --accent-bright: #FFA53B;
-  --accent-strong: #A85B02;
+  --accent-strong: #9A5300;
   --accent-soft: rgba(242, 140, 5, 0.12);
 }
 
@@ -169,7 +171,7 @@ a {
 .accent-gold {
   --accent: #FFC329;
   --accent-bright: #FFD662;
-  --accent-strong: #8A6200;
+  --accent-strong: #7A5600;
   --accent-soft: rgba(255, 195, 41, 0.18);
 }
 
@@ -216,7 +218,7 @@ a {
 
 .btn--primary {
   background: var(--exp-orange);
-  color: #ffffff;
+  color: var(--exp-navy-950); /* blanc sur orange = 2.46:1, bleu marine = 7.1:1 */
   box-shadow: 0 4px 14px rgba(242, 140, 5, 0.35);
 }
 
@@ -412,4 +414,16 @@ a {
 
 .prose strong {
   color: var(--color-text-main);
+}
+
+/* Respect de la préférence « réduire les animations » du système (RGAA 13.8) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

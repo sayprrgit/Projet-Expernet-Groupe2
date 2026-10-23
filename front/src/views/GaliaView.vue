@@ -132,7 +132,7 @@ const STEPS = [
           </figure>
         </div>
 
-        <aside class="preview-card" aria-label="Aperçu de l’espace GALIA">
+        <div class="preview-card" aria-label="Aperçu de l’espace GALIA">
           <div class="preview-head">
             <span class="preview-dot" aria-hidden="true"></span>
             <span>Mon espace — BTS SIO 1re année</span>
@@ -167,7 +167,7 @@ const STEPS = [
               </div>
             </li>
           </ul>
-        </aside>
+        </div>
       </div>
     </section>
 

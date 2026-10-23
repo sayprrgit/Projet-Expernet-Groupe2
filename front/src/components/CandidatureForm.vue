@@ -659,7 +659,7 @@ const resetForm = () => {
 }
 
 .required {
-  color: var(--exp-orange);
+  color: var(--exp-orange-dark);
 }
 
 .form-control,
@@ -766,7 +766,7 @@ const resetForm = () => {
   border-radius: var(--radius-md);
   font-size: 1.05rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--exp-navy-950);
   background: var(--exp-orange);
   border: none;
   cursor: pointer;
@@ -843,7 +843,7 @@ const resetForm = () => {
 .ref-code {
   font-size: 1.25rem;
   font-weight: 900;
-  color: var(--exp-orange);
+  color: var(--exp-orange-dark);
   letter-spacing: 0.05em;
 }
 

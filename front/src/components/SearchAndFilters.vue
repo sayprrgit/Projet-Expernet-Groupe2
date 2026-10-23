@@ -216,7 +216,7 @@ const hasActiveFilters = () => {
 .search-icon {
   position: absolute;
   left: 1.1rem;
-  color: var(--exp-blue);
+  color: var(--exp-blue-dark);
   pointer-events: none;
 }
 
@@ -275,18 +275,18 @@ const hasActiveFilters = () => {
 }
 
 .toggle-filters-btn:hover {
-  border-color: var(--exp-blue);
-  color: var(--exp-blue);
+  border-color: var(--exp-blue-dark);
+  color: var(--exp-blue-dark);
 }
 
 .toggle-filters-btn--active {
-  border-color: var(--exp-blue);
+  border-color: var(--exp-blue-dark);
   background: var(--exp-blue-light);
-  color: var(--exp-blue);
+  color: var(--exp-blue-dark);
 }
 
 .filter-count-badge {
-  color: var(--exp-orange);
+  color: var(--exp-orange-dark);
   font-size: 1.1rem;
 }
 
@@ -432,7 +432,7 @@ const hasActiveFilters = () => {
 .reset-btn {
   background: none;
   border: none;
-  color: var(--exp-orange);
+  color: var(--exp-orange-dark);
   font-weight: 700;
   cursor: pointer;
   padding: 0.25rem 0.5rem;

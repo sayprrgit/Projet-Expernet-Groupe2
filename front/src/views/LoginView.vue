@@ -1,349 +1,443 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { nextTick, reactive, ref } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { IMAGES } from '@/data/images';
-import BaseButton from '@/components/BaseButton.vue';
 import SeoMeta from '@/components/SeoMeta.vue';
+import type { Role } from '@/types/user';
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
+// Après connexion : retour à la page demandée, sinon l'espace GALIA
 const redirect = (route.query.redirect as string) || '/galia/espace';
 
-const form = reactive({
-  email: '',
-  password: '',
-  remember: false,
-});
+const ROLES: Record<Role, string> = {
+  ADMIN: 'Administrateur',
+  FORMATEUR: 'Formateur',
+  ETUDIANT: 'Étudiant',
+};
 
+// Comptes créés par le seed (développement uniquement) : un clic remplit l'email
+const COMPTES_DEMO: { email: string; libelle: string; role: Role }[] = [
+  { email: 'marie.payet@expernet.re', libelle: 'Marie Payet', role: 'ADMIN' },
+  { email: 'jean.hoarau@expernet.re', libelle: 'Jean Hoarau', role: 'FORMATEUR' },
+  { email: 'lynho.rasoamanana@exemple.re', libelle: 'Lynho Rasoamanana', role: 'ETUDIANT' },
+  { email: 'sarah.grondin@exemple.re', libelle: 'Sarah Grondin', role: 'ETUDIANT' },
+];
+
+const form = reactive({ email: '', password: '' });
 const errors = reactive({ email: '', password: '' });
-const isLoading = ref(false);
 const submitError = ref('');
+const champMotDePasse = ref<HTMLInputElement | null>(null);
 
 const validateEmail = (email: string) => {
-  if (!email.trim()) return 'L\'email est obligatoire.';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Format d\'email invalide.';
+  if (!email.trim()) return "L'email est obligatoire.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return "Format d'email invalide.";
   return '';
 };
 
-const handleSubmit = async (e: Event) => {
-  e.preventDefault();
+async function handleSubmit() {
   errors.email = validateEmail(form.email);
   errors.password = form.password ? '' : 'Le mot de passe est obligatoire.';
-  if (errors.email || errors.password) return;
+  if (errors.email || errors.password || authStore.isLoading) return;
 
-  isLoading.value = true;
   submitError.value = '';
-
   const res = await authStore.login(form.email, form.password);
   if (res.success) {
+    form.password = '';
     router.push(redirect);
   } else {
     submitError.value = res.message;
+    nextTick(() => champMotDePasse.value?.focus());
   }
-  isLoading.value = false;
-};
+}
+
+function remplirCompteDemo(email: string) {
+  form.email = email;
+  errors.email = '';
+  submitError.value = '';
+  nextTick(() => champMotDePasse.value?.focus());
+}
+
+function initiales(libelle: string) {
+  return libelle
+    .split(' ')
+    .map((mot) => mot.charAt(0))
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+}
 </script>
 
 <template>
-  <div class="login-page">
-    <SeoMeta title="Connexion — Galia Expernet" description="Accédez à votre espace apprenant, formateur ou administrateur." />
+  <div class="login-screen accent-gold">
+    <SeoMeta
+      title="Connexion | GALIA Expernet"
+      description="Accédez à votre espace GALIA : emploi du temps, notes, progression et suivi de votre formation."
+    />
 
-    <div class="login-wrapper">
-      <div class="login-card">
-        <div class="login-header">
-          <img :src="IMAGES.logoMarkBlue" alt="Expernet" class="login-logo" width="64" height="64" />
-          <h1>Connexion à Galia</h1>
-          <p class="login-subtitle">Votre espace personnel Expernet</p>
-        </div>
+    <div class="login-glow" aria-hidden="true"></div>
 
-        <form @submit="handleSubmit" class="login-form" novalidate>
-          <div v-if="submitError" class="form-alert error">{{ submitError }}</div>
+    <RouterLink to="/galia" class="login-back">← Retour à l’espace GALIA</RouterLink>
 
-          <div class="form-group">
-            <label for="email" class="form-label">Adresse email</label>
-            <input
-              id="email"
-              v-model="form.email"
-              type="email"
-              autocomplete="email"
-              class="form-control"
-              :class="{ 'is-invalid': errors.email }"
-              placeholder="votre@email.re"
-              :disabled="isLoading"
-              @blur="errors.email = validateEmail(form.email)"
-            />
-            <span v-if="errors.email" class="form-error">{{ errors.email }}</span>
-          </div>
-
-          <div class="form-group">
-            <div class="form-group-header">
-              <label for="password" class="form-label">Mot de passe</label>
-            </div>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              autocomplete="current-password"
-              class="form-control"
-              :class="{ 'is-invalid': errors.password }"
-              placeholder="••••••••"
-              :disabled="isLoading"
-              @input="errors.password = ''"
-            />
-            <span v-if="errors.password" class="form-error">{{ errors.password }}</span>
-          </div>
-
-          <div class="form-options">
-            <label class="checkbox-wrapper">
-              <input type="checkbox" v-model="form.remember" :disabled="isLoading" />
-              <span>Se souvenir de moi</span>
-            </label>
-            <a href="#" class="forgot-link">Mot de passe oublié ?</a>
-          </div>
-
-          <BaseButton type="submit" :loading="isLoading" class="btn-submit" size="lg">
-            Se connecter
-            <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </BaseButton>
-        </form>
-
-        <div class="login-footer">
-          <p>Pas encore de compte ? <RouterLink to="/candidature">Déposez votre candidature</RouterLink></p>
-          <p class="demo-hint">
-            <strong>Comptes démo :</strong><br>
-            Admin : marie.payet@expernet.re / Password123!<br>
-            Formateur : jean.hoarau@expernet.re / Password123!<br>
-            Étudiant : lynho.rasoamanana@exemple.re / Password123!
-          </p>
-        </div>
+    <section class="login-card" aria-labelledby="titre-connexion">
+      <div class="login-brand">
+        <img :src="IMAGES.logoMarkWhite" alt="" width="44" height="42" />
+        <span>EXPERNET <strong>GALIA</strong></span>
       </div>
 
-      <aside class="login-illustration" aria-hidden="true">
-        <img :src="IMAGES.heroGalia" alt="Galia - Espace apprenant Expernet" />
-        <div class="illustration-overlay">
-          <h2>GALIA</h2>
-          <p>Votre plateforme d'apprentissage<br>emploi du temps, notes, progression</p>
+      <h1 id="titre-connexion" class="login-title">Connexion à votre espace GALIA</h1>
+      <p class="login-desc">
+        Retrouvez votre emploi du temps, vos notes, votre progression et le suivi de votre formation.
+      </p>
+
+      <form class="login-form" novalidate @submit.prevent="handleSubmit">
+        <div class="field">
+          <label for="connexion-email">Adresse email</label>
+          <input
+            id="connexion-email"
+            v-model="form.email"
+            type="email"
+            autocomplete="username"
+            required
+            placeholder="prenom.nom@expernet.re"
+            :aria-invalid="!!errors.email"
+            :aria-describedby="errors.email ? 'erreur-email' : undefined"
+            @blur="errors.email = form.email ? validateEmail(form.email) : ''"
+          />
+          <span v-if="errors.email" id="erreur-email" class="field-error">{{ errors.email }}</span>
         </div>
-      </aside>
-    </div>
+
+        <div class="field">
+          <label for="connexion-mot-de-passe">Mot de passe</label>
+          <input
+            id="connexion-mot-de-passe"
+            ref="champMotDePasse"
+            v-model="form.password"
+            type="password"
+            autocomplete="current-password"
+            required
+            :aria-invalid="!!errors.password"
+            :aria-describedby="errors.password ? 'erreur-mot-de-passe' : undefined"
+            @input="errors.password = ''"
+          />
+          <span v-if="errors.password" id="erreur-mot-de-passe" class="field-error">{{ errors.password }}</span>
+        </div>
+
+        <p v-if="submitError" class="login-error" role="alert">{{ submitError }}</p>
+
+        <button
+          type="submit"
+          class="btn btn--primary btn--block btn--lg"
+          :disabled="authStore.isLoading"
+        >
+          {{ authStore.isLoading ? 'Connexion…' : 'Se connecter' }}
+        </button>
+      </form>
+
+      <p class="login-footer">
+        Pas encore de compte ? <RouterLink to="/candidature">Déposez votre candidature</RouterLink>
+      </p>
+
+      <details class="demo-accounts">
+        <summary>Comptes de démonstration</summary>
+        <p>Mot de passe commun : <code>Password123!</code> (données de test, à retirer en production).</p>
+        <ul class="account-list">
+          <li v-for="compte in COMPTES_DEMO" :key="compte.email">
+            <button type="button" class="account" @click="remplirCompteDemo(compte.email)">
+              <span class="avatar" :class="`avatar--${compte.role.toLowerCase()}`" aria-hidden="true">
+                {{ initiales(compte.libelle) }}
+              </span>
+              <span class="account__info">
+                <strong>{{ compte.libelle }}</strong>
+                <span>{{ compte.email }} · {{ ROLES[compte.role] }}</span>
+              </span>
+              <span class="account__arrow" aria-hidden="true">→</span>
+            </button>
+          </li>
+        </ul>
+      </details>
+    </section>
   </div>
 </template>
 
 <style scoped>
-.login-page {
+/* Même mise en page que l'écran de connexion Teams, avec l'accent doré de GALIA */
+.login-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--exp-navy-950) 0%, var(--exp-navy-800) 100%);
-  padding: 2rem 1rem;
+  min-height: 100dvh;
+  padding: 4rem 1rem 2rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--exp-blue-dark) 0%, var(--exp-navy-950) 100%);
 }
 
-.login-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  max-width: 1000px;
-  margin: 0 auto;
-  min-height: calc(100vh - 4rem);
-  background: #ffffff;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-2xl);
+.login-glow {
+  position: absolute;
+  top: -25%;
+  right: -10%;
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 65%);
+  opacity: 0.25;
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.login-back {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.5rem;
+  z-index: 1;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+
+.login-back:hover {
+  color: #ffffff;
+}
+
+.login-back:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .login-card {
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+  padding: 2rem;
+  background: var(--color-bg-card);
+  border-top: 4px solid var(--accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
 }
 
-.login-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.login-logo {
-  margin-bottom: 1rem;
-}
-
-.login-header h1 {
-  font-size: 1.75rem;
+.login-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.5rem;
+  border-radius: var(--radius-md);
+  background: var(--exp-navy-950);
+  color: #ffffff;
+  font-size: 0.95rem;
   font-weight: 900;
-  color: var(--exp-navy-950);
-  margin-bottom: 0.25rem;
+  letter-spacing: 0.04em;
 }
 
-.login-subtitle {
+.login-brand img {
+  width: 30px;
+  height: auto;
+}
+
+.login-brand strong {
+  color: var(--accent);
+}
+
+.login-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--color-text-main);
+}
+
+.login-desc {
+  margin-bottom: 1.25rem;
+  font-size: 0.93rem;
+  line-height: 1.6;
   color: var(--color-text-muted);
-  font-size: 1rem;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.9rem;
 }
 
-.form-alert {
-  padding: 0.85rem 1rem;
-  border-radius: var(--radius-md);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.form-alert.error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-}
-
-.form-group {
+.field {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
-.form-group-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.field label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-text-main);
 }
 
-.form-label {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--exp-navy-900);
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  font-size: 1rem;
+.field input {
+  padding: 0.75rem 0.9rem;
   border: 1.5px solid var(--color-border-strong);
   border-radius: var(--radius-md);
-  background: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
   color: var(--color-text-main);
-  transition: all 0.2s ease;
 }
 
-.form-control:focus {
-  border-color: var(--exp-orange);
-  box-shadow: 0 0 0 3px rgba(242, 140, 5, 0.2);
+.field input:focus {
   outline: none;
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-.form-control.is-invalid {
-  border-color: #ef4444;
+.field input[aria-invalid='true'] {
+  border-color: #dc2626;
+}
+
+.field-error {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #b91c1c;
+}
+
+.login-error {
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
   background: #fef2f2;
-}
-
-.form-error {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #dc2626;
-}
-
-.form-options {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   font-size: 0.88rem;
-}
-
-.checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-
-.forgot-link {
-  color: var(--exp-blue);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.forgot-link:hover {
-  text-decoration: underline;
-}
-
-.btn-submit {
-  margin-top: 0.5rem;
+  color: #b91c1c;
 }
 
 .login-footer {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border-subtle);
+  margin-top: 1rem;
+  font-size: 0.85rem;
   text-align: center;
-  font-size: 0.9rem;
   color: var(--color-text-muted);
 }
 
-.login-footer p {
-  margin: 0.5rem 0;
+.login-footer a {
+  font-weight: 800;
+  color: var(--exp-orange-dark);
 }
 
-.demo-hint {
-  background: var(--color-bg-inset);
-  padding: 1rem;
-  border-radius: var(--radius-md);
-  font-size: 0.78rem !important;
-  line-height: 1.6;
-  text-align: left;
+.demo-accounts {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.demo-accounts summary {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent-strong);
+  cursor: pointer;
+}
+
+.demo-accounts p {
+  margin: 0.6rem 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.demo-accounts code {
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card-subtle);
+  font-size: 0.8rem;
   color: var(--color-text-main);
 }
 
-.login-illustration {
-  position: relative;
+.account-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.account {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: var(--exp-navy-950);
-}
-
-.login-illustration img {
+  gap: 0.8rem;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.35;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 
-.illustration-overlay {
-  position: absolute;
+.account:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.account:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.avatar {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   color: #ffffff;
-  text-align: center;
-  padding: 2rem;
-}
-
-.illustration-overlay h2 {
-  font-size: 3rem;
+  font-size: 0.7rem;
   font-weight: 900;
-  color: var(--exp-orange);
-  margin-bottom: 1rem;
-  letter-spacing: 0.1em;
 }
 
-.illustration-overlay p {
-  font-size: 1.1rem;
-  line-height: 1.7;
-  opacity: 0.9;
+.avatar--admin {
+  background: var(--exp-navy-700);
 }
 
-@media (max-width: 768px) {
-  .login-wrapper {
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
-  .login-illustration {
-    min-height: 200px;
-  }
-  .login-card {
-    padding: 2rem 1.5rem;
+.avatar--formateur {
+  background: var(--accent-strong);
+}
+
+.avatar--etudiant {
+  background: var(--exp-blue-dark);
+}
+
+.account__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.account__info strong {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.account__info span {
+  overflow: hidden;
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+.account__arrow {
+  font-weight: 900;
+  color: var(--accent-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account {
+    transition: none;
   }
 }
 </style>

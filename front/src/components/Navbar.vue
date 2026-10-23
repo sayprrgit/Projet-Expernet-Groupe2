@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onBeforeUnmount, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { IMAGES } from '@/data/images';
 
@@ -30,6 +30,28 @@ const closeMenu = () => {
   isSpacesOpen.value = false;
 };
 
+// Menu « Espaces » : petit délai avant fermeture quand la souris sort,
+// pour laisser le temps d'aller du bouton jusqu'à la liste
+let fermetureEspaces: ReturnType<typeof setTimeout> | undefined;
+
+const annulerFermetureEspaces = () => {
+  clearTimeout(fermetureEspaces);
+};
+
+const fermerEspacesPlusTard = () => {
+  clearTimeout(fermetureEspaces);
+  fermetureEspaces = setTimeout(() => {
+    isSpacesOpen.value = false;
+  }, 300);
+};
+
+const fermerEspacesSiFocusSort = (event: FocusEvent) => {
+  const conteneur = event.currentTarget as HTMLElement;
+  if (!conteneur.contains(event.relatedTarget as Node | null)) isSpacesOpen.value = false;
+};
+
+onBeforeUnmount(() => clearTimeout(fermetureEspaces));
+
 watch(() => route.fullPath, closeMenu);
 </script>
 
@@ -51,7 +73,13 @@ watch(() => route.fullPath, closeMenu);
           <li v-for="link in NAV_LINKS" :key="link.to">
             <RouterLink :to="link.to" class="nav-link">{{ link.label }}</RouterLink>
           </li>
-          <li class="nav-item--dropdown" @mouseleave="isSpacesOpen = false">
+          <li
+            class="nav-item--dropdown"
+            @mouseenter="annulerFermetureEspaces"
+            @mouseleave="fermerEspacesPlusTard"
+            @focusout="fermerEspacesSiFocusSort"
+            @keydown.esc="isSpacesOpen = false"
+          >
             <button
               type="button"
               class="nav-link nav-link--button"
@@ -260,6 +288,15 @@ watch(() => route.fullPath, closeMenu);
   z-index: 20;
 }
 
+.nav-dropdown::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(-0.75rem - 2px);
+  height: calc(0.75rem + 2px);
+}
+
 .nav-dropdown__link {
   display: block;
   padding: 0.7rem 0.85rem;
@@ -299,7 +336,7 @@ watch(() => route.fullPath, closeMenu);
 
 .btn--primary {
   background: var(--exp-orange);
-  color: #ffffff;
+  color: var(--exp-navy-950);
   box-shadow: 0 4px 14px rgba(242, 140, 5, 0.4);
 }
 

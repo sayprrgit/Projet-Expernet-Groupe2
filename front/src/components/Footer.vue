@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { IMAGES } from '@/data/images';
+import { RESEAUX_SOCIAUX } from '@/data/reseaux';
 
 const currentYear = new Date().getFullYear();
 </script>
@@ -25,6 +26,18 @@ const currentYear = new Date().getFullYear();
             <span class="f-badge">CFA Certifié Qualiopi</span>
             <span class="f-badge">Partenaires ENI, IPI, ESD, Digital Campus</span>
           </div>
+          <nav class="footer-socials" aria-label="Expernet Campus sur les réseaux sociaux">
+            <p class="footer-socials__title">Suivez-nous</p>
+            <ul>
+              <li v-for="reseau in RESEAUX_SOCIAUX" :key="reseau.nom">
+                <a :href="reseau.url" class="social-link" target="_blank" rel="noopener noreferrer">
+                  {{ reseau.nom }}
+                  <svg class="social-link__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  <span class="sr-only">(nouvelle fenêtre)</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
 
         <!-- Colonne 2 : Campus Réunion -->
@@ -257,5 +270,43 @@ const currentYear = new Date().getFullYear();
     flex-direction: column;
     text-align: center;
   }
+}
+.footer-socials {
+  margin-top: 1.5rem;
+}
+
+.footer-socials__title {
+  margin-bottom: 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-socials ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-full);
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #ffffff;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.social-link:hover {
+  border-color: var(--exp-orange);
+  background: var(--exp-orange);
+  color: var(--exp-navy-950);
 }
 </style>

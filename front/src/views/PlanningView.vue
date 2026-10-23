@@ -391,18 +391,22 @@ const resetFilters = () => {
 
 .entry--formation {
   --entry-color: #45a1c3;
+  --entry-text: #1f5c73;
 }
 
 .entry--evenement {
   --entry-color: #10b981;
+  --entry-text: #047857;
 }
 
 .entry--atelier {
   --entry-color: #f28c05;
+  --entry-text: #9a5300;
 }
 
 .entry--examen {
   --entry-color: #6264a7;
+  --entry-text: #4a4c86;
 }
 
 .entry-date {
@@ -435,7 +439,7 @@ const resetFilters = () => {
   padding: 0.15rem 0.55rem;
   border-radius: var(--radius-full);
   background: color-mix(in srgb, var(--entry-color) 16%, transparent);
-  color: var(--entry-color);
+  color: var(--entry-text, var(--entry-color));
   font-size: 0.7rem;
   font-weight: 900;
   letter-spacing: 0.04em;

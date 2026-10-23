@@ -25,8 +25,15 @@ const studentItems = [
   { key: 'absences', label: 'Absences', icon: '📋' },
 ];
 
+// Exigence du sujet (scaffolding) : la navigation du tableau de bord formateur
+// arbore des icônes de bananes. Chaque entrée fait défiler jusqu'au bloc correspondant.
 const formateurItems = [
-  { key: 'dashboard', label: 'Tableau de bord', icon: '🏠' },
+  { key: 'dashboard', label: 'Tableau de bord', icon: '🍌', ancre: 'formateur-accueil' },
+  { key: 'indicateurs', label: 'Indicateurs', icon: '🍌', ancre: 'formateur-indicateurs' },
+  { key: 'etudiants', label: 'Étudiants', icon: '🍌', ancre: 'formateur-etudiants' },
+  { key: 'emargements', label: 'Émargements', icon: '🍌', ancre: 'formateur-emargements' },
+  { key: 'saisie', label: 'Saisir une note', icon: '🍌', ancre: 'formateur-saisie' },
+  { key: 'notes', label: 'Notes', icon: '🍌', ancre: 'formateur-notes' },
 ];
 
 const adminItems = [
@@ -41,6 +48,17 @@ const items = computed(() => {
 
 function selectSection(key: string) {
   section.value = key;
+  if (auth.isFormateur) {
+    const ancre = formateurItems.find((item) => item.key === key)?.ancre;
+    const cible = ancre ? document.getElementById(ancre) : null;
+    if (cible) {
+      const animations = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      cible.scrollIntoView({ behavior: animations ? 'smooth' : 'auto', block: 'start' });
+      // Le focus suit le défilement pour les utilisateurs du clavier et des lecteurs d'écran
+      cible.setAttribute('tabindex', '-1');
+      cible.focus({ preventScroll: true });
+    }
+  }
 }
 
 function logout() {
@@ -78,11 +96,12 @@ watch(
       :user="auth.user"
       :items="items"
       :active="section"
+      :motif-bananes="auth.isFormateur"
       @select="selectSection"
       @logout="logout"
     />
 
-    <main class="galia-main">
+    <div class="galia-main">
       <div v-if="!ready" class="loading-screen">
         <div class="spinner"></div>
         <p>Chargement de votre espace Galia…</p>
@@ -110,7 +129,7 @@ watch(
           <p>Votre rôle ne permet pas d'accéder à cet espace.</p>
         </div>
       </div>
-    </main>
+    </div>
   </div>
 </template>
 

@@ -336,8 +336,8 @@ onMounted(loadAll);
         <header class="panel-head">
           <h2>👤 Utilisateurs</h2>
           <div class="filters">
-            <input v-model="search" type="search" placeholder="Rechercher un nom ou email…" />
-            <select v-model="roleFilter" @keydown.space.prevent.stop>
+            <input v-model="search" type="search" placeholder="Rechercher un nom ou email…" aria-label="Rechercher un utilisateur par nom ou email" />
+            <select v-model="roleFilter" aria-label="Filtrer par rôle" @keydown.space.prevent.stop>
               <option value="ALL">Tous les rôles</option>
               <option value="ETUDIANT">Étudiants</option>
               <option value="FORMATEUR">Formateurs</option>
@@ -470,7 +470,7 @@ onMounted(loadAll);
 }
 .welcome h1 { font-size: 1.6rem; font-weight: 900; margin-bottom: 0.35rem; }
 .welcome p { opacity: 0.85; }
-.btn-primary { padding: 0.7rem 1.1rem; border: 0; border-radius: var(--radius-md); background: var(--exp-orange); color: #fff; font-weight: 800; cursor: pointer; }
+.btn-primary { padding: 0.7rem 1.1rem; border: 0; border-radius: var(--radius-md); background: var(--exp-orange); color: var(--exp-navy-950); font-weight: 800; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-secondary { padding: 0.7rem 1.1rem; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); background: #fff; color: var(--exp-navy-900); font-weight: 700; cursor: pointer; }
 .flash { padding: 0.8rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.9rem; }

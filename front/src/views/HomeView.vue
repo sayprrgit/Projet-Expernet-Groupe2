@@ -143,7 +143,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <aside class="stats-card">
+        <div class="stats-card">
           <figure class="stats-photo">
             <img :src="IMAGES.homeCampusPhoto" alt="Un centre de formation Expernet" loading="lazy" />
           </figure>
@@ -155,7 +155,7 @@ onMounted(async () => {
             <li><strong>3</strong><span>Sites à La Réunion</span></li>
             <li><strong>250+</strong><span>Entreprises partenaires</span></li>
           </ul>
-        </aside>
+        </div>
       </div>
     </section>
 

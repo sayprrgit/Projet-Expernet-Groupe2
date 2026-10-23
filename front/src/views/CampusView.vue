@@ -168,7 +168,7 @@ onMounted(loadFormations);
             <BaseButton to="/a-propos">Notre histoire &amp; notre équipe</BaseButton>
           </div>
         </div>
-        <aside class="partner-card">
+        <div class="partner-card">
           <img class="campus-logo" :src="IMAGES.logoCampus" alt="Expernet Campus" loading="lazy" />
           <h3>Nos partenaires pédagogiques</h3>
           <ul class="partner-list">
@@ -179,7 +179,7 @@ onMounted(loadFormations);
             <img :src="IMAGES.campusPhoto" alt="Un centre de formation Expernet" loading="lazy" />
             <figcaption>Nos locaux de formation et de travail en entreprise.</figcaption>
           </figure>
-        </aside>
+        </div>
       </div>
     </section>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import SeoMeta from '@/components/SeoMeta.vue';
 import { IMAGES } from '@/data/images';
 import { useAuthStore } from '@/stores/auth';
@@ -11,10 +11,18 @@ const INTERVALLE_RAFRAICHISSEMENT = 4000;
 const LONGUEUR_MAX = 2000;
 
 const ROLES: Record<Role, string> = {
-  ADMIN: 'Admin',
+  ADMIN: 'Administrateur',
   FORMATEUR: 'Formateur',
   ETUDIANT: 'Étudiant',
 };
+
+// Comptes créés par le seed (développement uniquement) : un clic remplit l'email
+const COMPTES_DEMO: { email: string; libelle: string; role: Role }[] = [
+  { email: 'marie.payet@expernet.re', libelle: 'Marie Payet', role: 'ADMIN' },
+  { email: 'jean.hoarau@expernet.re', libelle: 'Jean Hoarau', role: 'FORMATEUR' },
+  { email: 'lynho.rasoamanana@exemple.re', libelle: 'Lynho Rasoamanana', role: 'ETUDIANT' },
+  { email: 'sarah.grondin@exemple.re', libelle: 'Sarah Grondin', role: 'ETUDIANT' },
+];
 
 const canaux = ref<Canal[]>([]);
 const canalActifId = ref<number | null>(null);
@@ -35,12 +43,17 @@ const fichiersOuverts = ref(false); // panneau fichiers sur petits écrans
 
 const zoneMessages = ref<HTMLElement | null>(null);
 const champMessage = ref<HTMLTextAreaElement | null>(null);
+const champMotDePasse = ref<HTMLInputElement | null>(null);
+
+// Écran de connexion Teams (même session que le reste du site : store stores/auth.ts)
+const verificationSession = ref(true);
+const email = ref('');
+const motDePasse = ref('');
+const erreurConnexion = ref('');
 
 let minuterie: ReturnType<typeof setInterval> | undefined;
 
-// La route exige une connexion (router/index.ts) : on arrive ici déjà authentifié via /login
 const auth = useAuthStore();
-const router = useRouter();
 const utilisateurCourant = computed(() => auth.user);
 const connecte = computed(() => utilisateurCourant.value !== null);
 const canalActif = computed(() => canaux.value.find((c) => c.id === canalActifId.value) ?? null);
@@ -169,9 +182,30 @@ async function ouvrirEspace() {
   }
 }
 
+async function seConnecter() {
+  if (auth.isLoading) return;
+  if (!email.value.trim() || !motDePasse.value) {
+    erreurConnexion.value = 'Email et mot de passe obligatoires.';
+    return;
+  }
+  erreurConnexion.value = '';
+  const resultat = await auth.login(email.value, motDePasse.value);
+  if (resultat.success) {
+    motDePasse.value = '';
+  } else {
+    erreurConnexion.value = resultat.message;
+    nextTick(() => champMotDePasse.value?.focus());
+  }
+}
+
+function remplirCompteDemo(adresse: string) {
+  email.value = adresse;
+  erreurConnexion.value = '';
+  nextTick(() => champMotDePasse.value?.focus());
+}
+
 function seDeconnecter() {
   auth.logout();
-  router.push('/teams');
 }
 
 function selectionnerCanal(id: number) {
@@ -255,12 +289,12 @@ watch(() => utilisateurCourant.value?.id ?? null, (id) => {
   repondreA.value = null;
   brouillon.value = '';
   if (id !== null) ouvrirEspace();
-  // Session expirée pendant l'utilisation : retour à la page de connexion
-  else router.replace({ name: 'login', query: { redirect: '/teams/messagerie' } });
 });
 
 onMounted(async () => {
+  // Une session existante (connexion faite sur GALIA ou Teams) est revérifiée auprès du serveur
   await auth.ensureSession();
+  verificationSession.value = false;
   if (connecte.value) await ouvrirEspace();
   minuterie = setInterval(() => {
     if (connecte.value && document.visibilityState === 'visible') chargerMessages(true);
@@ -277,26 +311,117 @@ onBeforeUnmount(() => clearInterval(minuterie));
       description="Les canaux de discussion et les documents partagés de votre promotion, directement dans la plateforme Expernet."
     />
 
-    <!-- ================= Application ================= -->
-    <div v-if="connecte" class="app">
-      <header class="app-bar">
-        <RouterLink to="/teams" class="app-bar__brand" aria-label="Retour à l’espace collaboratif">
-          <img :src="IMAGES.logoMarkWhite" alt="" width="34" height="32" />
+    <!-- ================= Écran de connexion Teams ================= -->
+    <div v-if="!connecte" class="login-screen">
+      <div class="login-glow" aria-hidden="true"></div>
+
+      <RouterLink to="/teams" class="login-back">← Retour à l’espace collaboratif</RouterLink>
+
+      <section class="login-card" aria-labelledby="titre-connexion">
+        <div class="login-brand">
+          <img :src="IMAGES.logoMarkWhite" alt="" width="44" height="42" />
           <span>EXPERNET <strong>Teams</strong></span>
+        </div>
+
+        <h1 id="titre-connexion" class="login-title">Connexion à l’espace collaboratif</h1>
+        <p class="login-desc">
+          Retrouvez les canaux de votre promotion, vos fils de discussion et les documents partagés.
+        </p>
+
+        <p v-if="verificationSession" class="login-state">Vérification de la session…</p>
+
+        <form v-else class="login-form" novalidate @submit.prevent="seConnecter">
+          <div class="field">
+            <label for="connexion-email">Adresse email</label>
+            <input
+              id="connexion-email"
+              v-model="email"
+              type="email"
+              autocomplete="username"
+              required
+              placeholder="prenom.nom@expernet.re"
+            />
+          </div>
+          <div class="field">
+            <label for="connexion-mot-de-passe">Mot de passe</label>
+            <input
+              id="connexion-mot-de-passe"
+              ref="champMotDePasse"
+              v-model="motDePasse"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <p v-if="erreurConnexion" class="login-error" role="alert">{{ erreurConnexion }}</p>
+
+          <button
+            type="submit"
+            class="btn btn--primary btn--block btn--lg"
+            :disabled="auth.isLoading"
+          >
+            {{ auth.isLoading ? 'Connexion…' : 'Se connecter' }}
+          </button>
+        </form>
+
+        <details v-if="!verificationSession" class="demo-accounts">
+          <summary>Comptes de démonstration</summary>
+          <p>
+            Mot de passe commun : <code>Password123!</code> (données de test, à retirer en production).
+          </p>
+          <ul class="account-list">
+            <li v-for="compte in COMPTES_DEMO" :key="compte.email">
+              <button type="button" class="account" @click="remplirCompteDemo(compte.email)">
+                <span class="avatar avatar--sm" :class="`avatar--${compte.role.toLowerCase()}`" aria-hidden="true">
+                  {{ compte.libelle.split(' ').map((m) => m.charAt(0)).join('') }}
+                </span>
+                <span class="account__info">
+                  <strong>{{ compte.libelle }}</strong>
+                  <span>{{ compte.email }} · {{ ROLES[compte.role] }}</span>
+                </span>
+                <span class="account__arrow" aria-hidden="true">→</span>
+              </button>
+            </li>
+          </ul>
+        </details>
+      </section>
+    </div>
+
+    <!-- ================= Application ================= -->
+    <div v-else class="app">
+      <header class="app-bar">
+        <RouterLink to="/teams" class="space-brand" aria-label="Teams, retour à la présentation de l’espace">
+          <img :src="IMAGES.logoMarkWhite" alt="" width="34" height="32" />
+          <span class="space-brand__text">
+            <span class="space-brand__name">EXPERNET <strong>Teams</strong></span>
+            <span class="space-brand__subtitle">Espace collaboratif</span>
+          </span>
         </RouterLink>
 
         <div class="app-bar__spacer"></div>
 
-        <div v-if="utilisateurCourant" class="user-chip">
-          <span class="avatar avatar--sm" :class="`avatar--${utilisateurCourant.role.toLowerCase()}`" aria-hidden="true">
+        <div v-if="utilisateurCourant" class="space-user">
+          <span
+            class="space-user__avatar"
+            :class="`space-user__avatar--${utilisateurCourant.role.toLowerCase()}`"
+            aria-hidden="true"
+          >
             {{ initiales(utilisateurCourant.prenom, utilisateurCourant.nom) }}
           </span>
-          <span class="user-chip__info">
+          <span class="space-user__info">
             <strong>{{ utilisateurCourant.prenom }} {{ utilisateurCourant.nom }}</strong>
             <span>{{ ROLES[utilisateurCourant.role] }}</span>
           </span>
         </div>
-        <button type="button" class="app-bar__logout" @click="seDeconnecter">Déconnexion</button>
+        <button type="button" class="space-logout" @click="seDeconnecter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Déconnexion
+        </button>
       </header>
 
       <div class="workspace">
@@ -527,6 +652,230 @@ onBeforeUnmount(() => clearInterval(minuterie));
   background: var(--color-bg-inset);
 }
 
+/* ================= Écran de connexion Teams ================= */
+.login-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: linear-gradient(180deg, var(--exp-blue-dark) 0%, var(--exp-navy-950) 100%);
+}
+
+.login-glow {
+  position: absolute;
+  top: -25%;
+  right: -10%;
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 65%);
+  opacity: 0.3;
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.login-back {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.5rem;
+  z-index: 1;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+
+.login-back:hover {
+  color: #ffffff;
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+  padding: 2rem;
+  background: var(--color-bg-card);
+  border-top: 4px solid var(--accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+}
+
+.login-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.5rem;
+  border-radius: var(--radius-md);
+  background: var(--exp-navy-950);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.login-brand img {
+  width: 30px;
+  height: auto;
+}
+
+.login-brand strong {
+  color: var(--accent-bright);
+}
+
+.login-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--color-text-main);
+}
+
+.login-desc {
+  margin-bottom: 1.25rem;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.login-state {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.field input {
+  padding: 0.75rem 0.9rem;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-main);
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.login-error {
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  background: #fef2f2;
+  font-size: 0.88rem;
+  color: #b91c1c;
+}
+
+.demo-accounts {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.demo-accounts summary {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent-strong);
+  cursor: pointer;
+}
+
+.demo-accounts p {
+  margin: 0.6rem 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.demo-accounts code {
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card-subtle);
+  font-size: 0.8rem;
+  color: var(--color-text-main);
+}
+
+.account-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-card);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.account:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.account:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.account__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.account__info strong {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.account__info span {
+  overflow: hidden;
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+.account__arrow {
+  font-weight: 900;
+  color: var(--accent-strong);
+}
+
 /* ================= Application ================= */
 .app {
   display: flex;
@@ -535,78 +884,132 @@ onBeforeUnmount(() => clearInterval(minuterie));
 }
 
 .app-bar {
+  --space-accent: var(--accent-bright);
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-shrink: 0;
-  height: 60px;
-  padding: 0 1.25rem;
-  background: rgba(11, 26, 45, 0.98);
+  height: 68px;
+  padding: 0 1.5rem;
+  background: var(--exp-navy-950);
   border-bottom: 2px solid var(--accent);
   color: #ffffff;
-}
-
-.app-bar__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.app-bar__brand img {
-  width: 30px;
-  height: auto;
 }
 
 .app-bar__spacer {
   flex: 1;
 }
 
-.user-chip {
+/* ---- En-tête d'espace : structure commune GALIA / Teams ---- */
+.space-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.space-brand img {
+  width: 32px;
+  height: auto;
+}
+
+.space-brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.space-brand__name {
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.space-brand__name strong {
+  color: var(--space-accent);
+}
+
+.space-brand__subtitle {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.space-user {
   display: flex;
   align-items: center;
   gap: 0.55rem;
 }
 
-.user-chip__info {
+.space-user__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.space-user__avatar--admin {
+  background: var(--exp-navy-700);
+}
+
+.space-user__avatar--formateur {
+  background: #4a4c86;
+}
+
+.space-user__avatar--etudiant {
+  background: var(--exp-blue-dark);
+}
+
+.space-user__info {
   display: flex;
   flex-direction: column;
   line-height: 1.2;
 }
 
-.user-chip__info strong {
-  font-size: 0.85rem;
+.space-user__info strong {
+  font-size: 0.86rem;
   font-weight: 800;
+  color: #ffffff;
 }
 
-.user-chip__info span {
+.space-user__info span {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.app-bar__logout {
-  padding: 0.45rem 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.space-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
   border-radius: var(--radius-md);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.84rem;
   font-weight: 800;
   cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.app-bar__logout:hover {
+.space-logout:hover {
   border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  color: var(--exp-navy-950);
 }
 
-.app-bar__logout:focus-visible,
-.app-bar__brand:focus-visible {
+.space-brand:focus-visible,
+.space-logout:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }
@@ -709,7 +1112,6 @@ onBeforeUnmount(() => clearInterval(minuterie));
 
 .channel-link__count {
   font-size: 0.72rem;
-  opacity: 0.75;
 }
 
 /* ---------- Conversation ---------- */
@@ -912,7 +1314,7 @@ onBeforeUnmount(() => clearInterval(minuterie));
 }
 
 .avatar--etudiant {
-  background: var(--exp-blue);
+  background: var(--exp-blue-dark); /* blanc sur #45a1c3 = 2.9:1, sur #266b86 = 5.9:1 */
 }
 
 .role-badge {
@@ -1238,7 +1640,8 @@ onBeforeUnmount(() => clearInterval(minuterie));
 }
 
 @media (max-width: 760px) {
-  .user-chip__info,
+  .space-user__info,
+  .space-brand__subtitle,
   .composer__hint,
   .live-badge {
     display: none;

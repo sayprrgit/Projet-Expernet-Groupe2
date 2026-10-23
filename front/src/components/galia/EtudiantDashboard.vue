@@ -315,7 +315,7 @@ onMounted(loadDashboard);
 .link {
   border: 0;
   background: transparent;
-  color: var(--exp-blue);
+  color: var(--exp-blue-dark);
   font-weight: 700;
   font-size: 0.82rem;
   cursor: pointer;
@@ -425,8 +425,8 @@ onMounted(loadDashboard);
 
 .action:hover {
   transform: translateY(-2px);
-  border-color: var(--exp-orange);
-  color: var(--exp-orange);
+  border-color: var(--exp-orange-dark);
+  color: var(--exp-orange-dark);
   box-shadow: var(--shadow-md);
 }
 

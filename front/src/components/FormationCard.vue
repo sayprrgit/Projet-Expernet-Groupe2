@@ -211,7 +211,7 @@ const emit = defineEmits<{
 .formation-category {
   font-size: 0.8rem;
   font-weight: 800;
-  color: var(--exp-orange);
+  color: var(--exp-orange-dark);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.4rem;
@@ -321,7 +321,7 @@ const emit = defineEmits<{
 
 .btn--primary {
   background: var(--exp-orange);
-  color: #ffffff;
+  color: var(--exp-navy-950);
   box-shadow: 0 2px 8px rgba(242, 140, 5, 0.3);
 }
 

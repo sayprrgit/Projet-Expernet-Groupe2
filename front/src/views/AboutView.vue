@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { BUREAU_MEMBERS, CAMPUS_HISTORY, CAMPUS_SITES, PARTNERS } from '@/data/bureau';
+import { reactive } from 'vue';
+import { BUREAU_MEMBERS, CAMPUS_HISTORY, CAMPUS_SITES, EXPERPOTE_PHOTOS, PARTNERS } from '@/data/bureau';
+import { RESEAUX_SOCIAUX } from '@/data/reseaux';
 import { IMAGES } from '@/data/images';
 import PartnerLogos from '@/components/PartnerLogos.vue';
 import SeoMeta from '@/components/SeoMeta.vue';
@@ -23,6 +25,9 @@ const VALUES = [
     text: 'De la candidature à l’insertion, une équipe disponible pour sécuriser chaque étape du parcours.',
   },
 ];
+
+// Photos qui n'ont pas pu se charger : on revient aux initiales
+const photosIndisponibles = reactive(new Set<string>());
 
 const initials = (name: string) =>
   name
@@ -113,7 +118,18 @@ const initials = (name: string) =>
 
         <ul class="team-grid">
           <li v-for="member in BUREAU_MEMBERS" :key="member.name" class="member-card">
-            <span class="member-avatar" aria-hidden="true">{{ initials(member.name) }}</span>
+            <img
+              v-if="member.photo && !photosIndisponibles.has(member.name)"
+              :src="member.photo"
+              alt=""
+              class="member-photo"
+              width="72"
+              height="72"
+              loading="lazy"
+              decoding="async"
+              @error="photosIndisponibles.add(member.name)"
+            />
+            <span v-else class="member-avatar" aria-hidden="true">{{ initials(member.name) }}</span>
             <div class="member-info">
               <h3>{{ member.name }}</h3>
               <p class="member-role">{{ member.role }}</p>
@@ -122,8 +138,30 @@ const initials = (name: string) =>
             </div>
           </li>
         </ul>
+        <div class="mascotte">
+          <h3 class="mascotte__title">Et bien sûr, notre Experpote !</h3>
+          <p class="mascotte__desc">La mascotte du Campus voyage partout avec nos apprenants et nos équipes.</p>
+          <ul class="mascotte__grid">
+            <li v-for="photo in EXPERPOTE_PHOTOS" :key="photo.src">
+              <img :src="photo.src" :alt="photo.alt" loading="lazy" decoding="async" />
+            </li>
+          </ul>
+          <div class="mascotte__reseaux">
+            <p>Suivez les aventures d’Experpote sur nos réseaux :</p>
+            <ul>
+              <li v-for="reseau in RESEAUX_SOCIAUX" :key="reseau.nom">
+                <a :href="reseau.url" class="mascotte__lien" target="_blank" rel="noopener noreferrer">
+                  {{ reseau.nom }}<span class="sr-only"> (nouvelle fenêtre)</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <p class="team-note">
-          Informations présentées à titre de démonstration pour ce prototype de portail.
+          Photos et informations issues du site
+          <a href="https://expernet-campus.re/notre-equipe/" target="_blank" rel="noopener">expernet-campus.re<span class="sr-only"> (nouvelle fenêtre)</span></a>,
+          présentées à titre de démonstration pour ce prototype de portail.
         </p>
       </div>
     </section>
@@ -143,7 +181,7 @@ const initials = (name: string) =>
           </ul>
         </div>
 
-        <aside class="partner-card">
+        <div class="partner-card">
           <h3>Un réseau de partenaires</h3>
           <p>
             Le Campus s’appuie sur des écoles et éditeurs reconnus pour délivrer des diplômes et certifications
@@ -162,7 +200,7 @@ const initials = (name: string) =>
             Nos établissements sont accessibles aux personnes à mobilité réduite. Référente handicap :
             Murielle Chamand — 0262 21 90 45.
           </p>
-        </aside>
+        </div>
       </div>
     </section>
 
@@ -272,18 +310,107 @@ const initials = (name: string) =>
   box-shadow: var(--shadow-sm);
 }
 
+.member-photo,
 .member-avatar {
   flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid var(--color-bg-card);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.member-photo {
+  object-fit: cover;
+  object-position: center top;
+  background: var(--color-bg-card-subtle);
+}
+
+.member-avatar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
   background: linear-gradient(135deg, var(--exp-orange), #ff9f24);
-  color: #ffffff;
-  font-size: 1rem;
+  color: var(--exp-navy-950);
+  font-size: 1.2rem;
   font-weight: 900;
+}
+
+.mascotte {
+  margin-top: 2.5rem;
+  padding: 1.6rem;
+  background: var(--color-bg-card-subtle);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.mascotte__title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  color: var(--exp-blue-dark);
+}
+
+.mascotte__desc {
+  margin: 0.35rem 0 1.25rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.mascotte__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  list-style: none;
+}
+
+.mascotte__grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-bg-card);
+}
+
+.mascotte__reseaux {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.mascotte__reseaux ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.mascotte__lien {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--exp-blue-dark);
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  color: var(--exp-blue-dark);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mascotte__lien:hover {
+  background: var(--exp-blue-dark);
+  color: #ffffff;
+}
+
+@media (max-width: 720px) {
+  .mascotte__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .member-info h3 {
@@ -322,8 +449,14 @@ const initials = (name: string) =>
 .team-note {
   margin-top: 1.5rem;
   font-size: 0.8rem;
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
   text-align: center;
+}
+
+.team-note a {
+  font-weight: 700;
+  color: var(--exp-orange-dark);
+  text-decoration: underline;
 }
 
 .split {

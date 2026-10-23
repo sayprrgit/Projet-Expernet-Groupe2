@@ -50,7 +50,8 @@ const router = createRouter({
       path: '/teams/messagerie',
       name: 'teams-messagerie',
       component: () => import('@/views/TeamsChatView.vue'),
-      meta: { requiresAuth: true, bare: true },
+      // Pas de requiresAuth : la page affiche son propre écran de connexion Teams
+      meta: { bare: true },
     },
     {
       path: '/a-propos',

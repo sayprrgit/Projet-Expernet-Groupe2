@@ -107,7 +107,7 @@ const RULES = [
           </figure>
         </div>
 
-        <aside class="team-card">
+        <div class="team-card">
           <h3>Votre promotion sur Teams</h3>
           <ul class="team-list">
             <li>
@@ -139,7 +139,7 @@ const RULES = [
               </div>
             </li>
           </ul>
-        </aside>
+        </div>
       </div>
     </section>
 

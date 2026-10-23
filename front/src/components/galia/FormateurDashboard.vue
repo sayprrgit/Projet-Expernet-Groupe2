@@ -205,7 +205,7 @@ onMounted(loadOverview);
 
 <template>
   <div class="dashboard">
-    <section class="welcome">
+    <section id="formateur-accueil" class="welcome">
       <div>
         <h1>Tableau de bord formateur</h1>
         <p>Suivez l'évolution, l'assiduité et les résultats de vos promotions.</p>
@@ -262,7 +262,7 @@ onMounted(loadOverview);
       </section>
 
       <template v-if="selectedPromotion">
-        <section v-if="stats" class="panel">
+        <section v-if="stats" id="formateur-indicateurs" class="panel">
           <header class="panel-head">
             <h2>{{ selectedPromotion.nom }} — indicateurs</h2>
             <span class="sub">{{ selectedPromotion.formation?.libelle }}</span>
@@ -277,7 +277,7 @@ onMounted(loadOverview);
           </div>
         </section>
 
-        <section class="panel">
+        <section id="formateur-etudiants" class="panel">
           <header class="panel-head">
             <h2>👥 Suivi des étudiants</h2>
             <span class="sub">{{ etudiants.length }} étudiant(s)</span>
@@ -331,7 +331,7 @@ onMounted(loadOverview);
         </section>
 
         <div class="two-columns">
-          <section class="panel">
+          <section id="formateur-emargements" class="panel">
             <header class="panel-head">
               <h2>🕒 Émargements</h2>
               <span class="sub">Cliquez sur une session passée</span>
@@ -396,7 +396,7 @@ onMounted(loadOverview);
             </ul>
           </section>
 
-          <section class="panel">
+          <section id="formateur-saisie" class="panel">
             <header class="panel-head">
               <h2>📝 Saisir une note</h2>
             </header>
@@ -440,7 +440,7 @@ onMounted(loadOverview);
           </section>
         </div>
 
-        <section class="panel">
+        <section id="formateur-notes" class="panel">
           <header class="panel-head">
             <h2>📚 Notes de la promotion</h2>
             <span class="sub">{{ notes.length }} note(s)</span>
@@ -540,7 +540,7 @@ td small { color: var(--color-text-muted); }
 .session-button--active { border-color: var(--exp-orange); background: #fff7ed; }
 .session-button strong { display: block; font-size: 0.86rem; color: var(--exp-navy-950); }
 .session-button small { display: block; font-size: 0.74rem; color: var(--color-text-muted); }
-.chevron { color: var(--exp-orange); font-weight: 900; }
+.chevron { color: var(--exp-orange-dark); font-weight: 900; }
 .presence-panel { padding: 0.6rem 0.25rem 0.2rem; }
 .presence-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
 .presence-list li { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; font-size: 0.84rem; padding: 0.35rem 0.25rem; border-bottom: 1px dashed var(--color-border-subtle); }
@@ -548,7 +548,7 @@ td small { color: var(--color-text-muted); }
 .toggle { padding: 0.3rem 0.6rem; border: 1px solid var(--color-border-strong); background: #fff; border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 700; color: var(--color-text-muted); cursor: pointer; }
 .toggle--on { background: #dcfce7; border-color: #10b981; color: #047857; }
 .toggle--off { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
-.hint { margin-top: 0.5rem; font-size: 0.78rem; color: var(--exp-blue); }
+.hint { margin-top: 0.5rem; font-size: 0.78rem; color: var(--exp-blue-dark); }
 .upcoming-list { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
 .upcoming-list li { padding: 0.6rem 0.75rem; border-radius: var(--radius-md); background: var(--color-bg-inset); border-left: 3px solid var(--exp-blue); }
 .upcoming-list strong { display: block; font-size: 0.84rem; color: var(--exp-navy-950); }
@@ -557,9 +557,14 @@ td small { color: var(--color-text-muted); }
 .note-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.8rem; font-weight: 700; color: var(--exp-navy-900); }
 .note-form select, .note-form input, .note-form textarea { padding: 0.6rem 0.7rem; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); font-size: 0.88rem; font-family: inherit; }
 .note-form select:focus, .note-form input:focus, .note-form textarea:focus { outline: none; border-color: var(--exp-orange); box-shadow: 0 0 0 3px rgba(242,140,5,0.15); }
-.btn-primary { padding: 0.75rem 1rem; border: 0; border-radius: var(--radius-md); background: var(--exp-orange); color: #fff; font-weight: 800; cursor: pointer; }
+.btn-primary { padding: 0.75rem 1rem; border: 0; border-radius: var(--radius-md); background: var(--exp-orange); color: var(--exp-navy-950); font-weight: 800; cursor: pointer; }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .state { padding: 1.25rem; text-align: center; border-radius: var(--radius-md); background: var(--color-bg-inset); color: var(--color-text-muted); border: 1px dashed var(--color-border-strong); }
 .state--error { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
 @media (max-width: 700px) { .welcome { flex-direction: column; align-items: flex-start; } }
+/* Ancres de la navigation formateur : ne pas passer sous l'en-tête collant */
+.welcome,
+.panel {
+  scroll-margin-top: 90px;
+}
 </style>
