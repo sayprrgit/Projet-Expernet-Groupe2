@@ -4,9 +4,10 @@ import { AppService } from './app.service.js';
 import { FormationsModule } from './formations/formations.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { CanauxModule } from './canaux/canaux.module.js';
+import { DocumentsModule } from './documents/documents.module.js';
 
 @Module({
-  imports: [FormationsModule,PrismaModule, CanauxModule],
+  imports: [FormationsModule,PrismaModule, CanauxModule, DocumentsModule],
   controllers: [AppController],
   providers: [AppService],
 })
