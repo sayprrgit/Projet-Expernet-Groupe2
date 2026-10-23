@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '@/views/HomeView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,11 +10,65 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/formations',
+      name: 'formations',
+      component: () => import('@/views/FormationsView.vue'),
+    },
+    {
+      path: '/campus',
+      name: 'campus',
+      component: () => import('@/views/CampusView.vue'),
+    },
+    {
+      path: '/expernet-pro',
+      name: 'expernet-pro',
+      component: () => import('@/views/ProView.vue'),
+    },
+    {
+      path: '/galia',
+      name: 'galia',
+      component: () => import('@/views/GaliaView.vue'),
+    },
+    {
+      path: '/teams',
+      name: 'teams',
+      component: () => import('@/views/TeamsView.vue'),
+    },
+    {
+      path: '/a-propos',
+      name: 'about',
+      component: () => import('@/views/AboutView.vue'),
+    },
+    {
+      path: '/planning',
+      name: 'planning',
+      component: () => import('@/views/PlanningView.vue'),
+    },
+    {
+      path: '/candidature',
+      name: 'candidature',
+      component: () => import('@/views/CandidatureView.vue'),
+    },
+    {
       path: '/docs',
       name: 'docs',
       component: () => import('@/views/DocsView.vue'),
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue'),
+    },
   ],
-})
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' };
+    }
+    return { top: 0 };
+  },
+});
 
-export default router
+export default router;

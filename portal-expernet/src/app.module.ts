@@ -5,7 +5,9 @@ import { PrismaModule } from './prisma/prisma.module.js';
 import { CanauxModule } from './canaux/canaux.module.js';
 
 @Module({
+  imports: [FormationsModule],
   imports: [PrismaModule, CanauxModule],
+  import { FormationsModule } from './formations/formations.module.js';
   controllers: [AppController],
   providers: [AppService],
 })
