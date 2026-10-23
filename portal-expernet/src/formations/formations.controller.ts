@@ -58,6 +58,16 @@ export class FormationsController {
     return this.formationsService.getCategoriesSummary();
   }
 
+  @Get('candidatures')
+  @ApiOperation({
+    summary: 'Liste des candidatures reçues',
+    description: 'Renvoie l’ensemble des candidatures (plus récente en premier), avec la formation visée.',
+  })
+  @ApiResponse({ status: 200, description: 'Liste des candidatures' })
+  findAllCandidatures() {
+    return this.formationsService.findAllCandidatures();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtenir la fiche descriptive complète d’une formation' })
   @ApiParam({ name: 'id', description: 'ID ou slug de la formation' })

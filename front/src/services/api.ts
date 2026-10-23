@@ -5,7 +5,9 @@ import type {
   CandidatureFormInput,
   CandidatureResponse,
 } from '@/types/formation';
+import type { PlanningEntry } from '@/data/planning';
 import { MOCK_FORMATIONS } from './formationsData';
+import { PLANNING_ENTRIES } from '@/data/planning';
 
 const apiClient = axios.create({
   baseURL: '/api',
@@ -69,6 +71,17 @@ export const apiService = {
         total: list.length,
         data: list,
       };
+    }
+  },
+
+  async getPlanning(): Promise<PlanningEntry[]> {
+    try {
+      const response = await apiClient.get<PlanningEntry[]>('/planning');
+      return response.data;
+    } catch (err) {
+      // Fallback local si le backend est indisponible
+      console.info('Backend API non disponible, utilisation du planning local :', err);
+      return [...PLANNING_ENTRIES];
     }
   },
 
