@@ -97,6 +97,7 @@ const hasActiveFilters = () => {
                 class="filter-select"
                 :value="filters.category"
                 @change="updateField('category', ($event.target as HTMLSelectElement).value)"
+                @keydown.space.prevent.stop
               >
                 <option value="all">Toutes les filières</option>
                 <option value="dev">💻 Informatique &amp; Développement Web</option>
@@ -114,6 +115,7 @@ const hasActiveFilters = () => {
                 class="filter-select"
                 :value="filters.level"
                 @change="updateField('level', ($event.target as HTMLSelectElement).value)"
+                @keydown.space.prevent.stop
               >
                 <option value="all">Tous les niveaux</option>
                 <option value="bac+2">Bac +2 (BTS SIO, Titre Pro)</option>
@@ -131,6 +133,7 @@ const hasActiveFilters = () => {
                 class="filter-select"
                 :value="filters.campus"
                 @change="updateField('campus', ($event.target as HTMLSelectElement).value)"
+                @keydown.space.prevent.stop
               >
                 <option value="all">Tous les campus (974)</option>
                 <option value="Le Port">📍 Le Port</option>

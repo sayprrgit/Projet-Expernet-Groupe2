@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { computed } from 'vue';
+import { RouterView, useRoute } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
 import Footer from '@/components/Footer.vue';
+
+const route = useRoute();
+const bare = computed(() => route.meta.bare === true);
 </script>
 
 <template>
-  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
-  <Navbar />
+  <a v-if="!bare" class="skip-link" href="#main-content">Aller au contenu principal</a>
+  <Navbar v-if="!bare" />
   <main id="main-content" class="site-main" tabindex="-1">
     <RouterView />
   </main>
-  <Footer />
+  <Footer v-if="!bare" />
 </template>
 
 <style scoped>

@@ -941,6 +941,7 @@ async function main() {
         etudiantId: clara.id,
         competenceId: cdaC1.id,
         niveau: NiveauAcquisition.ACQUIS,
+        valeur: 16,
         commentaire: 'Bonne maîtrise de la sécurité applicative',
       },
       {
@@ -948,6 +949,7 @@ async function main() {
         etudiantId: clara.id,
         competenceId: cdaC2.id,
         niveau: NiveauAcquisition.EN_COURS,
+        valeur: 12.5,
         commentaire: 'Normalisation à revoir',
       },
       {
@@ -955,12 +957,14 @@ async function main() {
         etudiantId: clara.id,
         competenceId: cdaC3.id,
         niveau: NiveauAcquisition.ACQUIS,
+        valeur: 15,
       },
       {
         examenId: examenCda.id,
         etudiantId: yanis.id,
         competenceId: cdaC1.id,
         niveau: NiveauAcquisition.EN_COURS,
+        valeur: 11,
         commentaire: 'Tests automatisés à consolider',
       },
       {
@@ -968,6 +972,7 @@ async function main() {
         etudiantId: yanis.id,
         competenceId: cdaC2.id,
         niveau: NiveauAcquisition.NON_ACQUIS,
+        valeur: 8,
         commentaire: 'À revoir avant la session de rattrapage',
       },
       {
@@ -975,9 +980,142 @@ async function main() {
         etudiantId: yanis.id,
         competenceId: cdaC3.id,
         niveau: NiveauAcquisition.ACQUIS,
+        valeur: 14,
       },
     ],
   });
+
+  // ───────── Notes & assiduité des promotions SISR / SLAM ─────────
+  const sisrR1 = await prisma.competence.findUniqueOrThrow({
+    where: { formationId_code: { formationId: sioSisr.id, code: 'R1' } },
+  });
+  const sisrR2 = await prisma.competence.findUniqueOrThrow({
+    where: { formationId_code: { formationId: sioSisr.id, code: 'R2' } },
+  });
+  const examenSisr = await prisma.examen.create({
+    data: {
+      promotionId: promoSisr.id,
+      intitule: 'Évaluation mi-parcours — Réseaux & Systèmes',
+      dateExamen: new Date('2026-10-20T09:00:00+04:00'),
+      salle: 'B10',
+    },
+  });
+
+  const slamD1 = await prisma.competence.create({
+    data: { formationId: sioSlam.id, code: 'D1', libelle: 'Développer une interface web responsive' },
+  });
+  const slamD2 = await prisma.competence.create({
+    data: { formationId: sioSlam.id, code: 'D2', libelle: 'Interroger une base de données' },
+  });
+  const examenSlam = await prisma.examen.create({
+    data: {
+      promotionId: promoSlam.id,
+      intitule: 'Évaluation mi-parcours — Développement web',
+      dateExamen: new Date('2026-10-21T09:00:00+04:00'),
+      salle: 'B08',
+    },
+  });
+
+  const niveauPour = (valeur: number) =>
+    valeur >= 14
+      ? NiveauAcquisition.ACQUIS
+      : valeur >= 10
+        ? NiveauAcquisition.EN_COURS
+        : NiveauAcquisition.NON_ACQUIS;
+
+  const notes = [
+    // SISR
+    { examenId: examenSisr.id, etudiantId: lynho.id, competenceId: sisrR1.id, valeur: 15.5, commentaire: 'Très bonne maîtrise des VLAN et du routage.' },
+    { examenId: examenSisr.id, etudiantId: lynho.id, competenceId: sisrR2.id, valeur: 13, commentaire: 'Bonne autonomie sur Windows Server.' },
+    { examenId: examenSisr.id, etudiantId: sarah.id, competenceId: sisrR1.id, valeur: 12, commentaire: 'Résultats corrects, à consolider en pratique.' },
+    { examenId: examenSisr.id, etudiantId: sarah.id, competenceId: sisrR2.id, valeur: 14.5 },
+    { examenId: examenSisr.id, etudiantId: jules.id, competenceId: sisrR1.id, valeur: 9.5, commentaire: 'Doit revoir les bases du subnetting.' },
+    { examenId: examenSisr.id, etudiantId: jules.id, competenceId: sisrR2.id, valeur: 11 },
+    { examenId: examenSisr.id, etudiantId: amelie.id, competenceId: sisrR1.id, valeur: 16.5, commentaire: 'Excellente analyse des incidents.' },
+    { examenId: examenSisr.id, etudiantId: amelie.id, competenceId: sisrR2.id, valeur: 15 },
+    // SLAM
+    { examenId: examenSlam.id, etudiantId: hugo.id, competenceId: slamD1.id, valeur: 14, commentaire: 'Interface soignée et accessible.' },
+    { examenId: examenSlam.id, etudiantId: hugo.id, competenceId: slamD2.id, valeur: 12 },
+    { examenId: examenSlam.id, etudiantId: nina.id, competenceId: slamD1.id, valeur: 17, commentaire: 'Très bon niveau, à valoriser en projet.' },
+    { examenId: examenSlam.id, etudiantId: nina.id, competenceId: slamD2.id, valeur: 15.5 },
+    { examenId: examenSlam.id, etudiantId: kevin.id, competenceId: slamD1.id, valeur: 10.5 },
+    { examenId: examenSlam.id, etudiantId: kevin.id, competenceId: slamD2.id, valeur: 8.5, commentaire: 'Requêtes SQL à retravailler.' },
+  ];
+
+  for (const note of notes) {
+    await prisma.evaluation.create({
+      data: { ...note, niveau: niveauPour(note.valeur) },
+    });
+  }
+
+  // Sessions passées (pour calculer l'assiduité et l'absentéisme)
+  const sessionsPassees = await Promise.all([
+    prisma.session.create({
+      data: {
+        promotionId: promoSisr.id,
+        titre: 'Réseaux : introduction TCP/IP',
+        debut: new Date('2026-10-05T08:30:00+04:00'),
+        fin: new Date('2026-10-05T12:30:00+04:00'),
+      },
+    }),
+    prisma.session.create({
+      data: {
+        promotionId: promoSisr.id,
+        titre: 'Windows Server : bases et Active Directory',
+        debut: new Date('2026-10-12T13:30:00+04:00'),
+        fin: new Date('2026-10-12T17:30:00+04:00'),
+      },
+    }),
+    prisma.session.create({
+      data: {
+        promotionId: promoSisr.id,
+        titre: 'Support utilisateur et gestion des incidents',
+        debut: new Date('2026-10-19T08:30:00+04:00'),
+        fin: new Date('2026-10-19T12:30:00+04:00'),
+      },
+    }),
+    prisma.session.create({
+      data: {
+        promotionId: promoSlam.id,
+        titre: 'Python & algorithmique',
+        debut: new Date('2026-10-06T09:00:00+04:00'),
+        fin: new Date('2026-10-06T12:00:00+04:00'),
+      },
+    }),
+    prisma.session.create({
+      data: {
+        promotionId: promoSlam.id,
+        titre: 'HTML, CSS & intégration responsive',
+        debut: new Date('2026-10-13T09:00:00+04:00'),
+        fin: new Date('2026-10-13T12:00:00+04:00'),
+      },
+    }),
+  ]);
+
+  // Présences : quelques absences volontaires pour rendre le dashboard réaliste
+  const presences: Record<number, number[]> = {
+    [sessionsPassees[0].id]: [lynho.id, sarah.id, jules.id, amelie.id],
+    [sessionsPassees[1].id]: [lynho.id, sarah.id, amelie.id],
+    [sessionsPassees[2].id]: [lynho.id, jules.id, amelie.id],
+    [sessionsPassees[3].id]: [hugo.id, nina.id, kevin.id],
+    [sessionsPassees[4].id]: [hugo.id, nina.id],
+  };
+
+  for (const session of sessionsPassees) {
+    for (const etudiantId of presences[session.id] ?? []) {
+      const signeLe = new Date(session.debut.getTime() + 5 * 60 * 1000);
+      await prisma.emargement.create({
+        data: {
+          sessionId: session.id,
+          etudiantId,
+          signature: signaturePlaceholder,
+          signeLe,
+          adresseIp: '127.0.0.1',
+          empreinte: empreinte(session.id, etudiantId, signeLe, signaturePlaceholder),
+        },
+      });
+    }
+  }
 
   // ───────── Collaboration : canaux, messages, documents ─────────
   const general = await prisma.canal.create({ data: { nom: 'général' } });

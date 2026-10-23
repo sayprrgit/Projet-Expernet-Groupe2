@@ -156,7 +156,7 @@ const resetFilters = () => {
 
           <label class="site-filter">
             <span class="sr-only">Filtrer par site</span>
-            <select v-model="siteFilter">
+            <select v-model="siteFilter" @keydown.space.prevent.stop>
               <option v-for="site in PLANNING_SITES" :key="site" :value="site">{{ site }}</option>
             </select>
           </label>

@@ -295,7 +295,10 @@ model Evaluation {
   etudiantId   Int
   competenceId Int
   niveau       NiveauAcquisition @default(NON_ACQUIS)
+  valeur       Float? // note sur 20 saisie par le formateur
   commentaire  String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt @default(now())
 
   examen     Examen     @relation(fields: [examenId], references: [id])
   etudiant   User       @relation(fields: [etudiantId], references: [id])

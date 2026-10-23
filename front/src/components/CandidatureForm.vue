@@ -283,6 +283,7 @@ const resetForm = () => {
                     :aria-invalid="!!errors.formationId"
                     aria-describedby="formationId-error"
                     @blur="validateField('formationId')"
+                    @keydown.space.prevent.stop
                   >
                     <option value="" disabled>-- Choisissez une formation du catalogue --</option>
                     <option
@@ -427,6 +428,7 @@ const resetForm = () => {
                     id="field-statutActuel"
                     v-model="form.statutActuel"
                     class="form-select"
+                    @keydown.space.prevent.stop
                   >
                     <option value="etudiant">Étudiant(e) en cours d'études</option>
                     <option value="lyceen">Lycéen(ne) / Futur bachelier</option>
